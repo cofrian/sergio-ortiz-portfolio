@@ -6,7 +6,7 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function absoluteUrl(path: string) {
-  const base = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+  const base = process.env.NEXT_PUBLIC_SITE_URL ?? "https://portfolio-seven-red-73.vercel.app";
   return new URL(path, base).toString();
 }
 

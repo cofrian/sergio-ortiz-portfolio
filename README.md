@@ -2,6 +2,8 @@
 
 A bilingual, evidence-backed portfolio built with Next.js 16. It presents selected data and AI systems, synchronizes approved public GitHub repositories through reviewed pull requests, supports curated LinkedIn notes, and includes restricted portfolio search.
 
+Live site: [portfolio-seven-red-73.vercel.app](https://portfolio-seven-red-73.vercel.app/en)
+
 ## Product
 
 - English at `/en` and Spanish at `/es`; no automatic locale guessing.

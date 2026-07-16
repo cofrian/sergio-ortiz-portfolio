@@ -3,7 +3,7 @@ import { notes } from "@/content/notes";
 import { projects } from "@/content/projects";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const base = process.env.NEXT_PUBLIC_SITE_URL || "https://sergio-ortiz-portfolio.vercel.app";
+  const base = process.env.NEXT_PUBLIC_SITE_URL || "https://portfolio-seven-red-73.vercel.app";
   const pages = ["", "/work", "/research", "/experience", "/about", "/notes", "/contact", "/ask", "/connections"];
   const routes = [
     ...["en", "es"].flatMap((locale) => pages.map((page) => `/${locale}${page}`)),

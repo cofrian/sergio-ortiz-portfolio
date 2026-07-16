@@ -8,7 +8,7 @@ import type { Metadata } from "next";
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
   if (!hasLocale(locale)) return {};
-  const base = process.env.NEXT_PUBLIC_SITE_URL || "https://sergio-ortiz-portfolio.vercel.app";
+  const base = process.env.NEXT_PUBLIC_SITE_URL || "https://portfolio-seven-red-73.vercel.app";
   return {
     title: { default: "Sergio Ortiz — Data & AI Systems", template: "%s · Sergio Ortiz" },
     description: locale === "es" ? "Portfolio de Sergio Ortiz: ciencia de datos, IA, MLOps e investigación aplicada." : "Sergio Ortiz’s portfolio: data science, AI engineering, MLOps and applied research.",

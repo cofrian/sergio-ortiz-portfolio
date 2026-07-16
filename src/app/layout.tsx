@@ -22,7 +22,7 @@ const instrumentSerif = Instrument_Serif({
 
 export const metadata: Metadata = {
   metadataBase: new URL(
-    process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000",
+    process.env.NEXT_PUBLIC_SITE_URL ?? "https://portfolio-seven-red-73.vercel.app",
   ),
   title: {
     default: "Sergio Ortiz — Data & AI Systems",

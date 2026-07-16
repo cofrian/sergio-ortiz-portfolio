@@ -5,7 +5,7 @@ export const personJsonLd = {
   "@context": "https://schema.org",
   "@type": "Person",
   name: profile.name,
-  url: "https://sergio-ortiz-portfolio.vercel.app",
+  url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://portfolio-seven-red-73.vercel.app",
   sameAs: [profile.github, profile.linkedin],
   address: { "@type": "PostalAddress", addressLocality: "Valencia", addressCountry: "ES" },
   alumniOf: { "@type": "CollegeOrUniversity", name: "Universitat Politècnica de València" },
