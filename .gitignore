@@ -32,6 +32,16 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+!.env.example
+*.pem
+*.key
+secrets/
+test-results/
+playwright-report/
+blob-report/
+home-preview.png
+mobile-preview.png
+mobile-menu.png
 
 # vercel
 .vercel

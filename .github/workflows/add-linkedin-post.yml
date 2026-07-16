@@ -1,0 +1,30 @@
+name: Add LinkedIn post
+on:
+  issues:
+    types: [opened, edited]
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+jobs:
+  add:
+    if: contains(github.event.issue.labels.*.name, 'content:linkedin')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm run add:linkedin
+        env:
+          ISSUE_BODY: ${{ github.event.issue.body }}
+      - uses: peter-evans/create-pull-request@v7
+        with:
+          branch: automation/linkedin-${{ github.event.issue.number }}
+          delete-branch: true
+          commit-message: "chore(content): add curated LinkedIn post"
+          title: "chore(content): review LinkedIn post #${{ github.event.issue.number }}"
+          body: "Closes #${{ github.event.issue.number }}. Verify excerpt, image rights and both locales before merge."
+          labels: content-review,linkedin

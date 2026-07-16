@@ -1,0 +1,33 @@
+{
+  "nav": {
+    "work": "Work",
+    "research": "Research",
+    "experience": "Experience",
+    "about": "About",
+    "notes": "Notes",
+    "contact": "Contact",
+    "connections": "Connections",
+    "ask": "Ask my portfolio",
+    "menu": "Open navigation",
+    "close": "Close navigation"
+  },
+  "common": {
+    "downloadCv": "Download CV",
+    "cvPending": "CV coming soon",
+    "viewProject": "View project",
+    "viewRepository": "View repository",
+    "liveDemo": "Live demo",
+    "viewAll": "View all",
+    "source": "Source",
+    "verified": "Verified source",
+    "featured": "Featured",
+    "research": "Research",
+    "system": "System",
+    "experiment": "Experiment",
+    "comingSoon": "Pending verified content"
+  },
+  "footer": {
+    "title": "Let’s build something useful.",
+    "subtitle": "Open to thoughtful collaborations and meaningful problems."
+  }
+}

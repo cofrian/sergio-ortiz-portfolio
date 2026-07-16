@@ -1,0 +1,33 @@
+{
+  "nav": {
+    "work": "Proyectos",
+    "research": "Investigación",
+    "experience": "Experiencia",
+    "about": "Sobre mí",
+    "notes": "Notas",
+    "contact": "Contacto",
+    "connections": "Conexiones",
+    "ask": "Pregunta al portfolio",
+    "menu": "Abrir navegación",
+    "close": "Cerrar navegación"
+  },
+  "common": {
+    "downloadCv": "Descargar CV",
+    "cvPending": "CV disponible próximamente",
+    "viewProject": "Ver proyecto",
+    "viewRepository": "Ver repositorio",
+    "liveDemo": "Demo pública",
+    "viewAll": "Ver todo",
+    "source": "Fuente",
+    "verified": "Fuente verificada",
+    "featured": "Destacado",
+    "research": "Investigación",
+    "system": "Sistema",
+    "experiment": "Experimento",
+    "comingSoon": "Contenido pendiente de verificación"
+  },
+  "footer": {
+    "title": "Construyamos algo útil.",
+    "subtitle": "Abierto a colaboraciones cuidadas y problemas con impacto."
+  }
+}

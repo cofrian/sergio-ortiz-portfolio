@@ -1,0 +1,55 @@
+name: Sync portfolio from GitHub
+on:
+  schedule:
+    - cron: "17 */6 * * *"
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: Validate without writing generated content
+        type: boolean
+        default: false
+  repository_dispatch:
+    types: [portfolio-sync]
+permissions:
+  contents: write
+  pull-requests: write
+concurrency:
+  group: portfolio-sync
+  cancel-in-progress: false
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - name: Sync repositories
+        run: npm run sync:github
+        env:
+          GITHUB_TOKEN: ${{ secrets.PORTFOLIO_GITHUB_TOKEN }}
+          GITHUB_USERNAME: cofrian
+          STRICT_TOPIC_MODE: ${{ vars.STRICT_TOPIC_MODE || 'false' }}
+          DRY_RUN: ${{ inputs.dry_run || 'false' }}
+      - name: Create safe covers
+        if: ${{ inputs.dry_run != true }}
+        run: npm run capture:projects
+        env:
+          CAPTURE_ALLOWED_HOSTS: ${{ vars.CAPTURE_ALLOWED_HOSTS }}
+      - run: npm run validate:content
+      - run: npm run test
+      - name: Create reviewed pull request
+        if: ${{ inputs.dry_run != true }}
+        uses: peter-evans/create-pull-request@v7
+        with:
+          branch: automation/github-portfolio-sync
+          delete-branch: true
+          commit-message: "chore(content): sync verified GitHub records"
+          title: "chore(content): review GitHub portfolio sync"
+          body: |
+            Automated GitHub portfolio draft. Generated fields and covers require editorial review before merge.
+            No generated content is published directly.
+          labels: content-review,automation

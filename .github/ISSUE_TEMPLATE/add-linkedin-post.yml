@@ -1,0 +1,50 @@
+name: Add LinkedIn post
+description: Propose a public LinkedIn post for the portfolio through a reviewed pull request.
+title: "[LinkedIn] "
+labels: ["content:linkedin"]
+body:
+  - type: input
+    id: url
+    attributes:
+      label: Public LinkedIn URL
+      placeholder: https://www.linkedin.com/posts/...
+    validations:
+      required: true
+  - type: input
+    id: title
+    attributes:
+      label: Title
+    validations:
+      required: true
+  - type: textarea
+    id: excerpt
+    attributes:
+      label: Excerpt
+      description: A short, verified summary. Do not paste the full post.
+    validations:
+      required: true
+  - type: input
+    id: date
+    attributes:
+      label: Published date
+      placeholder: YYYY-MM-DD
+    validations:
+      required: true
+  - type: dropdown
+    id: category
+    attributes:
+      label: Category
+      options: [Research, MLOps, Smart Cities, LLMs, Data Engineering, Community, Innovation]
+    validations:
+      required: true
+  - type: input
+    id: image
+    attributes:
+      label: Optional approved image URL
+      placeholder: https://...
+  - type: checkboxes
+    id: featured
+    attributes:
+      label: Placement
+      options:
+        - label: Feature this post on the homepage
