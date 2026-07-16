@@ -43,7 +43,7 @@ jobs:
       - run: npm run test
       - name: Create reviewed pull request
         if: ${{ inputs.dry_run != true }}
-        uses: peter-evans/create-pull-request@v7
+        uses: peter-evans/create-pull-request@v8
         with:
           branch: automation/github-portfolio-sync
           delete-branch: true
