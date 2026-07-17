@@ -12,30 +12,30 @@ const rawCareerRecords: CareerRecord[] = [
     kind: "experience",
     organisation: "Freelance / Independent",
     role: {
-      en: "Freelance Data & AI Specialist",
-      es: "Especialista freelance en Datos e IA",
+      en: "Freelance projects alongside my degree",
+      es: "Proyectos freelance durante el grado",
     },
     period: { en: "Oct 2025 — Present", es: "Oct 2025 — Actualidad" },
     location: { en: "Valencia, Spain · Hybrid", es: "Valencia, España · Híbrido" },
     summary: {
-      en: "Independent work developed alongside my degree to help organisations move towards data-driven operations through data science, AI and process automation.",
-      es: "Trabajo independiente desarrollado durante el grado para ayudar a organizaciones a avanzar hacia operaciones data-driven mediante ciencia de datos, IA y automatización de procesos.",
+      en: "During my degree, I chose to take on real freelance projects to learn beyond the classroom: speaking with clients, understanding their needs and taking responsibility for delivering useful results.",
+      es: "Durante el grado decidí asumir proyectos freelance reales para aprender fuera del aula: hablar con clientes, entender sus necesidades y responsabilizarme de entregar resultados útiles.",
     },
     bullets: [
       {
-        en: "Turns fragmented data and manual workflows into measurable pipelines, internal tools and decision-support systems.",
-        es: "Convierte datos dispersos y flujos manuales en pipelines medibles, herramientas internas y sistemas de apoyo a decisiones.",
+        en: "Learned to listen, ask the right questions and turn an initially unclear problem into a realistic scope and plan.",
+        es: "Aprendí a escuchar, hacer las preguntas adecuadas y convertir un problema inicialmente poco definido en un alcance y un plan realistas.",
       },
       {
-        en: "Works across data foundations, analytics, machine learning, generative AI and maintainable automation according to each problem.",
-        es: "Trabaja sobre fundamentos de datos, analítica, machine learning, IA generativa y automatización mantenible según cada problema.",
+        en: "Developed client communication, expectation management, prioritisation and delivery skills while explaining technical decisions in plain language.",
+        es: "Desarrollé comunicación con clientes, gestión de expectativas, priorización y capacidad de entrega, explicando las decisiones técnicas con un lenguaje claro.",
       },
       {
-        en: "Has also taken part in GovTech and innovation challenges focused on cities, public services and real operational needs.",
-        es: "También ha participado en retos GovTech y de innovación centrados en ciudades, servicios públicos y necesidades operativas reales.",
+        en: "Applied data science, AI and automation to real workflows, adapting each solution to the organisation instead of working from a predefined academic brief.",
+        es: "Apliqué ciencia de datos, IA y automatización a procesos reales, adaptando cada solución a la organización en lugar de partir de un enunciado académico cerrado.",
       },
     ],
-    capabilities: ["Data Science", "Applied AI", "Automation", "Data Engineering", "GovTech", "Client Discovery"],
+    capabilities: ["Client Communication", "Requirements Discovery", "Scope Management", "Project Delivery", "Data Science", "Applied AI", "Automation"],
     relatedProjects: ["urbanflow-valencia", "aion-emergency-routing", "genaq-market-selection"],
     source: {
       id: "github-independent-work",
