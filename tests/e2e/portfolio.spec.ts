@@ -42,8 +42,10 @@ test("connections page exposes the Obsidian-inspired map", async ({ page, isMobi
   }
 });
 
-test("restricted portfolio query returns citations", async ({ page }) => {
-  await page.goto("/en/ask");
+test("floating portfolio assistant is available from every page and returns citations", async ({ page }) => {
+  await page.goto("/en/experience");
+  await page.getByRole("button", { name: "Open portfolio assistant" }).click();
+  await expect(page.getByRole("dialog")).toBeVisible();
   await page.getByLabel("Question about Sergio").fill("Which Sergio project demonstrates MLOps?");
   await page.getByRole("button", { name: "Ask", exact: true }).click();
   await expect(page.locator(".answer-panel")).toBeVisible();
@@ -55,6 +57,7 @@ test("mobile navigation exposes every primary destination", async ({ page, isMob
   await page.goto("/es");
   await page.getByRole("button", { name: "Abrir navegación" }).click();
   await expect(page.getByRole("dialog")).toBeVisible();
-  await expect(page.getByRole("link", { name: "Pregunta al portfolio" })).toBeVisible();
   await expect(page.getByRole("link", { name: "Conexiones", exact: true })).toBeVisible();
+  await page.getByRole("button", { name: "Cerrar navegación" }).click();
+  await expect(page.getByRole("button", { name: "Abrir asistente del portfolio" })).toBeVisible();
 });

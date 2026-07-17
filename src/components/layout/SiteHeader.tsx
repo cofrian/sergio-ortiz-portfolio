@@ -19,7 +19,6 @@ interface SiteHeaderProps {
     notes: string;
     contact: string;
     connections: string;
-    ask: string;
     menu: string;
     close: string;
     downloadCv: string;
@@ -34,7 +33,6 @@ const navItems = [
   ["connections", "/connections"],
   ["about", "/about"],
   ["notes", "/notes"],
-  ["ask", "/ask"],
   ["contact", "/contact"],
 ] as const;
 

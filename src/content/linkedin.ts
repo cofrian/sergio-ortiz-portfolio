@@ -9,7 +9,11 @@ const linkedInPostSchema = z.object({
   content: z.string().min(10).max(20_000).optional(),
   publishedAt: z.iso.date(),
   categories: z.array(z.string().min(1).max(60)).min(1).max(6),
-  image: z.union([z.literal(""), z.url().refine((url) => url.startsWith("https://"))]).optional(),
+  image: z.union([
+    z.literal(""),
+    z.url().refine((url) => url.startsWith("https://")),
+    z.string().regex(/^\/images\/linkedin\/[a-z0-9-]+\.(?:jpe?g|webp|png)$/),
+  ]).optional(),
   featured: z.boolean().default(false),
   needsEditorialReview: z.boolean().default(false),
 });

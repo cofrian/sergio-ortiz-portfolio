@@ -1,6 +1,8 @@
 # RAG security
 
-Allowed sources are topic-curated public GitHub projects, their sanitized public READMEs, verified portfolio case studies, the public GitHub profile README, verified profile/milestone content, approved notes and the full text of reviewed public LinkedIn posts. Private repositories, repositories without topics, issues, contact messages, environment files, logs, dependencies and build artifacts are excluded.
+Allowed sources are topic-curated public GitHub projects, their sanitized public READMEs, a bounded allowlist of public source-code files, verified portfolio case studies, the public GitHub profile README, verified profile/milestone content, approved notes and the full text of reviewed public LinkedIn posts. Private repositories, repositories without topics, issues, contact messages, environment files, logs, dependencies, datasets, model weights, notebook outputs and build artifacts are excluded.
+
+Code ingestion is intentionally selective rather than a full repository mirror. It prioritizes files under application and source directories, caps file count and total bytes per repository, strips notebook outputs, redacts credential-like values and cites the exact public GitHub file. Code questions receive code sources first. If no public implementation is available, the assistant must state that limitation instead of reconstructing or inventing it.
 
 Document embeddings are generated outside the web request with the Transformers.js-compatible `Xenova/multilingual-e5-small` ONNX model and stored in a server-only Supabase index. The public site never receives embeddings, a Supabase browser key or direct database access.
 

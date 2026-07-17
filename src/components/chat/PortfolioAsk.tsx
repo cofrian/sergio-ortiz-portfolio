@@ -6,8 +6,8 @@ import type { Locale } from "@/lib/i18n-types";
 import type { ChatResponse } from "@/lib/schemas";
 
 const suggestions = {
-  en: ["Give me an overview of Sergio's GitHub projects.", "Why is Sergio a strong data and AI candidate?", "What leadership and community experience does Sergio have?", "Which project demonstrates production ML?", "What has Sergio built with LLMs?"],
-  es: ["Resume los proyectos de GitHub de Sergio.", "¿Por qué es Sergio un buen candidato para datos e IA?", "¿Qué experiencia tiene Sergio en liderazgo y comunidad?", "¿Qué proyecto demuestra MLOps?", "¿Qué ha construido Sergio con LLM?"],
+  en: ["How is UrbanFlow's prediction pipeline implemented?", "Why is Sergio a strong data and AI candidate?", "What leadership experience does Sergio have?", "Which project demonstrates production ML?"],
+  es: ["¿Cómo está implementado el pipeline de UrbanFlow?", "¿Por qué es Sergio un buen candidato para datos e IA?", "¿Qué experiencia tiene Sergio en liderazgo?", "¿Qué proyecto demuestra MLOps?"],
 };
 
 export function PortfolioAsk({ locale }: { locale: Locale }) {
@@ -45,7 +45,7 @@ export function PortfolioAsk({ locale }: { locale: Locale }) {
         <label className="sr-only" htmlFor="portfolio-query">{locale === "es" ? "Pregunta sobre Sergio" : "Question about Sergio"}</label>
         <div className="ask-input-wrap">
           <Search aria-hidden="true" className="ask-search-icon" size={20} />
-          <input className="ask-input" id="portfolio-query" maxLength={500} onChange={(event) => setQuery(event.target.value)} placeholder={locale === "es" ? "Pregunta por proyectos, experiencia o investigación…" : "Ask about projects, experience or research…"} value={query} />
+          <input className="ask-input" id="portfolio-query" maxLength={500} onChange={(event) => setQuery(event.target.value)} placeholder={locale === "es" ? "Proyectos, código, experiencia o liderazgo…" : "Projects, code, experience or leadership…"} value={query} />
           <button className="button button-primary ask-submit" disabled={loading} type="submit">{loading ? "…" : locale === "es" ? "Preguntar" : "Ask"}</button>
         </div>
       </form>

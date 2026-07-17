@@ -1,1 +1,50 @@
-[]
+[
+  {
+    "id": "genai-hackathon-sigma-2026",
+    "url": "https://www.linkedin.com/feed/update/urn:li:activity:7426741145478692865/",
+    "title": "GenAI Hackathon: de la idea al producto en seis horas",
+    "excerpt": "Sigma Data Club reunió a estudiantes, GPTadvisor, MyInvestor y Lovable para construir soluciones de finanzas personales con IA generativa en una sola tarde.",
+    "content": "Como coordinador de Sigma Data Club, Sergio compartió la convocatoria del GenAI Hackathon organizado con GPTadvisor, MyInvestor y Lovable. El reto pedía construir en equipos de cuatro o cinco personas una solución real de finanzas personales con IA generativa, combinando metodología, integración técnica y comunicación. La actividad forma parte de su trabajo de organización de comunidad, colaboración con empresas y creación de oportunidades prácticas para estudiantes.",
+    "publishedAt": "2026-02-09",
+    "categories": ["Community", "Innovation", "Generative AI"],
+    "image": "",
+    "featured": true,
+    "needsEditorialReview": false
+  },
+  {
+    "id": "bugamap-business-strategy-2025",
+    "url": "https://www.linkedin.com/feed/update/urn:li:activity:7411345727760584704/",
+    "title": "Primer puesto en la fase universitaria de bugaMAP",
+    "excerpt": "El equipo Europa obtuvo la mejor puntuación en la simulación empresarial de Fundación MAPFRE, aplicando decisiones sobre suscripción, reaseguro, inversiones y control de gastos.",
+    "content": "Sergio formó parte del equipo Europa, ganador de la fase celebrada en la Facultad de ADE de la UPV del juego de estrategia empresarial bugaMAP de Fundación MAPFRE. Cuatro equipos gestionaron una aseguradora simulada y tomaron decisiones sobre suscripción, reaseguro, inversiones y control de gastos. La publicación destaca la aplicación práctica de análisis, estrategia y trabajo en equipo en un entorno competitivo.",
+    "publishedAt": "2025-12-29",
+    "categories": ["Business Strategy", "Investment", "Teamwork"],
+    "image": "/images/linkedin/bugamap-team.jpg",
+    "featured": false,
+    "needsEditorialReview": false
+  },
+  {
+    "id": "accenture-genai-maverick-winner-2025",
+    "url": "https://www.linkedin.com/feed/update/urn:li:activity:7402474082757320704/",
+    "title": "Ganadores del reto Retail & Fashion de Accenture GenAI Maverick",
+    "excerpt": "Un prototipo multimodal convirtió consultas por imagen y lenguaje natural en recomendaciones de prendas y looks adaptados al evento, el clima y los gustos del usuario.",
+    "content": "Sergio y su equipo desarrollaron en Accenture GenAI Maverick un prototipo para encontrar prendas similares a un outfit visto en redes. La solución combinaba búsqueda visual de prendas, búsqueda por lenguaje natural y un agente que recomendaba looks según el evento, el clima y las preferencias del usuario. El prototipo fue seleccionado como ganador del reto Retail & Fashion. Sergio destacó el aprendizaje de convertir una idea en un producto funcional con rapidez, colaboración y orientación a negocio.",
+    "publishedAt": "2025-12-04",
+    "categories": ["Innovation", "Multimodal AI", "Product"],
+    "image": "/images/linkedin/accenture-presentation.jpg",
+    "featured": true,
+    "needsEditorialReview": false
+  },
+  {
+    "id": "sigma-data-club-presentation-2025",
+    "url": "https://www.linkedin.com/feed/update/urn:li:activity:7375860826659766273/",
+    "title": "Presentación de Sigma Data Club: más de 50 inscripciones",
+    "excerpt": "La presentación de equipos de Generación Espontánea convirtió la visión del club en una comunidad abierta de Ciencia de Datos e IA con actividades, charlas y proyectos.",
+    "content": "Sigma Data Club presentó su nueva etapa dentro de Generación Espontánea de la ETSINF-UPV y superó las 50 inscripciones. La iniciativa busca ofrecer a estudiantes interesados en Ciencia de Datos e IA un espacio para crecer académica y personalmente mediante proyectos, workshops, charlas y comunidad. Las fotografías muestran a Sergio presentando la visión y los proyectos del club ante estudiantes de la UPV.",
+    "publishedAt": "2025-09-22",
+    "categories": ["Leadership", "Community", "Data Science"],
+    "image": "/images/linkedin/sigma-presentation.jpg",
+    "featured": true,
+    "needsEditorialReview": false
+  }
+]

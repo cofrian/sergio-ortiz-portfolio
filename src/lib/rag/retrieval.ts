@@ -40,6 +40,11 @@ export function isRepositoryOverviewQuestion(message: string) {
     || /\b(github|repositorios?)\b/.test(normalized) && /\b(projects?|proyectos?|work|trabajos?)\b/.test(normalized);
 }
 
+export function isCodeQuestion(message: string) {
+  const normalized = normalizeRagText(message);
+  return /\b(code|codigo|source|implementation|implemented|function|class|module|file|algorithm|script|endpoint|pipeline|how does|como funciona|como esta hecho|como se implementa)\b/.test(normalized);
+}
+
 export function buildRepositoryOverview(locale: Locale) {
   const groups = {
     systems: [] as string[],
@@ -75,6 +80,7 @@ function expandedTerms(message: string) {
     [/\bleadership\b|\bliderazgo\b|\bcoordina(?:r|cion|dor)\b/, ["sigma", "team", "community", "programme", "partnerships"]],
     [/\bclubs?\b|\bclubes?\b|\bcommunity\b|\bcomunidad\b|\bmentor(?:ing)?\b|\btutor(?:ia)?\b/, ["sigma", "investment", "etsinf", "students", "mentoring"]],
     [/\binnovation\b|\binnovacion\b|\bentrepreneurship\b|\bemprendimiento\b/, ["akademia", "bankinter", "samsung", "accenture", "product"]],
+    [/\bcode\b|\bcodigo\b|\bimplementation\b|\bimplementacion\b|\bfunction\b|\bfuncion\b|\bclass\b|\bmodule\b|\barchivo\b|\bscript\b|\bendpoint\b|\balgorithm\b|\balgoritmo\b/, ["src", "app", "api", "pipeline", "model", "train", "inference"]],
   ];
   for (const [pattern, additions] of expansions) {
     if (pattern.test(normalized)) terms.push(...additions);
@@ -164,6 +170,7 @@ function profileSource(locale: Locale): RetrievedSource {
 export function retrieveLocalSources(message: string, locale: Locale, limit = 6): RetrievedSource[] {
   const terms = expandedTerms(message);
   const overview = isRepositoryOverviewQuestion(message);
+  const codeQuestion = isCodeQuestion(message);
   const career = /\b(experience|skills?|education|hire|hiring|job|candidate|career|leadership|community|clubs?|mentoring|innovation|experiencia|habilidades?|formacion|contratar|empleo|candidato|trayectoria|liderazgo|comunidad|clubes?|tutoria|innovacion)\b/.test(normalizeRagText(message));
   const curated: RetrievedSource[] = projectSourceContent(locale).map((source) => {
     const normalized = normalizeRagText(source.searchable);
@@ -198,6 +205,26 @@ export function retrieveLocalSources(message: string, locale: Locale, limit = 6)
       origin: "local" as const,
     };
   });
+  const githubCode: RetrievedSource[] = corpus.included.flatMap((repository) => repository.code.map((file) => {
+    const repositoryText = normalizeRagText(`${repository.repository} ${repository.title}`);
+    const path = normalizeRagText(file.path);
+    const content = normalizeRagText(file.content);
+    const score = terms.reduce((total, term) => {
+      if (repositoryText.includes(term)) return total + 12;
+      if (path.includes(term)) return total + 8;
+      if (content.includes(term)) return total + 2;
+      return total;
+    }, codeQuestion ? 3 : 0);
+    return {
+      title: `${repository.title} — ${file.path}`,
+      url: file.url,
+      section: `Source code · ${file.path}`,
+      content: [`Repository: ${repository.repository}`, `Language: ${file.language}`, file.content].join("\n\n").slice(0, 6_000),
+      score,
+      repository: repository.repository,
+      origin: "local" as const,
+    };
+  }));
   const editorial: RetrievedSource[] = notes.map((note) => {
     const content = [
       localize(note.excerpt, locale),
@@ -228,7 +255,7 @@ export function retrieveLocalSources(message: string, locale: Locale, limit = 6)
   });
   const careerEntries = careerSourceContent(message, locale);
 
-  const ranked = [...careerEntries, ...curated, ...github, ...editorial, ...linkedIn]
+  const ranked = [...careerEntries, ...curated, ...githubCode, ...github, ...editorial, ...linkedIn]
     .filter((source) => overview || source.score > (source.repository && projects.some((project) => project.repository === source.repository) ? 2 : 0))
     .sort((a, b) => b.score - a.score || a.title.localeCompare(b.title));
   const results: RetrievedSource[] = [
@@ -332,7 +359,9 @@ export async function retrieveSources(message: string, locale: Locale, limit = 6
   const local = retrieveLocalSources(message, locale, limit);
   const remote = await retrieveSupabaseSources(message, limit, requestId);
   const pinned = local.filter((source) =>
-    source.section.startsWith("Index of") || source.section.startsWith("Profile, education"),
+    source.section.startsWith("Index of")
+      || source.section.startsWith("Profile, education")
+      || isCodeQuestion(message) && source.section.startsWith("Source code"),
   );
   const ordered = [...pinned, ...remote, ...local];
   const results: RetrievedSource[] = [];
