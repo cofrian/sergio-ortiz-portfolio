@@ -34,9 +34,12 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
           <figcaption>{locale === "es" ? "Sergio Ortiz · Valencia" : "Sergio Ortiz · Valencia"}</figcaption>
         </figure>
         <div>
-          <p className="eyebrow">{profile.location}</p>
-          <p className="about-bio-lead">{profile.bio[locale]}</p>
-          <p className="about-secondary-copy muted">{locale === "es" ? "Me interesan los sistemas en los que una buena predicción no basta: también importan la trazabilidad, el despliegue, la decisión y las personas que van a usar el resultado." : "I am drawn to systems where a good prediction is not enough: traceability, deployment, decision-making and the people using the result matter too."}</p>
+          <p className="eyebrow">{profile.location} · {locale === "es" ? "Cómo trabajo" : "How I work"}</p>
+          <h2 className="about-statement">{profile.aboutStatement[locale]}</h2>
+          <div className="about-copy-grid">
+            <p>{profile.bio[locale]}</p>
+            <p>{locale === "es" ? "Me interesan los sistemas en los que una buena predicción no basta: también importan la trazabilidad, el despliegue, la decisión y las personas que van a usar el resultado." : "I am drawn to systems where a good prediction is not enough: traceability, deployment, decision-making and the people using the result matter too."}</p>
+          </div>
           <div className="principle-list">{aboutPrinciples.map((principle) => <article className="principle" key={principle.key}><h2>{principle.title[locale]}</h2><p>{principle.body[locale]}</p></article>)}</div>
           <div className="project-actions"><Link className="button button-primary" href={localePath(locale, "/contact")}>{locale === "es" ? "Contactar" : "Get in touch"}<ArrowRight aria-hidden="true" size={16} /></Link><span aria-disabled="true" className="button button-disabled">{locale === "es" ? "CV pendiente" : "CV pending"}</span></div>
         </div>

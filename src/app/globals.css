@@ -908,19 +908,32 @@ a {
   font-weight: 650;
 }
 
-.about-bio-lead {
-  margin: 0 0 1.25rem;
-  max-width: 860px;
-  font-family: var(--font-geist-sans), Arial, sans-serif;
-  font-size: clamp(1.6rem, 2.45vw, 2.45rem);
-  font-weight: 520;
-  letter-spacing: -0.03em;
-  line-height: 1.23;
+.about-statement {
+  max-width: 760px;
+  margin: 0.8rem 0 1.75rem;
+  font-family: var(--font-instrument-serif), Georgia, serif;
+  font-size: clamp(2.75rem, 4.4vw, 4.8rem);
+  font-weight: 400;
+  letter-spacing: -0.045em;
+  line-height: 0.98;
+  text-wrap: balance;
 }
 
-.about-secondary-copy {
+.about-copy-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(1.25rem, 2.5vw, 2.5rem);
+  margin-bottom: 1.25rem;
+  padding: 1.35rem 0 1.5rem;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+}
+
+.about-copy-grid p {
   margin: 0;
-  line-height: 1.75;
+  color: #59645f;
+  font-size: 0.98rem;
+  line-height: 1.72;
 }
 
 .about-portrait {
@@ -1637,8 +1650,12 @@ a {
     flex-direction: column;
   }
 
-  .about-bio-lead {
-    font-size: clamp(1.55rem, 6.8vw, 2.25rem);
+  .about-statement {
+    font-size: clamp(2.55rem, 12vw, 4rem);
+  }
+
+  .about-copy-grid {
+    grid-template-columns: 1fr;
   }
 
   .brand-name { display: none; }

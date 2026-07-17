@@ -12,9 +12,13 @@ export const profile = {
     en: "Data Science student · Freelance AI & data builder · Community leader",
     es: "Estudiante de Ciencia de Datos · Freelance en Datos e IA · Líder de comunidad",
   },
+  aboutStatement: {
+    en: "Data, models and software — connected to real decisions.",
+    es: "Datos, modelos y software conectados con decisiones reales.",
+  },
   bio: {
-    en: "I work at the intersection of data science, artificial intelligence, software engineering and automation, including independent projects that help organisations become more data-driven. Alongside building useful systems, I lead university initiatives, coordinate teams and support technology with social purpose.",
-    es: "Trabajo en la intersección de ciencia de datos, inteligencia artificial, ingeniería de software y automatización, incluidos proyectos independientes que ayudan a organizaciones a ser más data-driven. Además de construir sistemas útiles, lidero iniciativas universitarias, coordino equipos y apoyo la tecnología con propósito social.",
+    en: "I build end-to-end data and AI systems for real organisations and real decisions. My work brings together modelling, software and automation; beyond the code, I lead university initiatives and coordinate teams.",
+    es: "Construyo sistemas de datos e IA de extremo a extremo para organizaciones y decisiones reales. Mi trabajo combina modelado, software y automatización; fuera del código, lidero iniciativas universitarias y coordino equipos.",
   },
   education: {
     en: "Data Science at Universitat Politècnica de València",
