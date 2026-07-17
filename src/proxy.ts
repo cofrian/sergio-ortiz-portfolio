@@ -41,12 +41,13 @@ export function proxy(request: NextRequest) {
 
   const locale = getLocale(pathname);
   if (!isInfrastructurePath && !locale) {
-    const target = request.nextUrl.clone();
-    target.pathname = `/en${pathname === "/" ? "" : pathname}`;
-    return NextResponse.redirect(target);
+    const localizedPath = `/en${pathname === "/" ? "" : pathname}`;
+    return NextResponse.redirect(new URL(localizedPath, request.url));
   }
 
-  const nonce = Buffer.from(crypto.randomUUID()).toString("base64");
+  // A hexadecimal Web Crypto nonce avoids Node Buffer/polyfill differences in
+  // the CDN proxy runtime while remaining a valid CSP base64-value subset.
+  const nonce = crypto.randomUUID().replaceAll("-", "");
   const csp = securityHeaders(nonce);
   const requestHeaders = new Headers(request.headers);
   requestHeaders.set("x-nonce", nonce);
