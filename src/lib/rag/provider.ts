@@ -1,11 +1,16 @@
 import "server-only";
 import { getServerEnv } from "@/lib/env/server";
+import { safeLog } from "@/lib/security/safe-log";
 
-export async function generateGroundedAnswer(input: { message: string; locale: "en" | "es"; context: string }) {
+export async function generateGroundedAnswer(input: { message: string; locale: "en" | "es"; context: string; requestId: string }) {
+  const started = Date.now();
   const env = getServerEnv();
-  if (!env.NVIDIA_API_KEY || !env.LLM_MODEL) return null;
+  if (!env.NVIDIA_API_KEY || !env.LLM_MODEL) {
+    safeLog("llm", { requestId: input.requestId, status: "fallback", latencyMs: Date.now() - started, code: "LLM_NOT_CONFIGURED" });
+    return null;
+  }
   const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 12_000);
+  const timeout = setTimeout(() => controller.abort(), 25_000);
   try {
     const response = await fetch(`${env.LLM_BASE_URL.replace(/\/$/, "")}/chat/completions`, {
       method: "POST",
@@ -21,10 +26,21 @@ export async function generateGroundedAnswer(input: { message: string; locale: "
       }),
       signal: controller.signal,
     });
-    if (!response.ok) return null;
+    if (!response.ok) {
+      safeLog("llm", { requestId: input.requestId, status: "fallback", latencyMs: Date.now() - started, code: `LLM_HTTP_${response.status}` });
+      return null;
+    }
     const payload = await response.json() as { choices?: Array<{ message?: { content?: string } }> };
-    return payload.choices?.[0]?.message?.content?.trim() || null;
-  } catch {
+    const answer = payload.choices?.[0]?.message?.content?.trim() || null;
+    safeLog("llm", { requestId: input.requestId, status: answer ? "ok" : "fallback", latencyMs: Date.now() - started, code: answer ? undefined : "LLM_EMPTY_RESPONSE" });
+    return answer;
+  } catch (error) {
+    safeLog("llm", {
+      requestId: input.requestId,
+      status: "fallback",
+      latencyMs: Date.now() - started,
+      code: error instanceof Error && error.name === "AbortError" ? "LLM_TIMEOUT" : "LLM_NETWORK_ERROR",
+    });
     return null;
   } finally {
     clearTimeout(timeout);

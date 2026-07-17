@@ -37,7 +37,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(response);
     }
     const context = matches.map(({ project }) => `${project.title}: ${localize(project.summary, parsed.data.locale)} Metrics: ${project.metrics.map((metric) => `${localize(metric.label, parsed.data.locale)} ${metric.value}`).join(", ")}. Sources: ${project.sources.map((source) => source.url).join(", ")}`).join("\n\n");
-    const generated = await generateGroundedAnswer({ message: parsed.data.message, locale: parsed.data.locale, context });
+    const generated = await generateGroundedAnswer({ message: parsed.data.message, locale: parsed.data.locale, context, requestId });
     const answer = generated ?? (parsed.data.locale === "es" ? `He encontrado ${matches.length} proyectos relevantes: ${matches.map(({ project }) => `${project.title} — ${localize(project.summary, "es")}`).join(" ")}` : `I found ${matches.length} relevant projects: ${matches.map(({ project }) => `${project.title} — ${localize(project.summary, "en")}`).join(" ")}`);
     const sources = matches.map(({ project }) => ({ title: project.title, url: project.repositoryUrl, section: project.sources[0]?.section ?? "README" }));
     const response = chatResponseSchema.parse({ answer, sources, inScope: true, confidence: generated ? "high" : "medium" });
