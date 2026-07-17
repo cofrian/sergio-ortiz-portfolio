@@ -48,7 +48,13 @@ describe("source-backed career records", () => {
     expect(education?.bullets.map((item) => item.es).join(" ")).toContain("Economía y Empresa");
     expect(education?.source.url).toBe("https://www.upv.es/titulaciones/GCD/indexc.html");
     expect(degreeEngagement.roles.map((role) => role.es)).toContain("Delegado de clase");
-    expect(degreeEngagement.podcast.url).toContain("open.spotify.com/episode/3y5OqwHlNSQeqWMKKEszNw");
+    expect(degreeEngagement.podcasts).toHaveLength(2);
+    expect(degreeEngagement.podcasts.map((podcast) => podcast.url)).toEqual(
+      expect.arrayContaining([
+        expect.stringContaining("open.spotify.com/episode/3y5OqwHlNSQeqWMKKEszNw"),
+        expect.stringContaining("open.spotify.com/episode/2Q5wz6ImysqHcIemmEPDQm"),
+      ]),
+    );
   });
 });
 

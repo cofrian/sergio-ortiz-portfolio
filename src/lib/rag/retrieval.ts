@@ -105,7 +105,9 @@ function careerSourceContent(message: string, locale: Locale): RetrievedSource[]
       localize(record.summary, locale),
       ...record.bullets.map((bullet) => localize(bullet, locale)),
       record.id === "upv-data-science" ? localize(degreeEngagement.summary, locale) : "",
-      record.id === "upv-data-science" ? `${localize(degreeEngagement.podcast.title, locale)} — ${degreeEngagement.podcast.url}` : "",
+      ...(record.id === "upv-data-science"
+        ? degreeEngagement.podcasts.map((podcast) => `${localize(podcast.title, locale)} — ${podcast.url}`)
+        : []),
       `Capabilities: ${record.capabilities.join(", ")}`,
     ].filter(Boolean).join("\n\n");
     const searchable = normalizeRagText(`${record.kind} ${record.organisation} ${content}`);
@@ -171,7 +173,8 @@ function profileSource(locale: Locale): RetrievedSource {
       localize(profile.education, locale),
       `Focus: ${profile.focus.join(", ")}`,
       ...careerRecords.map((record) => `${record.organisation} — ${localize(record.role, locale)} (${localize(record.period, locale)}): ${localize(record.summary, locale)}`),
-      `${localize(degreeEngagement.summary, locale)} ${localize(degreeEngagement.podcast.title, locale)} — ${degreeEngagement.podcast.url}`,
+      localize(degreeEngagement.summary, locale),
+      ...degreeEngagement.podcasts.map((podcast) => `${localize(podcast.title, locale)} — ${podcast.url}`),
       ...verifiedMilestones.map((milestone) => `${milestone.year} — ${milestone.title}: ${localize(milestone.description, locale)}`),
       corpus.profile?.readme ? `Public GitHub profile README:\n${corpus.profile.readme.slice(0, 6_000)}` : "",
     ].filter(Boolean).join("\n\n"),

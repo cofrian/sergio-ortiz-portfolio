@@ -66,11 +66,15 @@ export function EducationHighlight({ locale }: { locale: Locale }) {
           <div className="education-role-list">
             {degreeEngagement.roles.map((role) => <span className="tag" key={role.en}>{localize(role, locale)}</span>)}
           </div>
-          <a className="education-podcast-link" href={degreeEngagement.podcast.url} rel="noreferrer" target="_blank">
-            <Headphones aria-hidden="true" size={18} />
-            <span><small>{labels.listen}</small><strong>{localize(degreeEngagement.podcast.title, locale)}</strong></span>
-            <ArrowUpRight aria-hidden="true" size={15} />
-          </a>
+          <div className="education-podcast-list">
+            {degreeEngagement.podcasts.map((podcast) => (
+              <a className="education-podcast-link" href={podcast.url} key={podcast.id} rel="noreferrer" target="_blank">
+                <Headphones aria-hidden="true" size={18} />
+                <span><small>{labels.listen}</small><strong>{localize(podcast.title, locale)}</strong></span>
+                <ArrowUpRight aria-hidden="true" size={15} />
+              </a>
+            ))}
+          </div>
         </div>
 
         <div className="education-evidence">

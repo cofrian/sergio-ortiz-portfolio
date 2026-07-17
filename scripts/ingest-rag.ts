@@ -113,7 +113,9 @@ function buildRecords(): RagRecord[] {
       `Spanish summary: ${record.summary.es}`,
       ...record.bullets.flatMap((bullet) => [bullet.en, bullet.es]),
       record.id === "upv-data-science" ? `Degree engagement: ${degreeEngagement.summary.en} / ${degreeEngagement.summary.es}` : "",
-      record.id === "upv-data-science" ? `University podcast: ${degreeEngagement.podcast.title.en} / ${degreeEngagement.podcast.title.es} — ${degreeEngagement.podcast.url}` : "",
+      ...(record.id === "upv-data-science"
+        ? degreeEngagement.podcasts.map((podcast) => `University podcast: ${podcast.title.en} / ${podcast.title.es} — ${podcast.url}`)
+        : []),
       `Capabilities: ${record.capabilities.join(", ")}`,
       record.relatedProjects.length ? `Related portfolio projects: ${record.relatedProjects.join(", ")}` : "",
       `Verified public source: ${record.source.title} — ${record.source.section}`,
