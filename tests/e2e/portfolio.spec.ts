@@ -10,6 +10,9 @@ test("home and primary views are navigable", async ({ page }) => {
 
 test("language switch is explicit", async ({ page }) => {
   await page.goto("/en/about");
+  await expect(page.locator(".site-shell > section").first()).toHaveId("education");
+  await expect(page.getByRole("heading", { name: "BSc in Data Science", exact: true })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Academic distinctions", exact: true })).toBeVisible();
   await page.getByRole("link", { name: /Cambiar a español/i }).click();
   await expect(page).toHaveURL(/\/es\/about/);
   await expect(page.getByRole("heading", { name: /Curiosidad técnica/i })).toBeVisible();
@@ -25,6 +28,9 @@ test("project detail exposes verified sources", async ({ page }) => {
 test("experience includes leadership, clubs and innovation", async ({ page }) => {
   await page.goto("/en/experience");
   await expect(page.getByRole("heading", { name: /Building technology also means/i })).toBeVisible();
+  await expect(page.locator(".site-shell > section").first()).toHaveId("education");
+  await expect(page.getByText("240 ECTS", { exact: false })).toBeVisible();
+  await expect(page.getByText(/Data Processing Infrastructure/)).toBeVisible();
   await expect(page.getByText("Sigma Data Club UPV", { exact: true })).toBeVisible();
   await expect(page.getByText("Freelance / Independent", { exact: true })).toBeVisible();
   await expect(page.getByText("The Pink Force Foundation", { exact: true })).toBeVisible();

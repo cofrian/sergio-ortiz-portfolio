@@ -1,14 +1,14 @@
-import { ArrowUpRight, BriefcaseBusiness, ChevronDown, GraduationCap, Lightbulb, UsersRound } from "lucide-react";
+import { ArrowUpRight, BriefcaseBusiness, ChevronDown, Lightbulb, UsersRound } from "lucide-react";
 import Image from "next/image";
 import { notFound } from "next/navigation";
+import { EducationHighlight } from "@/components/profile/EducationHighlight";
 import {
   careerMetrics,
   communityRecords,
-  educationRecords,
   innovationRecords,
   professionalExperience,
 } from "@/content/career";
-import { localize, profile } from "@/content/profile";
+import { localize } from "@/content/profile";
 import { hasLocale } from "@/lib/i18n";
 import type { CareerRecord } from "@/lib/schemas";
 
@@ -76,6 +76,8 @@ export default async function ExperiencePage({ params }: { params: Promise<{ loc
         </p>
       </header>
 
+      <EducationHighlight locale={locale} />
+
       <section aria-label={locale === "es" ? "Cifras verificadas" : "Verified figures"} className="career-metrics">
         {careerMetrics.map((metric) => (
           <div key={metric.value}>
@@ -104,7 +106,7 @@ export default async function ExperiencePage({ params }: { params: Promise<{ loc
 
       <section className="section-block">
         <div className="section-heading">
-          <div><p className="eyebrow"><BriefcaseBusiness aria-hidden="true" size={15} /> 01 · {locale === "es" ? "Experiencia y liderazgo" : "Experience & leadership"}</p><h2>{locale === "es" ? "Datos, IA y responsabilidad real." : "Data, AI and real responsibility."}</h2></div>
+          <div><p className="eyebrow"><BriefcaseBusiness aria-hidden="true" size={15} /> 02 · {locale === "es" ? "Experiencia y liderazgo" : "Experience & leadership"}</p><h2>{locale === "es" ? "Datos, IA y responsabilidad real." : "Data, AI and real responsibility."}</h2></div>
           <p>{locale === "es" ? "Trabajo freelance, automatización, aprendizaje profesional temprano y coordinación de una comunidad técnica de más de 100 estudiantes." : "Freelance work, automation, early professional learning and coordination of a technical community of more than 100 students."}</p>
         </div>
         <CareerTimeline locale={locale} records={professionalExperience} />
@@ -112,7 +114,7 @@ export default async function ExperiencePage({ params }: { params: Promise<{ loc
 
       <section className="section-block">
         <div className="section-heading">
-          <div><p className="eyebrow"><UsersRound aria-hidden="true" size={15} /> 02 · {locale === "es" ? "Comunidad, clubes y mentoría" : "Community, clubs & mentoring"}</p><h2>{locale === "es" ? "Aprender y hacer que otros crezcan." : "Learning while helping others grow."}</h2></div>
+          <div><p className="eyebrow"><UsersRound aria-hidden="true" size={15} /> 03 · {locale === "es" ? "Comunidad, clubes y mentoría" : "Community, clubs & mentoring"}</p><h2>{locale === "es" ? "Aprender y hacer que otros crezcan." : "Learning while helping others grow."}</h2></div>
           <p>{locale === "es" ? "Inversión y software, acompañamiento universitario, tecnología con propósito y construcción de comunidad." : "Investment and software, university mentoring, technology with purpose and community building."}</p>
         </div>
         <CareerTimeline locale={locale} records={communityRecords} />
@@ -120,7 +122,7 @@ export default async function ExperiencePage({ params }: { params: Promise<{ loc
 
       <section className="section-block">
         <div className="section-heading">
-          <div><p className="eyebrow"><Lightbulb aria-hidden="true" size={15} /> 03 · {locale === "es" ? "Innovación aplicada" : "Applied innovation"}</p><h2>{locale === "es" ? "Programas que terminan en productos." : "Programmes that end in products."}</h2></div>
+          <div><p className="eyebrow"><Lightbulb aria-hidden="true" size={15} /> 04 · {locale === "es" ? "Innovación aplicada" : "Applied innovation"}</p><h2>{locale === "es" ? "Programas que terminan en productos." : "Programmes that end in products."}</h2></div>
           <p>{locale === "es" ? "Formación intensiva, retos multidisciplinares y prototipos construidos con una finalidad concreta." : "Intensive training, multidisciplinary challenges and prototypes built for a concrete purpose."}</p>
         </div>
         <div className="innovation-grid">
@@ -137,16 +139,6 @@ export default async function ExperiencePage({ params }: { params: Promise<{ loc
         </div>
       </section>
 
-      <section className="section-block career-education">
-        <div>
-          <p className="eyebrow"><GraduationCap aria-hidden="true" size={15} /> 04 · Education</p>
-          <h2 className="display">{profile.education[locale]}</h2>
-          {educationRecords.map((record) => <p className="muted" key={record.id}>{localize(record.period, locale)} · {record.organisation}</p>)}
-        </div>
-        <div className="card empty-state">
-          <div><p className="eyebrow">CV</p><h3>{locale === "es" ? "Documento pendiente" : "Document pending"}</h3><p>{locale === "es" ? "La experiencia ya está publicada y respaldada por fuentes. La descarga se activará cuando incorporemos el PDF definitivo." : "The experience is already published and source-backed. The download will activate when the final PDF is added."}</p></div>
-        </div>
-      </section>
     </div>
   );
 }

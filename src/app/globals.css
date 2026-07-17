@@ -634,9 +634,6 @@ a {
 .innovation-card h3 { margin: 0.4rem 0 0.8rem; font-family: var(--font-instrument-serif), Georgia, serif; font-size: 2.25rem; font-weight: 400; line-height: 1; }
 .innovation-card > p:not(.eyebrow) { color: var(--muted); line-height: 1.7; }
 .innovation-card .button { align-self: flex-start; margin-top: auto; }
-.career-education { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(320px, 0.8fr); gap: clamp(1.5rem, 4vw, 4rem); }
-.career-education h2 { max-width: 760px; margin: 0.5rem 0 1rem; font-size: clamp(3rem, 6vw, 6rem); font-weight: 400; line-height: 0.95; }
-
 .leadership-home {
   display: grid;
   grid-template-columns: minmax(0, 0.9fr) minmax(260px, 0.55fr) minmax(310px, 0.7fr);
@@ -718,6 +715,162 @@ a {
   display: grid;
   grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
   gap: clamp(1.5rem, 4vw, 4rem);
+}
+
+.education-highlight {
+  display: grid;
+  grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr);
+  gap: clamp(2rem, 6vw, 7rem);
+}
+
+.education-highlight-heading {
+  align-self: start;
+}
+
+.education-highlight .eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.education-highlight-heading h2 {
+  max-width: 720px;
+  margin: 0.7rem 0 1rem;
+  font-size: clamp(3.4rem, 6.2vw, 6.8rem);
+}
+
+.education-institution {
+  max-width: 620px;
+  margin: 0 0 1.2rem;
+  color: var(--primary);
+  font-size: clamp(1.05rem, 1.6vw, 1.35rem);
+  font-weight: 650;
+}
+
+.education-highlight-heading > .muted {
+  max-width: 680px;
+  margin: 0;
+  line-height: 1.7;
+}
+
+.education-highlight-body {
+  display: grid;
+  align-content: start;
+  gap: 1.2rem;
+}
+
+.education-facts {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-block: 1px solid var(--border);
+}
+
+.education-facts > div {
+  display: grid;
+  align-content: start;
+  gap: 0.55rem;
+  min-height: 118px;
+  padding: 1.15rem;
+  border-right: 1px solid var(--border);
+}
+
+.education-facts > div:last-child {
+  border-right: 0;
+}
+
+.education-facts span {
+  color: var(--muted);
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.education-facts strong {
+  color: var(--foreground);
+  font-size: 0.93rem;
+  font-weight: 620;
+  line-height: 1.45;
+}
+
+.academic-honours {
+  padding: clamp(1.35rem, 3vw, 2rem);
+  border: 1px solid rgb(211 169 79 / 55%);
+  border-radius: 14px;
+  background: #fff9e9;
+}
+
+.academic-honours-title {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.9rem;
+  color: #765a12;
+}
+
+.academic-honours-title svg {
+  flex: 0 0 auto;
+  margin-top: 0.2rem;
+}
+
+.academic-honours-title .eyebrow {
+  margin-bottom: 0.3rem;
+  color: #765a12;
+}
+
+.academic-honours h3 {
+  margin: 0;
+  font-family: var(--font-instrument-serif), Georgia, serif;
+  font-size: clamp(2rem, 3.5vw, 3.25rem);
+  font-weight: 400;
+  line-height: 1;
+}
+
+.academic-honours ul {
+  display: grid;
+  gap: 0.65rem;
+  margin: 1.25rem 0 0;
+  padding-left: 1.25rem;
+  color: #4f462f;
+  line-height: 1.55;
+}
+
+.education-evidence {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.education-evidence p {
+  max-width: 560px;
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.78rem;
+  line-height: 1.55;
+}
+
+.education-evidence a {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--primary);
+  font-size: 0.82rem;
+  font-weight: 650;
+}
+
+.about-bio-lead {
+  margin: 0 0 1.25rem;
+  font-family: var(--font-instrument-serif), Georgia, serif;
+  font-size: clamp(2rem, 3vw, 3.35rem);
+  font-weight: 400;
+  letter-spacing: -0.025em;
+  line-height: 1.08;
+}
+
+.about-secondary-copy {
+  margin: 0;
+  line-height: 1.75;
 }
 
 .portrait-placeholder {
@@ -1392,6 +1545,29 @@ a {
     grid-template-columns: 1fr;
   }
 
+  .education-highlight,
+  .education-facts {
+    grid-template-columns: 1fr;
+  }
+
+  .education-facts > div {
+    min-height: auto;
+    border-right: 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .education-facts > div:last-child {
+    border-bottom: 0;
+  }
+
+  .education-evidence {
+    flex-direction: column;
+  }
+
+  .about-bio-lead {
+    font-size: clamp(2.15rem, 10.5vw, 3.2rem);
+  }
+
   .brand-name { display: none; }
   .hero { min-height: auto; padding-top: 3rem; }
   .hero-copy h1 { font-size: clamp(4rem, 20vw, 6rem); }
@@ -1419,7 +1595,6 @@ a {
   .career-entry-copy { grid-column: 1; }
   .career-source { grid-row: 1; grid-column: 2; }
   .innovation-grid,
-  .career-education,
   .career-story,
   .leadership-home,
   .connections-teaser { grid-template-columns: 1fr; }

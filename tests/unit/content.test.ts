@@ -37,6 +37,16 @@ describe("source-backed career records", () => {
     expect(pinkForce?.role.en).toBe("Ambassador");
     expect(pinkForce?.source.url).toContain("7463151444582567937");
   });
+
+  it("publishes the current Data Science degree and source-backed academic distinctions", () => {
+    const education = careerRecords.find((record) => record.id === "upv-data-science");
+
+    expect(education?.period.en).toContain("Present");
+    expect(education?.summary.en).toContain("240-ECTS");
+    expect(education?.bullets.map((item) => item.es).join(" ")).toContain("Matrícula de Honor");
+    expect(education?.bullets.map((item) => item.es).join(" ")).toContain("Economía y Empresa");
+    expect(education?.source.url).toBe("https://www.upv.es/titulaciones/GCD/indexc.html");
+  });
 });
 
 describe("curated LinkedIn evidence", () => {

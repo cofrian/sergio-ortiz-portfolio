@@ -3,7 +3,6 @@ import { careerRecordSchema, type CareerRecord } from "@/lib/schemas";
 const linkedInProfile = "https://www.linkedin.com/in/sergioortizmontesinos/";
 const linkedInExperience = `${linkedInProfile}details/experience/`;
 const linkedInVolunteering = `${linkedInProfile}details/volunteering-experiences/`;
-const linkedInEducation = `${linkedInProfile}details/education/`;
 const linkedInCertifications = `${linkedInProfile}details/certifications/`;
 const githubProfile = "https://github.com/cofrian";
 
@@ -329,22 +328,34 @@ const rawCareerRecords: CareerRecord[] = [
     kind: "education",
     organisation: "Universitat Politècnica de València (UPV)",
     role: { en: "BSc in Data Science", es: "Grado en Ciencia de Datos" },
-    period: { en: "2023 — 2028", es: "2023 — 2028" },
-    summary: {
-      en: "Data Science degree combining statistics, machine learning, data engineering and applied projects.",
-      es: "Grado en Ciencia de Datos que combina estadística, machine learning, ingeniería de datos y proyectos aplicados.",
+    period: {
+      en: "Sep 2023 — Present · Expected 2028",
+      es: "Sep 2023 — Actualidad · Finalización prevista 2028",
     },
-    bullets: [],
-    capabilities: ["Data Science", "Machine Learning", "Statistics", "Data Engineering"],
+    summary: {
+      en: "Four-year, 240-ECTS degree at ETSINF combining statistics, machine learning, data engineering, software and applied decision-making projects.",
+      es: "Grado de cuatro años y 240 ECTS en la ETSINF que combina estadística, machine learning, ingeniería de datos, software y proyectos aplicados a la toma de decisiones.",
+    },
+    bullets: [
+      {
+        en: "With Distinction (Matrícula de Honor) in Data Processing Infrastructure.",
+        es: "Matrícula de Honor en Infraestructura de Procesamiento para Datos.",
+      },
+      {
+        en: "With Distinction in courses within the Economics and Business area.",
+        es: "Matrículas de Honor en asignaturas del área de Economía y Empresa.",
+      },
+    ],
+    capabilities: ["Data Science", "Machine Learning", "Statistics", "Data Engineering", "Decision Science"],
     relatedProjects: [],
     source: {
-      id: "linkedin-upv-education",
-      title: "LinkedIn — UPV education",
-      url: linkedInEducation,
-      section: "Education · Data Science",
-      accessedAt: "2026-07-17",
+      id: "upv-data-science-degree",
+      title: "UPV — Grado en Ciencia de Datos",
+      url: "https://www.upv.es/titulaciones/GCD/indexc.html",
+      section: "Official degree programme; distinctions supplied by Sergio in his academic CV",
+      accessedAt: "2026-07-18",
     },
-    order: 9,
+    order: 0,
   },
 ];
 
@@ -355,6 +366,17 @@ export const leadershipAndCommunity = careerRecords.filter((record) => record.ki
 export const communityRecords = careerRecords.filter((record) => record.kind === "community");
 export const innovationRecords = careerRecords.filter((record) => record.kind === "innovation");
 export const educationRecords = careerRecords.filter((record) => record.kind === "education");
+
+export const degreeFacts = {
+  duration: { en: "4-year programme", es: "Programa de 4 años" },
+  credits: "240 ECTS",
+  school: "ETSINF · UPV",
+  status: { en: "Currently studying", es: "Actualmente cursando" },
+  evidence: {
+    en: "Programme details: official UPV degree page. Academic distinctions: provisional CV supplied by Sergio.",
+    es: "Datos del grado: página oficial de la UPV. Distinciones académicas: CV provisional aportado por Sergio.",
+  },
+} as const;
 
 export const careerMetrics = [
   {
