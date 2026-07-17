@@ -2,6 +2,7 @@
 
 import * as Dialog from "@radix-ui/react-dialog";
 import { Download, Languages, Menu, X } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
@@ -47,7 +48,7 @@ export function SiteHeader({ locale, labels }: SiteHeaderProps) {
       <div className="site-shell header-inner">
         <Link className="brand" href={localePath(locale)} aria-label="Sergio Ortiz home">
           <span aria-hidden="true" className="brand-mark">
-            SO
+            <Image alt="" fill priority sizes="36px" src="/images/profile/github-avatar.webp" />
           </span>
           <span className="brand-name">Sergio Ortiz</span>
         </Link>
@@ -92,7 +93,12 @@ export function SiteHeader({ locale, labels }: SiteHeaderProps) {
               <Dialog.Overlay className="mobile-nav-overlay" />
               <Dialog.Content className="mobile-nav-sheet">
                 <div className="mobile-nav-head">
-                  <Dialog.Title className="brand-mark">SO</Dialog.Title>
+                  <Dialog.Title className="mobile-brand-title">
+                    <span aria-hidden="true" className="brand-mark">
+                      <Image alt="" fill sizes="36px" src="/images/profile/github-avatar.webp" />
+                    </span>
+                    <span>Sergio Ortiz</span>
+                  </Dialog.Title>
                   <Dialog.Close asChild><button aria-label={labels.close} className="mobile-menu-button" type="button"><X aria-hidden="true" size={22} /></button></Dialog.Close>
                 </div>
                 <nav aria-label="Mobile navigation" className="mobile-nav-links">

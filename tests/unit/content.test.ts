@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { projects } from "@/content/projects";
-import { careerRecords } from "@/content/career";
+import { careerRecords, degreeEngagement } from "@/content/career";
 import { linkedinPosts } from "@/content/linkedin";
 import { careerRecordSchema, contactRequestSchema, projectRecordSchema } from "@/lib/schemas";
 
@@ -41,11 +41,14 @@ describe("source-backed career records", () => {
   it("publishes the current Data Science degree and source-backed academic distinctions", () => {
     const education = careerRecords.find((record) => record.id === "upv-data-science");
 
-    expect(education?.period.en).toContain("Present");
+    expect(education?.period.en).toBe("Sep 2022 — Present · Expected 2027");
     expect(education?.summary.en).toContain("240-ECTS");
+    expect(education?.summary.en).toContain("peer tutoring");
     expect(education?.bullets.map((item) => item.es).join(" ")).toContain("Matrícula de Honor");
     expect(education?.bullets.map((item) => item.es).join(" ")).toContain("Economía y Empresa");
     expect(education?.source.url).toBe("https://www.upv.es/titulaciones/GCD/indexc.html");
+    expect(degreeEngagement.roles.map((role) => role.es)).toContain("Delegado de clase");
+    expect(degreeEngagement.podcast.url).toContain("open.spotify.com/episode/3y5OqwHlNSQeqWMKKEszNw");
   });
 });
 
@@ -58,6 +61,15 @@ describe("curated LinkedIn evidence", () => {
     expect(hackathon?.image).toMatch(/^\/images\/linkedin\//);
     expect(pinkForce?.content).toContain("embajador");
     expect(pinkForce?.image).toMatch(/^\/images\/linkedin\//);
+  });
+
+  it("links the university podcast directly and removes the superseded career workshop", () => {
+    const podcast = linkedinPosts.find((post) => post.id === "planning-podcast-upv-2025");
+
+    expect(podcast?.spotifyUrl).toContain("open.spotify.com/episode/2Q5wz6ImysqHcIemmEPDQm");
+    expect(podcast?.spotifyTitle).toContain("Netflix");
+    expect(podcast?.image).toBe("/images/linkedin/planning-podcast-cover.webp");
+    expect(linkedinPosts.some((post) => post.id === "sigma-career-workshop-2026")).toBe(false);
   });
 });
 

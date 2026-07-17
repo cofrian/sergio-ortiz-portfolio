@@ -94,7 +94,7 @@ export default async function ExperiencePage({ params }: { params: Promise<{ loc
         </a>
         <div className="career-story-side">
           <a href="https://www.linkedin.com/posts/pablogandia_aicommunity-inteligenciaartificial-ugcPost-7432461355523145732-F-KU/" rel="noreferrer" target="_blank">
-            <Image alt={locale === "es" ? "Aula llena durante el GenAI Hackathon organizado por Sigma" : "Full classroom during the GenAI Hackathon organised by Sigma"} fill sizes="(max-width: 720px) 100vw, 34vw" src="/images/linkedin/sigma-genai-hackathon-room.jpg" />
+            <Image alt={locale === "es" ? "Mentoría y coordinación de equipos durante el GenAI Hackathon de Sigma" : "Team mentoring and coordination during Sigma's GenAI Hackathon"} fill sizes="(max-width: 720px) 100vw, 34vw" src="/images/linkedin/sigma-hackathon-mentoring.webp" />
             <span>{locale === "es" ? "Coordinación y mentoría de equipos" : "Team coordination and mentoring"}</span>
           </a>
           <a href="https://www.linkedin.com/feed/update/urn:li:activity:7463151444582567937/" rel="noreferrer" target="_blank">

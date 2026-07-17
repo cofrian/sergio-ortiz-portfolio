@@ -145,9 +145,11 @@ a {
 }
 
 .brand-mark {
+  position: relative;
   display: grid;
   width: 36px;
   height: 36px;
+  overflow: hidden;
   place-items: center;
   border-radius: 50%;
   color: white;
@@ -155,6 +157,19 @@ a {
   font-family: var(--font-geist-mono), ui-monospace, monospace;
   font-size: 0.72rem;
   letter-spacing: -0.03em;
+}
+
+.brand-mark img {
+  object-fit: cover;
+}
+
+.mobile-brand-title {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
 }
 
 .brand-name {
@@ -598,6 +613,7 @@ a {
 .career-story a { position: relative; display: block; min-height: 250px; overflow: hidden; border-radius: 16px; color: white; background: #193d38; }
 .career-story a::after { position: absolute; inset: 35% 0 0; content: ""; background: linear-gradient(transparent, rgb(4 20 17 / 78%)); }
 .career-story img { object-fit: cover; transition: transform 350ms ease; }
+.career-story-side a:first-child img { object-position: center 34%; }
 .career-story a:hover img { transform: scale(1.025); }
 .career-story span { position: absolute; right: 1rem; bottom: 1rem; left: 1rem; z-index: 1; display: grid; gap: 0.2rem; font-size: 0.78rem; line-height: 1.35; }
 .career-story strong { font-family: var(--font-instrument-serif), Georgia, serif; font-size: clamp(1.8rem, 3vw, 3.2rem); font-weight: 400; line-height: 1; }
@@ -698,9 +714,16 @@ a {
 .linkedin-card { display: grid; align-content: start; gap: 0.9rem; min-height: 280px; padding: 1.35rem; overflow: hidden; color: inherit; text-decoration: none; transition: transform 180ms ease, border-color 180ms ease; }
 .linkedin-card-image { position: relative; height: 220px; margin: -1.35rem -1.35rem 0.25rem; overflow: hidden; background: #e6ebe6; }
 .linkedin-card-image img { object-fit: cover; }
+.linkedin-card-image-contain { background: #f1eee7; }
+.linkedin-card-image-contain img { object-fit: contain; }
 .linkedin-card:hover { border-color: var(--primary); transform: translateY(-3px); }
 .linkedin-card h3 { margin: 0; font-family: var(--font-instrument-serif), Georgia, serif; font-size: 1.75rem; font-weight: 400; line-height: 1.05; }
 .linkedin-card .button { align-self: end; justify-self: start; }
+.linkedin-card-actions { display: flex; align-items: center; align-self: end; flex-wrap: wrap; gap: 0.55rem; }
+.spotify-episode { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 0.7rem; padding: 0.85rem; border: 1px solid rgb(6 78 71 / 18%); border-radius: 10px; color: var(--primary); background: #edf4f0; }
+.spotify-episode span { display: grid; gap: 0.18rem; }
+.spotify-episode small { color: #59645f; font-family: var(--font-geist-mono), monospace; font-size: 0.6rem; letter-spacing: 0.07em; text-transform: uppercase; }
+.spotify-episode strong { font-size: 0.82rem; line-height: 1.35; }
 .linkedin-home-row { display: grid; grid-template-columns: 120px 1fr; margin-top: 1.25rem; border-top: 1px solid var(--border); }
 .linkedin-home-row > p { padding-top: 1.2rem; }
 .linkedin-home-row > a { grid-column: 2; display: grid; grid-template-columns: 1fr auto auto; align-items: center; gap: 1rem; padding: 1rem 0; border-bottom: 1px solid var(--border); color: inherit; text-decoration: none; }
@@ -834,6 +857,32 @@ a {
   line-height: 1.55;
 }
 
+.education-engagement {
+  display: grid;
+  gap: 1rem;
+  padding: clamp(1.35rem, 3vw, 2rem);
+  border: 1px solid rgb(6 78 71 / 22%);
+  border-radius: 14px;
+  background: #edf4f0;
+}
+
+.education-engagement-title {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.9rem;
+  color: var(--primary);
+}
+
+.education-engagement-title svg { flex: 0 0 auto; margin-top: 0.2rem; }
+.education-engagement-title .eyebrow { margin-bottom: 0.3rem; }
+.education-engagement h3 { margin: 0; font-family: var(--font-instrument-serif), Georgia, serif; font-size: clamp(1.8rem, 3vw, 2.7rem); font-weight: 400; line-height: 1; }
+.education-engagement > p { margin: 0; color: #455650; line-height: 1.65; }
+.education-role-list { display: flex; flex-wrap: wrap; gap: 0.45rem; }
+.education-podcast-link { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 0.75rem; padding-top: 1rem; border-top: 1px solid rgb(6 78 71 / 18%); color: var(--primary); }
+.education-podcast-link span { display: grid; gap: 0.2rem; }
+.education-podcast-link small { color: #59645f; font-family: var(--font-geist-mono), monospace; font-size: 0.62rem; letter-spacing: 0.07em; text-transform: uppercase; }
+.education-podcast-link strong { font-size: 0.9rem; line-height: 1.4; }
+
 .education-evidence {
   display: flex;
   align-items: flex-start;
@@ -861,11 +910,12 @@ a {
 
 .about-bio-lead {
   margin: 0 0 1.25rem;
-  font-family: var(--font-instrument-serif), Georgia, serif;
-  font-size: clamp(2rem, 3vw, 3.35rem);
-  font-weight: 400;
-  letter-spacing: -0.025em;
-  line-height: 1.08;
+  max-width: 860px;
+  font-family: var(--font-geist-sans), Arial, sans-serif;
+  font-size: clamp(1.6rem, 2.45vw, 2.45rem);
+  font-weight: 520;
+  letter-spacing: -0.03em;
+  line-height: 1.23;
 }
 
 .about-secondary-copy {
@@ -873,16 +923,39 @@ a {
   line-height: 1.75;
 }
 
-.portrait-placeholder {
-  display: grid;
+.about-portrait {
+  position: relative;
   aspect-ratio: 4 / 5;
-  place-items: center;
+  margin: 0;
+  overflow: hidden;
   border: 1px solid var(--border);
   border-radius: 18px;
+  background: #dfe7e2;
+}
+
+.about-portrait::after {
+  position: absolute;
+  inset: 65% 0 0;
+  content: "";
+  background: linear-gradient(transparent, rgb(4 30 26 / 68%));
+}
+
+.about-portrait img {
+  object-fit: cover;
+  object-position: center 44%;
+}
+
+.about-portrait figcaption {
+  position: absolute;
+  right: 1rem;
+  bottom: 1rem;
+  left: 1rem;
+  z-index: 1;
   color: white;
-  background: var(--primary);
-  font-family: var(--font-instrument-serif), Georgia, serif;
-  font-size: clamp(5rem, 14vw, 11rem);
+  font-family: var(--font-geist-mono), monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .principle-list { display: grid; gap: 0.75rem; }
@@ -1565,7 +1638,7 @@ a {
   }
 
   .about-bio-lead {
-    font-size: clamp(2.15rem, 10.5vw, 3.2rem);
+    font-size: clamp(1.55rem, 6.8vw, 2.25rem);
   }
 
   .brand-name { display: none; }

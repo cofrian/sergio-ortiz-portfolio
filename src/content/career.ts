@@ -329,12 +329,12 @@ const rawCareerRecords: CareerRecord[] = [
     organisation: "Universitat Politècnica de València (UPV)",
     role: { en: "BSc in Data Science", es: "Grado en Ciencia de Datos" },
     period: {
-      en: "Sep 2023 — Present · Expected 2028",
-      es: "Sep 2023 — Actualidad · Finalización prevista 2028",
+      en: "Sep 2022 — Present · Expected 2027",
+      es: "Sep 2022 — Actualidad · Finalización prevista 2027",
     },
     summary: {
-      en: "Four-year, 240-ECTS degree at ETSINF combining statistics, machine learning, data engineering, software and applied decision-making projects.",
-      es: "Grado de cuatro años y 240 ECTS en la ETSINF que combina estadística, machine learning, ingeniería de datos, software y proyectos aplicados a la toma de decisiones.",
+      en: "Four-year, 240-ECTS degree at ETSINF combining statistics, machine learning, data engineering, software and applied decision-making projects, alongside class representation, peer tutoring and university podcasts.",
+      es: "Grado de cuatro años y 240 ECTS en la ETSINF que combina estadística, machine learning, ingeniería de datos, software y proyectos aplicados a la toma de decisiones, junto con representación de clase, tutoría entre estudiantes y podcasts universitarios.",
     },
     bullets: [
       {
@@ -373,8 +373,26 @@ export const degreeFacts = {
   school: "ETSINF · UPV",
   status: { en: "Currently studying", es: "Actualmente cursando" },
   evidence: {
-    en: "Programme details: official UPV degree page. Academic distinctions: provisional CV supplied by Sergio.",
-    es: "Datos del grado: página oficial de la UPV. Distinciones académicas: CV provisional aportado por Sergio.",
+    en: "Programme details: official UPV degree page. Academic distinctions and dates: provisional CV supplied by Sergio.",
+    es: "Datos del grado: página oficial de la UPV. Distinciones académicas y fechas: CV provisional aportado por Sergio.",
+  },
+} as const;
+
+export const degreeEngagement = {
+  summary: {
+    en: "Beyond the syllabus, I have served as a class delegate, supported new students as an ETSINF peer tutor and taken part in UPV podcasts that connect business organisation with everyday decisions.",
+    es: "Además del plan de estudios, he sido delegado de clase, acompaño a nuevos estudiantes como alumno tutor de la ETSINF y he participado en podcasts de la UPV que conectan la organización empresarial con decisiones cotidianas.",
+  },
+  roles: [
+    { en: "Class delegate", es: "Delegado de clase" },
+    { en: "ETSINF peer tutor · PIAE+", es: "Alumno tutor de la ETSINF · PIAE+" },
+  ],
+  podcast: {
+    title: {
+      en: "Marketing in companies: Apple and the four variables of the marketing mix",
+      es: "El marketing en las empresas: Apple y las cuatro variables del marketing mix",
+    },
+    url: "https://open.spotify.com/episode/3y5OqwHlNSQeqWMKKEszNw?si=OLJxY7RAQwS5whPKW3TBdw",
   },
 } as const;
 

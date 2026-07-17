@@ -14,6 +14,11 @@ const linkedInPostSchema = z.object({
     z.url().refine((url) => url.startsWith("https://")),
     z.string().regex(/^\/images\/linkedin\/[a-z0-9-]+\.(?:jpe?g|webp|png)$/),
   ]).optional(),
+  imageFit: z.enum(["cover", "contain"]).default("cover"),
+  spotifyUrl: z.url()
+    .refine((url) => url.startsWith("https://open.spotify.com/episode/"))
+    .optional(),
+  spotifyTitle: z.string().min(3).max(180).optional(),
   featured: z.boolean().default(false),
   needsEditorialReview: z.boolean().default(false),
 });
