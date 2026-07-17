@@ -6,6 +6,7 @@ const linkedInPostSchema = z.object({
   url: z.url().refine((url) => url.startsWith("https://www.linkedin.com/")),
   title: z.string().min(3).max(180),
   excerpt: z.string().min(10).max(700),
+  content: z.string().min(10).max(20_000).optional(),
   publishedAt: z.iso.date(),
   categories: z.array(z.string().min(1).max(60)).min(1).max(6),
   image: z.union([z.literal(""), z.url().refine((url) => url.startsWith("https://"))]).optional(),

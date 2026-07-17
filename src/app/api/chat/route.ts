@@ -1,7 +1,6 @@
 import { NextRequest } from "next/server";
-import { localize } from "@/content/profile";
 import { generateGroundedAnswer } from "@/lib/rag/provider";
-import { retrieveLocalSources } from "@/lib/rag/retrieval";
+import { retrieveSources } from "@/lib/rag/retrieval";
 import { classifyScope } from "@/lib/rag/scope-classifier";
 import { chatRequestSchema, chatResponseSchema } from "@/lib/schemas";
 import { consumeRateLimit } from "@/lib/security/rate-limit";
@@ -23,8 +22,25 @@ function refusal(locale: "en" | "es", type: "scope" | "evidence") {
       : "I can only answer questions about Sergio Ortiz’s projects, experience, research and published portfolio content.";
   }
   return locale === "es"
-    ? "No he encontrado información verificada sobre eso en el portfolio."
-    : "I couldn’t find verified information about that in the portfolio.";
+    ? "No he encontrado información pública suficiente para responder con seguridad."
+    : "I couldn’t find enough public information to answer that safely.";
+}
+
+function buildVerifiedContext(matches: Awaited<ReturnType<typeof retrieveSources>>) {
+  return JSON.stringify(matches.map((source, index) => ({
+    sourceId: `S${index + 1}`,
+    title: source.title,
+    publicUrl: source.url,
+    section: source.section,
+    excerpt: source.content.slice(0, 4_000),
+  })));
+}
+
+function fallbackAnswer(locale: "en" | "es", matches: Awaited<ReturnType<typeof retrieveSources>>) {
+  const titles = matches.map((source) => source.title).join(", ");
+  return locale === "es"
+    ? `He encontrado fuentes públicas relevantes sobre: ${titles}. Puedes abrirlas debajo para revisar la información completa.`
+    : `I found relevant public sources about: ${titles}. You can open them below to review the complete information.`;
 }
 
 export async function POST(request: NextRequest) {
@@ -64,9 +80,11 @@ export async function POST(request: NextRequest) {
       return noStoreJson(response);
     }
 
-    const matches = retrieveLocalSources(
+    const matches = await retrieveSources(
       parsed.data.message,
       parsed.data.locale,
+      6,
+      requestId,
     );
     if (!matches.length) {
       const response = chatResponseSchema.parse({
@@ -78,27 +96,18 @@ export async function POST(request: NextRequest) {
       return noStoreJson(response);
     }
 
-    const context = matches
-      .map(
-        ({ project }) =>
-          `${project.title}: ${localize(project.summary, parsed.data.locale)} Metrics: ${project.metrics.map((metric) => `${localize(metric.label, parsed.data.locale)} ${metric.value}`).join(", ")}. Sources: ${project.sources.map((source) => source.url).join(", ")}`,
-      )
-      .join("\n\n");
+    const context = buildVerifiedContext(matches);
     const generated = await generateGroundedAnswer({
       message: parsed.data.message,
       locale: parsed.data.locale,
       context,
       requestId,
     });
-    const answer =
-      generated ??
-      (parsed.data.locale === "es"
-        ? `He encontrado ${matches.length} proyectos relevantes: ${matches.map(({ project }) => `${project.title} — ${localize(project.summary, "es")}`).join(" ")}`
-        : `I found ${matches.length} relevant projects: ${matches.map(({ project }) => `${project.title} — ${localize(project.summary, "en")}`).join(" ")}`);
-    const sources = matches.map(({ project }) => ({
-      title: project.title,
-      url: project.repositoryUrl,
-      section: project.sources[0]?.section ?? "README",
+    const answer = generated ?? fallbackAnswer(parsed.data.locale, matches);
+    const sources = matches.map((source) => ({
+      title: source.title,
+      url: source.url,
+      section: source.section,
     }));
     const response = chatResponseSchema.parse({
       answer,
@@ -110,6 +119,7 @@ export async function POST(request: NextRequest) {
       requestId,
       status: "ok",
       latencyMs: Date.now() - started,
+      sourceCount: matches.length,
     });
     return noStoreJson(response);
   } catch (error) {

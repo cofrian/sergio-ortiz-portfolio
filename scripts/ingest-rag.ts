@@ -4,6 +4,9 @@ import { createClient } from "@supabase/supabase-js";
 import { linkedinPosts } from "../src/content/linkedin";
 import { notes } from "../src/content/notes";
 import { projects } from "../src/content/projects";
+import githubRagJson from "../src/content/generated-github-rag.json";
+import { githubRagCorpusSchema, sanitizeGithubRagText } from "../src/lib/github/rag-sources";
+import { profile, verifiedMilestones } from "../src/content/profile";
 
 const url = process.env.SUPABASE_URL;
 const key = process.env.SUPABASE_SECRET_KEY ?? process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -14,28 +17,38 @@ const model = process.env.EMBEDDING_MODEL || "Xenova/multilingual-e5-small";
 const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || "https://portfolio-seven-red-73.vercel.app").replace(/\/$/, "");
 
 interface RagRecord {
-  sourceType: "project" | "note" | "linkedin";
+  sourceType: "project" | "github" | "github-index" | "profile" | "note" | "linkedin";
   title: string;
   publicUrl: string;
   content: string;
   metadata: Record<string, string>;
 }
 
-function chunks(text: string, max = 2_400) {
+export function chunks(text: string, max = 2_400, overlap = 240) {
   const paragraphs = text.split(/\n{2,}/).map((value) => value.trim()).filter(Boolean);
   const output: string[] = [];
   let current = "";
   for (const paragraph of paragraphs) {
-    if (`${current}\n\n${paragraph}`.length > max && current) {
-      output.push(current);
-      current = paragraph;
-    } else current = current ? `${current}\n\n${paragraph}` : paragraph;
+    const pieces: string[] = [];
+    if (paragraph.length <= max) pieces.push(paragraph);
+    else {
+      for (let start = 0; start < paragraph.length; start += max - overlap) {
+        pieces.push(paragraph.slice(start, start + max));
+      }
+    }
+    for (const piece of pieces) {
+      if (current && `${current}\n\n${piece}`.length > max) {
+        output.push(current);
+        current = `${current.slice(-overlap)}\n\n${piece}`.slice(0, max);
+      } else current = current ? `${current}\n\n${piece}` : piece;
+    }
   }
   if (current) output.push(current);
   return output;
 }
 
 function buildRecords(): RagRecord[] {
+  const githubCorpus = githubRagCorpusSchema.parse(githubRagJson);
   const projectRecords: RagRecord[] = projects.map((project) => ({
     sourceType: "project",
     title: project.title,
@@ -77,15 +90,79 @@ function buildRecords(): RagRecord[] {
     sourceType: "linkedin",
     title: post.title,
     publicUrl: post.url,
-    content: `${post.title}\n\n${post.excerpt}`,
+    content: sanitizeGithubRagText(`${post.title}\n\n${post.content || post.excerpt}`, 20_000),
     metadata: { linkedInId: post.id, updatedAt: post.publishedAt },
   }));
 
-  return [...projectRecords, ...noteRecords, ...linkedInRecords];
+  const githubRecords: RagRecord[] = githubCorpus.included.map((repository) => ({
+    sourceType: "github",
+    title: repository.title,
+    publicUrl: repository.repositoryUrl,
+    content: [
+      `GitHub repository: ${repository.repository}`,
+      repository.description ? `Description: ${repository.description}` : "",
+      repository.language ? `Primary language: ${repository.language}` : "",
+      repository.topics.length ? `Topics: ${repository.topics.join(", ")}` : "",
+      `Fork: ${repository.fork ? "yes" : "no"}`,
+      repository.readme ? `Public README:\n${repository.readme}` : "No public README content was available.",
+    ].filter(Boolean).join("\n\n"),
+    metadata: {
+      repository: repository.repository,
+      projectSlug: repository.repository.toLowerCase().replace(/[^a-z0-9]+/g, "-"),
+      updatedAt: repository.updatedAt,
+      sourceSection: "GitHub README and public repository metadata",
+    },
+  }));
+
+  const githubIndex: RagRecord = {
+    sourceType: "github-index",
+    title: "Sergio Ortiz public GitHub project index",
+    publicUrl: profile.github,
+    content: [
+      `Sergio Ortiz has ${githubCorpus.included.length} public project repositories approved for the portfolio knowledge index.`,
+      ...githubCorpus.included.map((repository) =>
+        `${repository.repository}: ${repository.description || "Public repository without a description."} Topics: ${repository.topics.join(", ") || "not specified"}.`,
+      ),
+    ].join("\n\n"),
+    metadata: { updatedAt: githubCorpus.generatedAt, sourceSection: "Public repository index" },
+  };
+
+  const profileRecord: RagRecord = {
+    sourceType: "profile",
+    title: "Sergio Ortiz — verified public profile",
+    publicUrl: profile.github,
+    content: [
+      `Name: ${profile.name}`,
+      `Location: ${profile.location}`,
+      `English bio: ${profile.bio.en}`,
+      `Spanish bio: ${profile.bio.es}`,
+      `Education: ${profile.education.en} / ${profile.education.es}`,
+      `Focus: ${profile.focus.join(", ")}`,
+      ...verifiedMilestones.map((milestone) => `${milestone.year} — ${milestone.title}: ${milestone.description.en} / ${milestone.description.es}`),
+      githubCorpus.profile?.readme ? `Public GitHub profile README:\n${githubCorpus.profile.readme}` : "",
+    ].filter(Boolean).join("\n\n"),
+    metadata: { updatedAt: githubCorpus.generatedAt, sourceSection: "Verified portfolio profile" },
+  };
+
+  return [profileRecord, githubIndex, ...projectRecords, ...githubRecords, ...noteRecords, ...linkedInRecords];
 }
 
 async function main() {
   const records = buildRecords();
+  const activeKeys = new Set(records.map((record) => `${record.sourceType}:${record.publicUrl}`));
+  const managedTypes = ["project", "github", "github-index", "profile", "note", "linkedin"];
+  const { data: existingDocuments, error: existingError } = await client
+    .from("content_documents")
+    .select("id, source_type, public_url")
+    .in("source_type", managedTypes);
+  if (existingError) throw existingError;
+  const staleIds = (existingDocuments ?? [])
+    .filter((document) => !activeKeys.has(`${document.source_type}:${document.public_url}`))
+    .map((document) => document.id as string);
+  if (staleIds.length) {
+    const { error: staleError } = await client.from("content_documents").delete().in("id", staleIds);
+    if (staleError) throw staleError;
+  }
   const embed = await pipeline("feature-extraction", model, { dtype: "q8" });
   let indexed = 0;
 
@@ -138,7 +215,7 @@ async function main() {
     indexed += 1;
   }
 
-  process.stdout.write(`Indexed ${indexed} changed record(s) from ${records.length} approved sources with ${model}.\n`);
+  process.stdout.write(`Indexed ${indexed} changed record(s), removed ${staleIds.length} stale record(s), and retained ${records.length} approved sources with ${model}.\n`);
 }
 
 main().catch((error: unknown) => {

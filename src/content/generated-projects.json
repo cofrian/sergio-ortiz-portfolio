@@ -1,10 +1,10 @@
 {
-  "generatedAt": "2026-07-17T10:46:31.277Z",
+  "generatedAt": "2026-07-17T14:46:32.746Z",
   "strictTopicMode": true,
   "included": [
     {
       "repository": "upv-earth-planetary-boundaries",
-      "title": "upv earth planetary boundaries",
+      "title": "Upv Earth Planetary Boundaries",
       "description": "Mapping UPV scientific production onto the nine Planetary Boundaries: corpus pipeline, PB ontology, TF-IDF/SPECTER baselines, local LLM classification with abstention, an auditable agent cascade, and a review platform.",
       "repositoryUrl": "https://github.com/cofrian/upv-earth-planetary-boundaries",
       "topics": [
@@ -41,7 +41,7 @@
     },
     {
       "repository": "genaq-market-selection",
-      "title": "genaq market selection",
+      "title": "Genaq Market Selection",
       "description": "Ranking Spain's 35,891 census sections to find the 50 best places to launch a domestic atmospheric water generator — Bankinter Akademia 2025 case study for GENAQ",
       "repositoryUrl": "https://github.com/cofrian/genaq-market-selection",
       "topics": [
@@ -70,7 +70,7 @@
     },
     {
       "repository": "outfit-ai-recommender",
-      "title": "outfit ai recommender",
+      "title": "Outfit Ai Recommender",
       "description": "Multimodal fashion recommender that finds catalogue items from a photo, a sentence or a full outfit. Winner of the Retail & Fashion challenge at Accenture Spain's GenAI Maverick 2025.",
       "repositoryUrl": "https://github.com/cofrian/outfit-ai-recommender",
       "topics": [
@@ -107,7 +107,7 @@
     },
     {
       "repository": "aion-emergency-routing-valencia",
-      "title": "aion emergency routing valencia",
+      "title": "Aion Emergency Routing Valencia",
       "description": "Predictive traffic system for Valencia that anticipates congestion so emergency vehicles don't get trapped in gridlock. Robust baseline + PCA embeddings + CatBoost + sigmoid shrink (R² 0.971, sMAPE 17.4%), fed by an LLM pipeline turning local news, events and weather into structured signals. Samsung Innovation Campus AI Diploma (467h) capstone.",
       "repositoryUrl": "https://github.com/cofrian/aion-emergency-routing-valencia",
       "topics": [
@@ -144,7 +144,7 @@
     },
     {
       "repository": "covid19-wealth-mortality",
-      "title": "covid19 wealth mortality",
+      "title": "Covid19 Wealth Mortality",
       "description": "Interactive dashboard testing whether national wealth and health spending protected countries from COVID-19 mortality. 189 countries, 2020. Shiny for Python + Plotly.",
       "repositoryUrl": "https://github.com/cofrian/covid19-wealth-mortality",
       "topics": [
@@ -174,7 +174,7 @@
     },
     {
       "repository": "Proyecto_fitplanner",
-      "title": "Proyecto fitplanner",
+      "title": "Proyecto Fitplanner",
       "description": "🏋️ Streamlit app that builds personalized workout routines, calorie-based meal plans and matching sports gear deals — powered by web scraping, REST APIs and fuzzy matching.",
       "repositoryUrl": "https://github.com/cofrian/Proyecto_fitplanner",
       "topics": [
@@ -210,7 +210,7 @@
     },
     {
       "repository": "nba-scouting-analytics",
-      "title": "nba scouting analytics",
+      "title": "Nba Scouting Analytics",
       "description": "NBA scouting engine: PCA + k-means to find a player's statistical replacements, and PLS-DA to predict All-Stars from box-score data alone. R / R Markdown.",
       "repositoryUrl": "https://github.com/cofrian/nba-scouting-analytics",
       "topics": [
@@ -284,7 +284,7 @@
     },
     {
       "repository": "urbanflow-valencia-mlops",
-      "title": "urbanflow valencia mlops",
+      "title": "Urbanflow Valencia Mlops",
       "description": "Urban planning tool for Valencia: 24 CatBoost models predicting hourly traffic across 1,158 zones + an ILP facility-siting optimizer. Full MLOps cycle — FastAPI, Docker, CI/CD, drift monitoring. Graded 10/10.",
       "repositoryUrl": "https://github.com/cofrian/urbanflow-valencia-mlops",
       "demoUrl": "https://edm-project.vercel.app",
@@ -320,7 +320,7 @@
     },
     {
       "repository": "exist2026-ordantis",
-      "title": "exist2026 ordantis",
+      "title": "Exist2026 Ordantis",
       "description": "Ordantis @ EXIST 2026 Task 2 — GEMF: Gemini-enriched multimodal fusion for sexism characterization in memes (CLEF 2026).",
       "repositoryUrl": "https://github.com/cofrian/exist2026-ordantis",
       "topics": [
@@ -356,7 +356,7 @@
     },
     {
       "repository": "nobil_data",
-      "title": "nobil data",
+      "title": "Nobil Data",
       "description": "Real-time NOBIL data pipeline for EV charging events, combining websocket ingestion, event normalization, hourly JSONL storage, periodic snapshots, and automated versioned sync to GitHub and Google Cloud Storage.",
       "repositoryUrl": "https://github.com/cofrian/nobil_data",
       "topics": [
