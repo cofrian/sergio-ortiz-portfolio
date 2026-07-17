@@ -70,6 +70,8 @@ Detailed setup is in [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md), [docs/GITHUB_SYNC
 
 The intended production target is Vercel Hobby linked to `cofrian/sergio-ortiz-portfolio`, with preview deployments for pull requests and production from `main`. External services are initialized lazily so builds remain valid without their secrets.
 
+GitHub portfolio synchronization runs on the 1st and 16th of every month at 07:17 UTC. Each run prepares a reviewed content pull request; merging an approved update into `main` triggers the Vercel production deployment automatically.
+
 ## Security
 
 Private providers are called only from server routes. Service-role credentials, LLM keys, mail keys, webhook secrets and prompts are never serialized to client components. RLS denies anonymous access to internal tables, sensitive endpoints fail closed in production when atomic rate limiting is unavailable, and CI scans source and bundles for secret patterns. See [SECURITY.md](SECURITY.md).
