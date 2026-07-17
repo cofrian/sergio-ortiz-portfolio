@@ -23,6 +23,7 @@ The audit did identify several defense-in-depth gaps. They were remediated befor
 | Main branch | The default branch had no merge guardrails. | Required an up-to-date pull request with passing `quality`, `codeql` and `secrets-and-bundle` checks; force pushes and deletion are blocked and unresolved review conversations prevent merging. |
 | Abuse controls | Only application-level limits protected public APIs. | Published a Vercel firewall rule limiting `/api/` traffic to 60 requests per minute per IP, in addition to tighter fail-closed application limits. |
 | Admin login | The optional diagnostics login had no attempt limit. | Added the same atomic, HMAC-anonymized limiter; the route remains a 404 when no admin secret is configured. |
+| Custom domain | Rebuilding the Next.js 16 Node proxy intermittently caused `MIDDLEWARE_INVOCATION_FAILED` on CDN aliases. | Restored the last healthy release, reproduced the issue, then moved the identical nonce CSP and locale routing to the still-supported Edge middleware compatibility path. Both custom and Vercel aliases were reverified after a clean deployment. |
 
 ## Verification evidence
 
@@ -41,6 +42,7 @@ The audit did identify several defense-in-depth gaps. They were remediated befor
 - The inspected production logs contained no secret-shaped value, and the browser reported no console or runtime errors.
 - Local and GitHub lint, type checking, 24 unit tests, 33 end-to-end tests, production build, CodeQL, Gitleaks, secret/bundle scan and dependency audit completed successfully.
 - A production RAG reindex and the twice-monthly GitHub synchronization in `DRY_RUN` mode both completed successfully after hardening.
+- `sergioortiz.dev` redirects to `www.sergioortiz.dev`; both return 200 with a valid TLS chain, while the Vercel production alias also remains healthy. The custom-domain chat flow was retested after the middleware compatibility deployment.
 
 ## Intentional public information
 
@@ -51,6 +53,7 @@ Project repositories, verified project evidence, LinkedIn URLs and the portfolio
 - Public services cannot be made immune to all denial-of-service or provider outages. Application features fail closed when the atomic limiter or private provider is unavailable.
 - The provider-owned `supabase_admin` role retains platform-managed default grants that the project migration role cannot change. No current application object is owned by that role or anonymously exposed; project migrations use the hardened `postgres` owner. Supabase has announced platform-level grant hardening for existing projects in 2026.
 - NVIDIA, Vercel, Resend and Supabase free-tier behavior can change. The RAG flow falls back to verified search sources when generation is unavailable.
+- The Edge middleware filename is deprecated by Next.js 16 but remains supported and is used as a documented compatibility workaround for the open custom-CDN proxy regression. Revisit it after the upstream issue is resolved.
 - Secrets must still be rotated immediately if a provider reports exposure, even when repository scans are clean.
 
 ## Ongoing controls
