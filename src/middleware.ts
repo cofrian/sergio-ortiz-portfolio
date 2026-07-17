@@ -31,7 +31,7 @@ function securityHeaders(nonce: string) {
   return policy.join("; ");
 }
 
-export function proxy(request: NextRequest) {
+export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const isInfrastructurePath =
     pathname.startsWith("/api/") ||
@@ -45,8 +45,6 @@ export function proxy(request: NextRequest) {
     return NextResponse.redirect(new URL(localizedPath, request.url));
   }
 
-  // A hexadecimal Web Crypto nonce avoids Node Buffer/polyfill differences in
-  // the CDN proxy runtime while remaining a valid CSP base64-value subset.
   const nonce = crypto.randomUUID().replaceAll("-", "");
   const csp = securityHeaders(nonce);
   const requestHeaders = new Headers(request.headers);

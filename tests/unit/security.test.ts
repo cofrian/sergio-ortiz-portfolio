@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { NextRequest } from "next/server";
-import { proxy } from "@/proxy";
+import { middleware } from "@/middleware";
 import { validateGeneratedAnswer } from "@/lib/rag/output-security";
 import { retrieveLocalSources } from "@/lib/rag/retrieval";
 import { classifyScope } from "@/lib/rag/scope-classifier";
@@ -50,12 +50,12 @@ describe("security boundaries", () => {
     ).toContain("urbanflow-valencia");
   });
   it("localizes requests on a custom production hostname", () => {
-    const response = proxy(new NextRequest("https://www.sergioortiz.dev/"));
+    const response = middleware(new NextRequest("https://www.sergioortiz.dev/"));
     expect(response.status).toBe(307);
     expect(response.headers.get("location")).toBe("https://www.sergioortiz.dev/en");
   });
   it("uses a portable hexadecimal nonce for localized routes", () => {
-    const response = proxy(new NextRequest("https://www.sergioortiz.dev/en"));
+    const response = middleware(new NextRequest("https://www.sergioortiz.dev/en"));
     expect(response.headers.get("content-security-policy")).toMatch(
       /'nonce-[a-f0-9]{32}'/,
     );
