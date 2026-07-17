@@ -918,9 +918,30 @@ a {
 
 .ask-panel,
 .connections-panel { padding: clamp(1.2rem, 3vw, 2.3rem); }
+.home-ask {
+  display: grid;
+  grid-template-columns: minmax(0, 0.78fr) minmax(0, 1.22fr);
+  gap: clamp(1.5rem, 4vw, 4rem);
+  padding: clamp(1.4rem, 4vw, 3.5rem);
+  border-radius: 18px;
+  color: white;
+  background: var(--primary);
+}
+.home-ask-copy { align-self: center; }
+.home-ask-copy .eyebrow { color: #b7d8ce; }
+.home-ask-copy h2 { max-width: 680px; margin: 0.6rem 0 1rem; font-size: clamp(2.8rem, 5vw, 5.4rem); line-height: 0.94; }
+.home-ask-copy > p:not(.eyebrow) { max-width: 600px; color: #d5e5df; line-height: 1.7; }
+.home-ask .ask-panel { align-self: start; color: var(--text); background: var(--background); }
+.home-ask-proof { display: grid; gap: 0.65rem; margin: 1.5rem 0; padding: 0; list-style: none; }
+.home-ask-proof li { display: flex; align-items: center; gap: 0.65rem; color: #edf5f2; }
+.home-ask-proof li::before { width: 7px; height: 7px; border-radius: 50%; background: #89c8b5; content: ""; }
+.home-ask-link { display: inline-flex; align-items: center; gap: 0.45rem; color: white; font-weight: 650; text-decoration: none; }
+.home-ask-link:hover { text-decoration: underline; text-underline-offset: 4px; }
 .ask-input-wrap { position: relative; }
-.ask-input { min-height: 64px; padding: 0 130px 0 1rem; font-size: 1rem; }
+.ask-search-icon { position: absolute; top: 22px; left: 18px; pointer-events: none; }
+.ask-input { min-height: 64px; padding: 0 130px 0 50px; font-size: 1rem; }
 .ask-submit { position: absolute; top: 9px; right: 9px; bottom: 9px; }
+.ask-error { margin-top: 1rem; }
 .suggestions { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem; }
 .answer-panel { margin-top: 1rem; padding: 1.2rem; border-left: 3px solid var(--primary); background: #f0f3ef; }
 .answer-panel p { margin: 0; line-height: 1.65; }
@@ -1221,8 +1242,12 @@ a {
   .contact-grid,
   .detail-hero,
   .ask-layout,
+  .home-ask,
   .connections-layout,
   .site-footer { grid-template-columns: 1fr; }
+  .ask-input-wrap { display: grid; gap: 0.65rem; }
+  .ask-input { padding-right: 1rem; }
+  .ask-submit { position: static; min-height: 48px; width: 100%; }
   .contact-opportunity { gap: 2.5rem; }
   .contact-context h2 { font-size: clamp(3rem, 15vw, 4.6rem); }
   .contact-links { grid-template-columns: 1fr; }

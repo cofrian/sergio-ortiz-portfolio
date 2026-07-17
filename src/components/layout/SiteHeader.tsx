@@ -33,6 +33,7 @@ const navItems = [
   ["experience", "/experience"],
   ["about", "/about"],
   ["notes", "/notes"],
+  ["ask", "/ask"],
   ["contact", "/contact"],
 ] as const;
 
@@ -97,7 +98,6 @@ export function SiteHeader({ locale, labels }: SiteHeaderProps) {
                 </div>
                 <nav aria-label="Mobile navigation" className="mobile-nav-links">
                   {navItems.map(([key, href]) => <Link href={localePath(locale, href)} key={key} onClick={() => setOpen(false)}>{labels[key]}</Link>)}
-                  <Link href={localePath(locale, "/ask")} onClick={() => setOpen(false)}>{labels.ask}</Link>
                   <Link href={localePath(locale, "/connections")} onClick={() => setOpen(false)}>{labels.connections}</Link>
                 </nav>
               </Dialog.Content>

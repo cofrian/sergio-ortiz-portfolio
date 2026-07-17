@@ -44,15 +44,15 @@ export function PortfolioAsk({ locale }: { locale: Locale }) {
       <form onSubmit={(event) => { event.preventDefault(); void ask(query); }}>
         <label className="sr-only" htmlFor="portfolio-query">{locale === "es" ? "Pregunta sobre Sergio" : "Question about Sergio"}</label>
         <div className="ask-input-wrap">
-          <Search aria-hidden="true" size={20} style={{ left: 18, position: "absolute", top: 22 }} />
-          <input className="ask-input" id="portfolio-query" maxLength={500} onChange={(event) => setQuery(event.target.value)} placeholder={locale === "es" ? "Pregunta por proyectos, experiencia o investigación…" : "Ask about projects, experience or research…"} style={{ paddingLeft: 50 }} value={query} />
+          <Search aria-hidden="true" className="ask-search-icon" size={20} />
+          <input className="ask-input" id="portfolio-query" maxLength={500} onChange={(event) => setQuery(event.target.value)} placeholder={locale === "es" ? "Pregunta por proyectos, experiencia o investigación…" : "Ask about projects, experience or research…"} value={query} />
           <button className="button button-primary ask-submit" disabled={loading} type="submit">{loading ? "…" : locale === "es" ? "Preguntar" : "Ask"}</button>
         </div>
       </form>
       <div className="suggestions">
         {suggestions[locale].map((suggestion) => <button className="filter-button" key={suggestion} onClick={() => void ask(suggestion)} type="button">{suggestion}</button>)}
       </div>
-      {error ? <p className="form-message" role="alert" style={{ marginTop: "1rem" }}>{error}</p> : null}
+      {error ? <p className="form-message ask-error" role="alert">{error}</p> : null}
       {result ? (
         <div className="answer-panel">
           <p>{result.answer}</p>
