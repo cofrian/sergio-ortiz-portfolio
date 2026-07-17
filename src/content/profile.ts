@@ -9,18 +9,18 @@ export const profile = {
   email: "scofrian@gmail.com" as string | null,
   cv: { en: null as string | null, es: null as string | null },
   headline: {
-    en: "Data Science student · AI systems builder · Community leader",
-    es: "Estudiante de Ciencia de Datos · Constructor de sistemas de IA · Líder de comunidad",
+    en: "Data Science student · Freelance AI & data builder · Community leader",
+    es: "Estudiante de Ciencia de Datos · Freelance en Datos e IA · Líder de comunidad",
   },
   bio: {
-    en: "I work at the intersection of data science, artificial intelligence, software engineering and automation. Alongside building useful systems, I lead university initiatives, coordinate teams and help technical communities turn ideas into real activities and collaborations.",
-    es: "Trabajo en la intersección de ciencia de datos, inteligencia artificial, ingeniería de software y automatización. Además de construir sistemas útiles, lidero iniciativas universitarias, coordino equipos y ayudo a comunidades técnicas a convertir ideas en actividades y colaboraciones reales.",
+    en: "I work at the intersection of data science, artificial intelligence, software engineering and automation, including independent projects that help organisations become more data-driven. Alongside building useful systems, I lead university initiatives, coordinate teams and support technology with social purpose.",
+    es: "Trabajo en la intersección de ciencia de datos, inteligencia artificial, ingeniería de software y automatización, incluidos proyectos independientes que ayudan a organizaciones a ser más data-driven. Además de construir sistemas útiles, lidero iniciativas universitarias, coordino equipos y apoyo la tecnología con propósito social.",
   },
   education: {
     en: "Data Science at Universitat Politècnica de València",
     es: "Ciencia de Datos en la Universitat Politècnica de València",
   },
-  focus: ["Machine Learning", "MLOps", "Data Engineering", "Applied AI", "Leadership", "Innovation"],
+  focus: ["Machine Learning", "MLOps", "Data Engineering", "Applied AI", "Freelance", "Leadership", "Social Impact", "Innovation"],
 };
 
 export const verifiedMilestones = [

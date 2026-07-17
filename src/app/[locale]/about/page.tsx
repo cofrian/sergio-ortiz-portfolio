@@ -32,7 +32,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
       <section className="section-block about-community">
         <div className="section-heading">
           <div><p className="eyebrow">Leadership · Community</p><h2>{locale === "es" ? "La parte humana también es parte del sistema." : "The human side is part of the system too."}</h2></div>
-          <p>{locale === "es" ? "Coordino equipos, participo en clubes técnicos y acompaño a otros estudiantes porque el conocimiento gana valor cuando circula." : "I coordinate teams, contribute to technical clubs and mentor other students because knowledge becomes more valuable when it circulates."}</p>
+          <p>{locale === "es" ? "Coordino equipos, participo en clubes técnicos, acompaño a otros estudiantes y ayudo a difundir iniciativas con propósito social porque el conocimiento gana valor cuando circula." : "I coordinate teams, contribute to technical clubs, mentor other students and help make socially purposeful initiatives visible because knowledge becomes more valuable when it circulates."}</p>
         </div>
         <div className="grid-three">
           {leadershipAndCommunity.map((record) => (

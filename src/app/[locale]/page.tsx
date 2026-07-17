@@ -29,7 +29,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
         <div className="hero-copy">
           <p className="eyebrow">Sergio Ortiz · Data Science · Valencia</p>
           <h1 className="display">{locale === "es" ? "Construyo sistemas inteligentes con datos del mundo real." : "I build intelligent systems from real-world data."}</h1>
-          <p>{locale === "es" ? "Diseño y desarrollo productos de datos, modelos de machine learning y sistemas reproducibles para problemas reales." : "I design and ship data products, machine-learning models and reproducible systems for meaningful real-world problems."}</p>
+          <p>{locale === "es" ? "Diseño y desarrollo productos de datos, modelos de machine learning, automatizaciones y sistemas reproducibles para organizaciones y problemas reales." : "I design and ship data products, machine-learning models, automation and reproducible systems for organisations and meaningful real-world problems."}</p>
           <div className="hero-actions">
             <Link className="button button-primary" href={localePath(locale, "/work")}>{locale === "es" ? "Ver proyectos" : "View selected work"}<ArrowRight aria-hidden="true" size={16} /></Link>
             <AssistantTrigger className="button button-secondary"><Search aria-hidden="true" size={16} />{locale === "es" ? "Preguntar al portfolio" : "Ask my portfolio"}</AssistantTrigger>
@@ -56,7 +56,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
         <div className="leadership-home">
           <div className="leadership-home-copy">
             <p className="display">{locale === "es" ? "Coordinar, conectar y convertir ideas en iniciativas." : "Coordinate, connect and turn ideas into initiatives."}</p>
-            <p className="muted">{locale === "es" ? "Sigma Data Club, UPV Investment Club y tutoría universitaria forman una parte real de mi perfil: liderazgo operativo, comunicación, mentoría y colaboración con empresas." : "Sigma Data Club, UPV Investment Club and peer tutoring are a real part of my profile: operational leadership, communication, mentoring and company collaboration."}</p>
+            <p className="muted">{locale === "es" ? "Sigma Data Club, UPV Investment Club, tutoría universitaria y The Pink Force forman una parte real de mi perfil: liderazgo operativo, comunicación, mentoría, impacto social y colaboración con organizaciones." : "Sigma Data Club, UPV Investment Club, peer tutoring and The Pink Force are a real part of my profile: operational leadership, communication, mentoring, social impact and organisational collaboration."}</p>
           </div>
           <div className="leadership-metric-grid">{careerMetrics.map((metric) => <div key={metric.value}><strong className="display">{metric.value}</strong><span>{metric.label[locale]}</span></div>)}</div>
           <div className="leadership-role-list">{leadershipAndCommunity.map((record) => <Link href={`${localePath(locale, "/experience")}#${record.id}`} key={record.id}><span>{record.organisation}</span><strong>{record.role[locale]}</strong><ArrowRight aria-hidden="true" size={15} /></Link>)}</div>

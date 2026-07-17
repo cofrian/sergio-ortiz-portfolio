@@ -12,13 +12,21 @@ import { localize, profile } from "@/content/profile";
 import { hasLocale } from "@/lib/i18n";
 import type { CareerRecord } from "@/lib/schemas";
 
+const careerKindLabels: Record<CareerRecord["kind"], { en: string; es: string }> = {
+  experience: { en: "Experience", es: "Experiencia" },
+  leadership: { en: "Leadership", es: "Liderazgo" },
+  community: { en: "Community", es: "Comunidad" },
+  innovation: { en: "Innovation", es: "Innovación" },
+  education: { en: "Education", es: "Formación" },
+};
+
 function CareerTimeline({ locale, records }: { locale: "en" | "es"; records: CareerRecord[] }) {
   return (
     <div className="career-timeline">
       {records.map((record) => (
         <article className="career-entry" id={record.id} key={record.id}>
           <div className="career-entry-period">
-            <span className={`career-kind career-kind-${record.kind}`}>{record.kind}</span>
+            <span className={`career-kind career-kind-${record.kind}`}>{localize(careerKindLabels[record.kind], locale)}</span>
             <span className="mono">{localize(record.period, locale)}</span>
           </div>
           <div className="career-entry-heading">
@@ -63,8 +71,8 @@ export default async function ExperiencePage({ params }: { params: Promise<{ loc
         </h1>
         <p>
           {locale === "es"
-            ? "Mi trayectoria combina sistemas de datos e IA, automatización, liderazgo universitario, mentoría e iniciativas de innovación. Cada entrada enlaza a una fuente pública verificable."
-            : "My path combines data and AI systems, automation, university leadership, mentoring and innovation programmes. Every entry links to a verifiable public source."}
+            ? "Mi trayectoria combina trabajo freelance en datos e IA, automatización, liderazgo universitario, impacto social e iniciativas de innovación. Cada entrada enlaza a una fuente pública verificable."
+            : "My path combines freelance data and AI work, automation, university leadership, social impact and innovation programmes. Every entry links to a verifiable public source."}
         </p>
       </header>
 
@@ -77,27 +85,27 @@ export default async function ExperiencePage({ params }: { params: Promise<{ loc
         ))}
       </section>
 
-      <section aria-label={locale === "es" ? "Momentos de liderazgo e innovación" : "Leadership and innovation moments"} className="career-story">
-        <a className="career-story-main" href="https://www.linkedin.com/feed/update/urn:li:activity:7375860826659766273/" rel="noreferrer" target="_blank">
-          <Image alt={locale === "es" ? "Sergio presenta Sigma Data Club ante estudiantes de la UPV" : "Sergio presents Sigma Data Club to UPV students"} fill priority sizes="(max-width: 720px) 100vw, 62vw" src="/images/linkedin/sigma-presentation.jpg" />
-          <span><strong>{locale === "es" ? "Construir comunidad" : "Building community"}</strong>{locale === "es" ? "Presentación de Sigma Data Club · UPV" : "Sigma Data Club presentation · UPV"}</span>
+      <section aria-label={locale === "es" ? "Momentos de liderazgo e impacto" : "Leadership and impact moments"} className="career-story">
+        <a className="career-story-main" href="https://www.linkedin.com/posts/pablogandia_aicommunity-inteligenciaartificial-ugcPost-7432461355523145732-F-KU/" rel="noreferrer" target="_blank">
+          <Image alt={locale === "es" ? "Participantes y organización del GenAI Hackathon de Sigma Data Club" : "Participants and organisers at Sigma Data Club's GenAI Hackathon"} fill priority sizes="(max-width: 720px) 100vw, 62vw" src="/images/linkedin/sigma-genai-hackathon-group.jpg" />
+          <span><strong>{locale === "es" ? "Liderar haciendo" : "Leading by building"}</strong>{locale === "es" ? "GenAI Hackathon · más de 60 participantes" : "GenAI Hackathon · 60+ participants"}</span>
         </a>
         <div className="career-story-side">
-          <a href="https://www.linkedin.com/feed/update/urn:li:activity:7402474082757320704/" rel="noreferrer" target="_blank">
-            <Image alt={locale === "es" ? "Presentación del prototipo ganador en Accenture GenAI Maverick" : "Presentation of the winning prototype at Accenture GenAI Maverick"} fill sizes="(max-width: 720px) 100vw, 34vw" src="/images/linkedin/accenture-presentation.jpg" />
-            <span>{locale === "es" ? "De prototipo a premio · Accenture" : "From prototype to award · Accenture"}</span>
+          <a href="https://www.linkedin.com/posts/pablogandia_aicommunity-inteligenciaartificial-ugcPost-7432461355523145732-F-KU/" rel="noreferrer" target="_blank">
+            <Image alt={locale === "es" ? "Aula llena durante el GenAI Hackathon organizado por Sigma" : "Full classroom during the GenAI Hackathon organised by Sigma"} fill sizes="(max-width: 720px) 100vw, 34vw" src="/images/linkedin/sigma-genai-hackathon-room.jpg" />
+            <span>{locale === "es" ? "Coordinación y mentoría de equipos" : "Team coordination and mentoring"}</span>
           </a>
-          <a href="https://www.linkedin.com/feed/update/urn:li:activity:7375860826659766273/" rel="noreferrer" target="_blank">
-            <Image alt={locale === "es" ? "Equipo de Sigma Data Club durante su presentación" : "Sigma Data Club team during its presentation"} fill sizes="(max-width: 720px) 100vw, 34vw" src="/images/linkedin/sigma-onboarding.jpg" />
-            <span>{locale === "es" ? "Equipo, organización y más de 50 inscripciones" : "Teamwork, organisation and 50+ registrations"}</span>
+          <a href="https://www.linkedin.com/feed/update/urn:li:activity:7463151444582567937/" rel="noreferrer" target="_blank">
+            <Image alt={locale === "es" ? "Sergio junto a R2-KT y estudiantes durante Up! Steam 7" : "Sergio with R2-KT and students during Up! Steam 7"} fill sizes="(max-width: 720px) 100vw, 34vw" src="/images/linkedin/pink-force-up-steam.jpg" />
+            <span>{locale === "es" ? "Embajador · The Pink Force" : "Ambassador · The Pink Force"}</span>
           </a>
         </div>
       </section>
 
       <section className="section-block">
         <div className="section-heading">
-          <div><p className="eyebrow"><BriefcaseBusiness aria-hidden="true" size={15} /> 01 · {locale === "es" ? "Experiencia y liderazgo" : "Experience & leadership"}</p><h2>{locale === "es" ? "Responsabilidad técnica y operativa." : "Technical and operational responsibility."}</h2></div>
-          <p>{locale === "es" ? "De la ingeniería y la automatización a coordinar una comunidad técnica de más de 100 estudiantes." : "From engineering and automation to coordinating a technical community of more than 100 students."}</p>
+          <div><p className="eyebrow"><BriefcaseBusiness aria-hidden="true" size={15} /> 01 · {locale === "es" ? "Experiencia y liderazgo" : "Experience & leadership"}</p><h2>{locale === "es" ? "Datos, IA y responsabilidad real." : "Data, AI and real responsibility."}</h2></div>
+          <p>{locale === "es" ? "Trabajo freelance, automatización, aprendizaje profesional temprano y coordinación de una comunidad técnica de más de 100 estudiantes." : "Freelance work, automation, early professional learning and coordination of a technical community of more than 100 students."}</p>
         </div>
         <CareerTimeline locale={locale} records={professionalExperience} />
       </section>
@@ -105,7 +113,7 @@ export default async function ExperiencePage({ params }: { params: Promise<{ loc
       <section className="section-block">
         <div className="section-heading">
           <div><p className="eyebrow"><UsersRound aria-hidden="true" size={15} /> 02 · {locale === "es" ? "Comunidad, clubes y mentoría" : "Community, clubs & mentoring"}</p><h2>{locale === "es" ? "Aprender y hacer que otros crezcan." : "Learning while helping others grow."}</h2></div>
-          <p>{locale === "es" ? "Inversión y software, acompañamiento universitario y construcción de comunidad." : "Investment and software, university mentoring and community building."}</p>
+          <p>{locale === "es" ? "Inversión y software, acompañamiento universitario, tecnología con propósito y construcción de comunidad." : "Investment and software, university mentoring, technology with purpose and community building."}</p>
         </div>
         <CareerTimeline locale={locale} records={communityRecords} />
       </section>
