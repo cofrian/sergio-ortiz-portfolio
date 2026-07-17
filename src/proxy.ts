@@ -31,7 +31,7 @@ function securityHeaders(nonce: string) {
   return policy.join("; ");
 }
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const isInfrastructurePath =
     pathname.startsWith("/api/") ||
