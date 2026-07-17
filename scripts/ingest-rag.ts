@@ -7,7 +7,7 @@ import { projects } from "../src/content/projects";
 import githubRagJson from "../src/content/generated-github-rag.json";
 import { githubRagCorpusSchema, sanitizeGithubRagText } from "../src/lib/github/rag-sources";
 import { profile, verifiedMilestones } from "../src/content/profile";
-import { careerRecords } from "../src/content/career";
+import { careerRecords, degreeEngagement } from "../src/content/career";
 
 const url = process.env.SUPABASE_URL;
 const key = process.env.SUPABASE_SECRET_KEY ?? process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -91,7 +91,11 @@ function buildRecords(): RagRecord[] {
     sourceType: "linkedin",
     title: post.title,
     publicUrl: post.url,
-    content: sanitizeGithubRagText(`${post.title}\n\n${post.content || post.excerpt}`, 20_000),
+    content: sanitizeGithubRagText([
+      post.title,
+      post.content || post.excerpt,
+      post.spotifyUrl ? `Spotify episode: ${post.spotifyTitle || post.title} — ${post.spotifyUrl}` : "",
+    ].filter(Boolean).join("\n\n"), 20_000),
     metadata: { linkedInId: post.id, updatedAt: post.publishedAt },
   }));
 
@@ -108,6 +112,8 @@ function buildRecords(): RagRecord[] {
       `English summary: ${record.summary.en}`,
       `Spanish summary: ${record.summary.es}`,
       ...record.bullets.flatMap((bullet) => [bullet.en, bullet.es]),
+      record.id === "upv-data-science" ? `Degree engagement: ${degreeEngagement.summary.en} / ${degreeEngagement.summary.es}` : "",
+      record.id === "upv-data-science" ? `University podcast: ${degreeEngagement.podcast.title.en} / ${degreeEngagement.podcast.title.es} — ${degreeEngagement.podcast.url}` : "",
       `Capabilities: ${record.capabilities.join(", ")}`,
       record.relatedProjects.length ? `Related portfolio projects: ${record.relatedProjects.join(", ")}` : "",
       `Verified public source: ${record.source.title} — ${record.source.section}`,

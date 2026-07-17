@@ -82,6 +82,13 @@ describe("security boundaries", () => {
     expect(education.content).toContain("Infraestructura de Procesamiento para Datos");
     expect(education.content).toContain("Economía y Empresa");
   });
+  it("retrieves both reviewed university podcast references", () => {
+    const sources = retrieveLocalSources("¿En qué podcasts ha participado Sergio?", "es");
+    const content = sources.map((source) => source.content).join("\n");
+
+    expect(content).toContain("Medir lo intangible como hace Netflix");
+    expect(content).toContain("cuatro variables del marketing mix");
+  });
   it("retrieves a secondary topic-curated repository", () => {
     expect(
       retrieveLocalSources("¿Qué contiene genaq-market-selection?", "es").map(

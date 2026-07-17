@@ -31,20 +31,9 @@
     "content": "Como coordinador de Sigma Data Club, Sergio compartió la convocatoria del GenAI Hackathon organizado con GPTadvisor, MyInvestor y Lovable. El reto pedía construir en equipos de cuatro o cinco personas una solución real de finanzas personales con IA generativa, combinando metodología, integración técnica y comunicación. La actividad forma parte de su trabajo de organización de comunidad, colaboración con empresas y creación de oportunidades prácticas para estudiantes.",
     "publishedAt": "2026-02-09",
     "categories": ["Community", "Innovation", "Generative AI"],
-    "image": "",
+    "image": "/images/linkedin/genai-hackathon-poster.webp",
+    "imageFit": "contain",
     "featured": true,
-    "needsEditorialReview": false
-  },
-  {
-    "id": "sigma-career-workshop-2026",
-    "url": "https://www.linkedin.com/feed/update/urn:li:activity:7425302409192636417/",
-    "title": "Orientación profesional para que los estudiantes dejen de aplicar a ciegas",
-    "excerpt": "Sigma organizó con Ana Oropesa un taller práctico sobre candidaturas, entrevistas, seguimiento y hábitos sostenibles para buscar prácticas y empleo.",
-    "content": "Como parte de su trabajo de coordinación en Sigma Data Club, Sergio compartió y apoyó la organización de un workshop de orientación profesional con Ana Oropesa. La actividad ofreció a estudiantes un sistema práctico para ordenar candidaturas, preparar entrevistas, hacer seguimiento y avanzar con una rutina sostenible en su búsqueda de empleo.",
-    "publishedAt": "2026-02-05",
-    "categories": ["Leadership", "Employability", "Community"],
-    "image": "",
-    "featured": false,
     "needsEditorialReview": false
   },
   {
@@ -67,7 +56,10 @@
     "content": "Sergio participó junto a otros estudiantes de la UPV en la temporada de podcast Planificación y control en la vida y en la empresa, coordinada por el profesor Juanjo Lull. Los siete episodios breves traducen herramientas de planificación empresarial a la organización de estudios y proyectos sin perder de vista la salud mental.",
     "publishedAt": "2025-12-04",
     "categories": ["Communication", "Education", "Planning"],
-    "image": "",
+    "image": "/images/linkedin/planning-podcast-cover.webp",
+    "imageFit": "contain",
+    "spotifyUrl": "https://open.spotify.com/episode/2Q5wz6ImysqHcIemmEPDQm?si=9_nf7ozLRDKdON8eXht_gA",
+    "spotifyTitle": "¿Estás aprendiendo algo? Medir lo intangible como hace Netflix",
     "featured": false,
     "needsEditorialReview": false
   },

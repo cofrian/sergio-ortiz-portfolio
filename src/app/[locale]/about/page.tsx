@@ -1,4 +1,5 @@
 import { ArrowRight, ArrowUpRight } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { EducationHighlight } from "@/components/profile/EducationHighlight";
@@ -22,7 +23,16 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
       <EducationHighlight locale={locale} />
 
       <section className="section-block about-grid">
-        <div className="portrait-placeholder" role="img" aria-label={locale === "es" ? "Retrato pendiente" : "Portrait pending"}>{profile.initials}</div>
+        <figure className="about-portrait">
+          <Image
+            alt={locale === "es" ? "Sergio Ortiz en una terraza de arquitectura contemporánea" : "Sergio Ortiz in a contemporary architectural setting"}
+            fill
+            priority
+            sizes="(max-width: 720px) 100vw, 42vw"
+            src="/images/profile/sergio-ortiz-portrait.webp"
+          />
+          <figcaption>{locale === "es" ? "Sergio Ortiz · Valencia" : "Sergio Ortiz · Valencia"}</figcaption>
+        </figure>
         <div>
           <p className="eyebrow">{profile.location}</p>
           <p className="about-bio-lead">{profile.bio[locale]}</p>

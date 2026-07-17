@@ -1,5 +1,5 @@
-import { ArrowUpRight, Award, GraduationCap } from "lucide-react";
-import { degreeFacts, educationRecords } from "@/content/career";
+import { ArrowUpRight, Award, GraduationCap, Headphones, UsersRound } from "lucide-react";
+import { degreeEngagement, degreeFacts, educationRecords } from "@/content/career";
 import { localize } from "@/content/profile";
 import type { Locale } from "@/lib/i18n";
 
@@ -15,6 +15,8 @@ export function EducationHighlight({ locale }: { locale: Locale }) {
         programme: "Programa",
         school: "Escuela",
         honours: "Matrículas de Honor",
+        beyond: "Más allá de las asignaturas",
+        listen: "Escuchar en Spotify",
         source: "Ver grado oficial en la UPV",
       }
     : {
@@ -24,6 +26,8 @@ export function EducationHighlight({ locale }: { locale: Locale }) {
         programme: "Programme",
         school: "School",
         honours: "Academic distinctions",
+        beyond: "Beyond the classroom",
+        listen: "Listen on Spotify",
         source: "View the official UPV degree",
       };
 
@@ -51,6 +55,22 @@ export function EducationHighlight({ locale }: { locale: Locale }) {
           <ul>
             {degree.bullets.map((honour) => <li key={honour.en}>{localize(honour, locale)}</li>)}
           </ul>
+        </div>
+
+        <div className="education-engagement">
+          <div className="education-engagement-title">
+            <UsersRound aria-hidden="true" size={22} />
+            <div><p className="eyebrow">Leadership · Communication</p><h3>{labels.beyond}</h3></div>
+          </div>
+          <p>{localize(degreeEngagement.summary, locale)}</p>
+          <div className="education-role-list">
+            {degreeEngagement.roles.map((role) => <span className="tag" key={role.en}>{localize(role, locale)}</span>)}
+          </div>
+          <a className="education-podcast-link" href={degreeEngagement.podcast.url} rel="noreferrer" target="_blank">
+            <Headphones aria-hidden="true" size={18} />
+            <span><small>{labels.listen}</small><strong>{localize(degreeEngagement.podcast.title, locale)}</strong></span>
+            <ArrowUpRight aria-hidden="true" size={15} />
+          </a>
         </div>
 
         <div className="education-evidence">

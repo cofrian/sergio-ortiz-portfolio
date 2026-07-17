@@ -1,4 +1,4 @@
-import { ArrowRight, ExternalLink } from "lucide-react";
+import { ArrowRight, ExternalLink, Headphones } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -52,13 +52,26 @@ export default async function NotesPage({ params }: { params: Promise<{ locale: 
           </div>
           <div className="linkedin-grid">
             {linkedinPosts.map((post) => (
-              <a className="card linkedin-card" href={post.url} key={post.id} rel="noreferrer" target="_blank">
-                {post.image ? <div className="linkedin-card-image"><Image alt="" fill sizes="(max-width: 720px) 100vw, 33vw" src={post.image} /></div> : null}
+              <article className="card linkedin-card" key={post.id}>
+                {post.image ? (
+                  <a aria-label={`${candidate === "es" ? "Abrir publicación" : "Open post"}: ${post.title}`} className={`linkedin-card-image linkedin-card-image-${post.imageFit}`} href={post.url} rel="noreferrer" target="_blank">
+                    <Image alt="" fill sizes="(max-width: 720px) 100vw, 33vw" src={post.image} />
+                  </a>
+                ) : null}
                 <div className="note-meta"><span>{post.categories[0]}</span><span>{formatDate(post.publishedAt, candidate)}</span></div>
                 <h3>{post.title}</h3>
                 <p className="muted">{post.excerpt}</p>
-                <span className="button button-ghost">{candidate === "es" ? "Leer en LinkedIn" : "Read on LinkedIn"}<ExternalLink aria-hidden="true" size={15} /></span>
-              </a>
+                {post.spotifyUrl && post.spotifyTitle ? (
+                  <a className="spotify-episode" href={post.spotifyUrl} rel="noreferrer" target="_blank">
+                    <Headphones aria-hidden="true" size={19} />
+                    <span><small>Spotify · Podcast</small><strong>{post.spotifyTitle}</strong></span>
+                    <ExternalLink aria-hidden="true" size={15} />
+                  </a>
+                ) : null}
+                <div className="linkedin-card-actions">
+                  <a className="button button-ghost" href={post.url} rel="noreferrer" target="_blank">{candidate === "es" ? "Leer en LinkedIn" : "Read on LinkedIn"}<ExternalLink aria-hidden="true" size={15} /></a>
+                </div>
+              </article>
             ))}
           </div>
         </section>

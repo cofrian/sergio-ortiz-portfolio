@@ -1,6 +1,6 @@
 import "server-only";
 import githubRagJson from "@/content/generated-github-rag.json";
-import { careerRecords } from "@/content/career";
+import { careerRecords, degreeEngagement } from "@/content/career";
 import { linkedinPosts } from "@/content/linkedin";
 import { notes } from "@/content/notes";
 import { localize, profile, verifiedMilestones } from "@/content/profile";
@@ -84,6 +84,7 @@ function expandedTerms(message: string) {
     [/\bjob\b|\bhire\b|\bcontratar\b|\bempleo\b/, ["mlops", "machine-learning", "data-engineering", "fastapi", "python"]],
     [/\bleadership\b|\bliderazgo\b|\bcoordina(?:r|cion|dor)\b/, ["sigma", "team", "community", "programme", "partnerships"]],
     [/\bclubs?\b|\bclubes?\b|\bcommunity\b|\bcomunidad\b|\bmentor(?:ing)?\b|\btutor(?:ia)?\b/, ["sigma", "investment", "etsinf", "students", "mentoring"]],
+    [/\bpodcasts?\b|\bepisodios?\b|\bspotify\b/, ["podcast", "podcasts", "episode", "episodio", "spotify", "planificacion", "marketing"]],
     [/\binnovation\b|\binnovacion\b|\bentrepreneurship\b|\bemprendimiento\b/, ["akademia", "bankinter", "samsung", "accenture", "product"]],
     [/\b(education|degree|stud(?:y|ies|ying|ent)|academic|honou?r|distinction|university|credits?|ects|formacion|grado|carrera|estudia|estudios|estudiante|academica|academico|matricula(?:s)?(?: de honor)?|universidad|creditos?)\b/, ["data science", "ciencia de datos", "upv", "etsinf", "240 ects", "distinction", "matricula de honor", "economics", "business", "economia", "empresa", "infraestructura", "procesamiento"]],
     [/\bcode\b|\bcodigo\b|\bimplementation\b|\bimplementacion\b|\bfunction\b|\bfuncion\b|\bclass\b|\bmodule\b|\barchivo\b|\bscript\b|\bendpoint\b|\balgorithm\b|\balgoritmo\b/, ["src", "app", "api", "pipeline", "model", "train", "inference"]],
@@ -103,8 +104,10 @@ function careerSourceContent(message: string, locale: Locale): RetrievedSource[]
       localize(record.period, locale),
       localize(record.summary, locale),
       ...record.bullets.map((bullet) => localize(bullet, locale)),
+      record.id === "upv-data-science" ? localize(degreeEngagement.summary, locale) : "",
+      record.id === "upv-data-science" ? `${localize(degreeEngagement.podcast.title, locale)} — ${degreeEngagement.podcast.url}` : "",
       `Capabilities: ${record.capabilities.join(", ")}`,
-    ].join("\n\n");
+    ].filter(Boolean).join("\n\n");
     const searchable = normalizeRagText(`${record.kind} ${record.organisation} ${content}`);
     const termScore = terms.reduce((total, term) => total + (searchable.includes(term) ? 4 : 0), 0);
     const intentScore = educationQuestion && record.kind === "education" ? 60 : 0;
@@ -168,6 +171,7 @@ function profileSource(locale: Locale): RetrievedSource {
       localize(profile.education, locale),
       `Focus: ${profile.focus.join(", ")}`,
       ...careerRecords.map((record) => `${record.organisation} — ${localize(record.role, locale)} (${localize(record.period, locale)}): ${localize(record.summary, locale)}`),
+      `${localize(degreeEngagement.summary, locale)} ${localize(degreeEngagement.podcast.title, locale)} — ${degreeEngagement.podcast.url}`,
       ...verifiedMilestones.map((milestone) => `${milestone.year} — ${milestone.title}: ${localize(milestone.description, locale)}`),
       corpus.profile?.readme ? `Public GitHub profile README:\n${corpus.profile.readme.slice(0, 6_000)}` : "",
     ].filter(Boolean).join("\n\n"),
@@ -251,7 +255,10 @@ export function retrieveLocalSources(message: string, locale: Locale, limit = 6)
     };
   });
   const linkedIn: RetrievedSource[] = linkedinPosts.map((post) => {
-    const content = post.content || post.excerpt;
+    const content = [
+      post.content || post.excerpt,
+      post.spotifyUrl ? `Spotify episode: ${post.spotifyTitle || post.title} — ${post.spotifyUrl}` : "",
+    ].filter(Boolean).join("\n\n");
     const searchable = normalizeRagText(`linkedin publicacion publication social post ${post.title} ${post.categories.join(" ")} ${content}`);
     return {
       title: post.title,
