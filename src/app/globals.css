@@ -943,7 +943,7 @@ a {
 .ask-submit { position: absolute; top: 9px; right: 9px; bottom: 9px; }
 .ask-error { margin-top: 1rem; }
 .suggestions { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem; }
-.answer-panel { margin-top: 1rem; padding: 1.2rem; border-left: 3px solid var(--primary); background: #f0f3ef; }
+.answer-panel { margin-top: 1rem; padding: 1.2rem; border-left: 3px solid var(--primary); color: var(--text); background: #f0f3ef; }
 .answer-panel p { margin: 0; line-height: 1.65; }
 .source-list { display: grid; gap: 0.5rem; margin-top: 1rem; }
 .source-card { padding: 0.85rem; border: 1px solid var(--border); border-radius: 8px; background: var(--surface); }
