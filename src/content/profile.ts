@@ -8,15 +8,19 @@ export const profile = {
   linkedin: "https://www.linkedin.com/in/sergioortizmontesinos/",
   email: "scofrian@gmail.com" as string | null,
   cv: { en: null as string | null, es: null as string | null },
+  headline: {
+    en: "Data Science student · AI systems builder · Community leader",
+    es: "Estudiante de Ciencia de Datos · Constructor de sistemas de IA · Líder de comunidad",
+  },
   bio: {
-    en: "I work at the intersection of data science, artificial intelligence, software engineering and automation, with a focus on useful systems for real-world environments.",
-    es: "Trabajo en la intersección de ciencia de datos, inteligencia artificial, ingeniería de software y automatización, con foco en sistemas útiles para entornos reales.",
+    en: "I work at the intersection of data science, artificial intelligence, software engineering and automation. Alongside building useful systems, I lead university initiatives, coordinate teams and help technical communities turn ideas into real activities and collaborations.",
+    es: "Trabajo en la intersección de ciencia de datos, inteligencia artificial, ingeniería de software y automatización. Además de construir sistemas útiles, lidero iniciativas universitarias, coordino equipos y ayudo a comunidades técnicas a convertir ideas en actividades y colaboraciones reales.",
   },
   education: {
     en: "Data Science at Universitat Politècnica de València",
     es: "Ciencia de Datos en la Universitat Politècnica de València",
   },
-  focus: ["Machine Learning", "MLOps", "Data Engineering", "Applied AI"],
+  focus: ["Machine Learning", "MLOps", "Data Engineering", "Applied AI", "Leadership", "Innovation"],
 };
 
 export const verifiedMilestones = [
@@ -85,6 +89,14 @@ export const aboutPrinciples = [
     body: {
       en: "Reproducibility, honest evaluation and systems that are genuinely useful.",
       es: "Reproducibilidad, evaluación honesta y sistemas genuinamente útiles.",
+    },
+  },
+  {
+    key: "lead",
+    title: { en: "How I lead", es: "Cómo lidero" },
+    body: {
+      en: "Give teams context, turn ideas into clear responsibilities and create the conditions for people to contribute and learn.",
+      es: "Dar contexto a los equipos, convertir ideas en responsabilidades claras y crear las condiciones para que las personas aporten y aprendan.",
     },
   },
 ];

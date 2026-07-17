@@ -22,6 +22,26 @@ test("project detail exposes verified sources", async ({ page }) => {
   await expect(page.getByText("44.4 veh/h")).toBeVisible();
 });
 
+test("experience includes leadership, clubs and innovation", async ({ page }) => {
+  await page.goto("/en/experience");
+  await expect(page.getByRole("heading", { name: /Building technology also means/i })).toBeVisible();
+  await expect(page.getByText("Sigma Data Club UPV", { exact: true })).toBeVisible();
+  await expect(page.getByText("UPV Investment Club", { exact: true })).toBeVisible();
+  await expect(page.getByText("Samsung Innovation Campus", { exact: true })).toBeVisible();
+});
+
+test("connections page exposes the Obsidian-inspired map", async ({ page, isMobile }) => {
+  await page.goto("/en/connections");
+  await expect(page.getByRole("heading", { name: /form a network/i })).toBeVisible();
+  await expect(page.getByRole("button", { name: "Leadership", exact: true })).toBeVisible();
+  if (isMobile) {
+    await expect(page.getByRole("heading", { name: "Accessible list" })).toBeVisible();
+    await expect(page.getByLabel("Interactive connections graph")).toBeHidden();
+  } else {
+    await expect(page.getByLabel("Interactive connections graph")).toBeVisible();
+  }
+});
+
 test("restricted portfolio query returns citations", async ({ page }) => {
   await page.goto("/en/ask");
   await page.getByLabel("Question about Sergio").fill("Which Sergio project demonstrates MLOps?");

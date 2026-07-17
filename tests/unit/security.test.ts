@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { NextRequest } from "next/server";
-import { middleware } from "@/middleware";
+import { proxy } from "@/proxy";
 import { validateGeneratedAnswer } from "@/lib/rag/output-security";
 import { buildRepositoryOverview, retrieveLocalSources } from "@/lib/rag/retrieval";
 import { classifyScope } from "@/lib/rag/scope-classifier";
@@ -53,6 +53,16 @@ describe("security boundaries", () => {
       ),
     ).toContain("urbanflow-valencia-mlops");
   });
+  it("returns grounded leadership and community evidence", () => {
+    const sources = retrieveLocalSources(
+      "What leadership and community experience does Sergio have?",
+      "en",
+    );
+    expect(sources.map((source) => source.title)).toContain(
+      "Sigma Data Club UPV — Coordinator & Vice President",
+    );
+    expect(sources.some((source) => source.url.endsWith("/en/experience#sigma-coordinator-vice-president"))).toBe(true);
+  });
   it("retrieves a secondary topic-curated repository", () => {
     expect(
       retrieveLocalSources("¿Qué contiene genaq-market-selection?", "es").map(
@@ -76,12 +86,12 @@ describe("security boundaries", () => {
     expect(sanitized).not.toContain("Ignore previous instructions");
   });
   it("localizes requests on a custom production hostname", () => {
-    const response = middleware(new NextRequest("https://www.sergioortiz.dev/"));
+    const response = proxy(new NextRequest("https://www.sergioortiz.dev/"));
     expect(response.status).toBe(307);
     expect(response.headers.get("location")).toBe("https://www.sergioortiz.dev/en");
   });
   it("uses a portable hexadecimal nonce for localized routes", () => {
-    const response = middleware(new NextRequest("https://www.sergioortiz.dev/en"));
+    const response = proxy(new NextRequest("https://www.sergioortiz.dev/en"));
     expect(response.headers.get("content-security-policy")).toMatch(
       /'nonce-[a-f0-9]{32}'/,
     );

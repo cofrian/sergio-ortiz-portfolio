@@ -1,5 +1,6 @@
 import "server-only";
 import githubRagJson from "@/content/generated-github-rag.json";
+import { careerRecords } from "@/content/career";
 import { linkedinPosts } from "@/content/linkedin";
 import { notes } from "@/content/notes";
 import { localize, profile, verifiedMilestones } from "@/content/profile";
@@ -71,11 +72,37 @@ function expandedTerms(message: string) {
     [/\bsmart[ -]?cit(?:y|ies)\b|\bciudades?\s+inteligentes?\b/, ["traffic", "valencia", "urban", "geospatial"]],
     [/\bllms?\b|\bmodelos?\s+de\s+lenguaje\b/, ["llm", "rag", "gemini", "ollama", "nlp"]],
     [/\bjob\b|\bhire\b|\bcontratar\b|\bempleo\b/, ["mlops", "machine-learning", "data-engineering", "fastapi", "python"]],
+    [/\bleadership\b|\bliderazgo\b|\bcoordina(?:r|cion|dor)\b/, ["sigma", "team", "community", "programme", "partnerships"]],
+    [/\bclubs?\b|\bclubes?\b|\bcommunity\b|\bcomunidad\b|\bmentor(?:ing)?\b|\btutor(?:ia)?\b/, ["sigma", "investment", "etsinf", "students", "mentoring"]],
+    [/\binnovation\b|\binnovacion\b|\bentrepreneurship\b|\bemprendimiento\b/, ["akademia", "bankinter", "samsung", "accenture", "product"]],
   ];
   for (const [pattern, additions] of expansions) {
     if (pattern.test(normalized)) terms.push(...additions);
   }
   return [...new Set(terms)];
+}
+
+function careerSourceContent(message: string, locale: Locale): RetrievedSource[] {
+  const terms = expandedTerms(message);
+  return careerRecords.map((record) => {
+    const content = [
+      `${localize(record.role, locale)} · ${record.organisation}`,
+      localize(record.period, locale),
+      localize(record.summary, locale),
+      ...record.bullets.map((bullet) => localize(bullet, locale)),
+      `Capabilities: ${record.capabilities.join(", ")}`,
+    ].join("\n\n");
+    const searchable = normalizeRagText(`${record.kind} ${record.organisation} ${content}`);
+    const score = terms.reduce((total, term) => total + (searchable.includes(term) ? 4 : 0), 0) + 1;
+    return {
+      title: `${record.organisation} — ${localize(record.role, locale)}`,
+      url: `https://www.sergioortiz.dev/${locale}/experience#${record.id}`,
+      section: record.source.section,
+      content,
+      score,
+      origin: "local" as const,
+    };
+  });
 }
 
 function projectSourceContent(locale: Locale) {
@@ -125,6 +152,7 @@ function profileSource(locale: Locale): RetrievedSource {
       localize(profile.bio, locale),
       localize(profile.education, locale),
       `Focus: ${profile.focus.join(", ")}`,
+      ...careerRecords.map((record) => `${record.organisation} — ${localize(record.role, locale)} (${localize(record.period, locale)}): ${localize(record.summary, locale)}`),
       ...verifiedMilestones.map((milestone) => `${milestone.year} — ${milestone.title}: ${localize(milestone.description, locale)}`),
       corpus.profile?.readme ? `Public GitHub profile README:\n${corpus.profile.readme.slice(0, 6_000)}` : "",
     ].filter(Boolean).join("\n\n"),
@@ -136,7 +164,7 @@ function profileSource(locale: Locale): RetrievedSource {
 export function retrieveLocalSources(message: string, locale: Locale, limit = 6): RetrievedSource[] {
   const terms = expandedTerms(message);
   const overview = isRepositoryOverviewQuestion(message);
-  const career = /\b(experience|skills?|education|hire|hiring|job|candidate|career|experiencia|habilidades?|formacion|contratar|empleo|candidato|trayectoria)\b/.test(normalizeRagText(message));
+  const career = /\b(experience|skills?|education|hire|hiring|job|candidate|career|leadership|community|clubs?|mentoring|innovation|experiencia|habilidades?|formacion|contratar|empleo|candidato|trayectoria|liderazgo|comunidad|clubes?|tutoria|innovacion)\b/.test(normalizeRagText(message));
   const curated: RetrievedSource[] = projectSourceContent(locale).map((source) => {
     const normalized = normalizeRagText(source.searchable);
     const title = normalizeRagText(`${source.title} ${source.repository}`);
@@ -198,8 +226,9 @@ export function retrieveLocalSources(message: string, locale: Locale, limit = 6)
       origin: "local" as const,
     };
   });
+  const careerEntries = careerSourceContent(message, locale);
 
-  const ranked = [...curated, ...github, ...editorial, ...linkedIn]
+  const ranked = [...careerEntries, ...curated, ...github, ...editorial, ...linkedIn]
     .filter((source) => overview || source.score > (source.repository && projects.some((project) => project.repository === source.repository) ? 2 : 0))
     .sort((a, b) => b.score - a.score || a.title.localeCompare(b.title));
   const results: RetrievedSource[] = [

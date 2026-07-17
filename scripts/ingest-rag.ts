@@ -7,6 +7,7 @@ import { projects } from "../src/content/projects";
 import githubRagJson from "../src/content/generated-github-rag.json";
 import { githubRagCorpusSchema, sanitizeGithubRagText } from "../src/lib/github/rag-sources";
 import { profile, verifiedMilestones } from "../src/content/profile";
+import { careerRecords } from "../src/content/career";
 
 const url = process.env.SUPABASE_URL;
 const key = process.env.SUPABASE_SECRET_KEY ?? process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -14,10 +15,10 @@ if (!url || !key) throw new Error("Supabase server credentials are required for 
 
 const client = createClient(url, key, { auth: { persistSession: false } });
 const model = process.env.EMBEDDING_MODEL || "Xenova/multilingual-e5-small";
-const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || "https://portfolio-seven-red-73.vercel.app").replace(/\/$/, "");
+const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || "https://www.sergioortiz.dev").replace(/\/$/, "");
 
 interface RagRecord {
-  sourceType: "project" | "github" | "github-index" | "profile" | "note" | "linkedin";
+  sourceType: "project" | "github" | "github-index" | "profile" | "career" | "note" | "linkedin";
   title: string;
   publicUrl: string;
   content: string;
@@ -94,6 +95,31 @@ function buildRecords(): RagRecord[] {
     metadata: { linkedInId: post.id, updatedAt: post.publishedAt },
   }));
 
+  const careerRecordSources: RagRecord[] = careerRecords.map((record) => ({
+    sourceType: "career",
+    title: `${record.organisation} — ${record.role.en}`,
+    publicUrl: `${siteUrl}/en/experience#${record.id}`,
+    content: [
+      `Kind: ${record.kind}`,
+      `Organisation: ${record.organisation}`,
+      `English role: ${record.role.en}`,
+      `Spanish role: ${record.role.es}`,
+      `Period: ${record.period.en} / ${record.period.es}`,
+      `English summary: ${record.summary.en}`,
+      `Spanish summary: ${record.summary.es}`,
+      ...record.bullets.flatMap((bullet) => [bullet.en, bullet.es]),
+      `Capabilities: ${record.capabilities.join(", ")}`,
+      record.relatedProjects.length ? `Related portfolio projects: ${record.relatedProjects.join(", ")}` : "",
+      `Verified public source: ${record.source.title} — ${record.source.section}`,
+    ].filter(Boolean).join("\n\n"),
+    metadata: {
+      careerId: record.id,
+      upstreamSource: record.source.url,
+      sourceSection: record.source.section,
+      updatedAt: record.source.accessedAt,
+    },
+  }));
+
   const githubRecords: RagRecord[] = githubCorpus.included.map((repository) => ({
     sourceType: "github",
     title: repository.title,
@@ -138,19 +164,20 @@ function buildRecords(): RagRecord[] {
       `Spanish bio: ${profile.bio.es}`,
       `Education: ${profile.education.en} / ${profile.education.es}`,
       `Focus: ${profile.focus.join(", ")}`,
+      ...careerRecords.map((record) => `${record.organisation} — ${record.role.en} / ${record.role.es}: ${record.summary.en} / ${record.summary.es}`),
       ...verifiedMilestones.map((milestone) => `${milestone.year} — ${milestone.title}: ${milestone.description.en} / ${milestone.description.es}`),
       githubCorpus.profile?.readme ? `Public GitHub profile README:\n${githubCorpus.profile.readme}` : "",
     ].filter(Boolean).join("\n\n"),
     metadata: { updatedAt: githubCorpus.generatedAt, sourceSection: "Verified portfolio profile" },
   };
 
-  return [profileRecord, githubIndex, ...projectRecords, ...githubRecords, ...noteRecords, ...linkedInRecords];
+  return [profileRecord, githubIndex, ...careerRecordSources, ...projectRecords, ...githubRecords, ...noteRecords, ...linkedInRecords];
 }
 
 async function main() {
   const records = buildRecords();
   const activeKeys = new Set(records.map((record) => `${record.sourceType}:${record.publicUrl}`));
-  const managedTypes = ["project", "github", "github-index", "profile", "note", "linkedin"];
+  const managedTypes = ["project", "github", "github-index", "profile", "career", "note", "linkedin"];
   const { data: existingDocuments, error: existingError } = await client
     .from("content_documents")
     .select("id, source_type, public_url")

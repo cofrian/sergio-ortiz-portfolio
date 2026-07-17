@@ -6,8 +6,8 @@ import type { Locale } from "@/lib/i18n-types";
 import type { ChatResponse } from "@/lib/schemas";
 
 const suggestions = {
-  en: ["Give me an overview of Sergio's GitHub projects.", "Why is Sergio a strong data and AI candidate?", "Which project demonstrates production ML?", "What has Sergio built with LLMs?"],
-  es: ["Resume los proyectos de GitHub de Sergio.", "¿Por qué es Sergio un buen candidato para datos e IA?", "¿Qué proyecto demuestra MLOps?", "¿Qué ha construido Sergio con LLM?"],
+  en: ["Give me an overview of Sergio's GitHub projects.", "Why is Sergio a strong data and AI candidate?", "What leadership and community experience does Sergio have?", "Which project demonstrates production ML?", "What has Sergio built with LLMs?"],
+  es: ["Resume los proyectos de GitHub de Sergio.", "¿Por qué es Sergio un buen candidato para datos e IA?", "¿Qué experiencia tiene Sergio en liderazgo y comunidad?", "¿Qué proyecto demuestra MLOps?", "¿Qué ha construido Sergio con LLM?"],
 };
 
 export function PortfolioAsk({ locale }: { locale: Locale }) {

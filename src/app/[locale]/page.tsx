@@ -12,6 +12,7 @@ import { hasLocale, localePath } from "@/lib/i18n";
 import { formatDate } from "@/lib/utils";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { personJsonLd } from "@/lib/seo/structured-data";
+import { careerMetrics, leadershipAndCommunity } from "@/content/career";
 
 export default async function HomePage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale: candidate } = await params;
@@ -68,24 +69,40 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       </section>
 
       <section className="section-block">
-        <div className="section-heading"><div><p className="eyebrow">03 · Capabilities</p><h2>{locale === "es" ? "Explora por capacidad." : "Explore by capability."}</h2></div><Link className="button button-ghost" href={localePath(locale, "/connections")}>{locale === "es" ? "Ver conexiones" : "View connections"}<ArrowRight aria-hidden="true" size={16} /></Link></div>
-        <div className="capability-grid">{capabilities.map((capability, index) => <Link href={`${localePath(locale, "/work")}?capability=${encodeURIComponent(capability)}`} key={capability}><strong>{String(index + 1).padStart(2, "0")}</strong>{capability}</Link>)}</div>
+        <div className="section-heading"><div><p className="eyebrow">03 · Leadership · Community</p><h2>{locale === "es" ? "Más allá de los proyectos." : "Beyond the projects."}</h2></div><Link className="button button-ghost" href={localePath(locale, "/experience")}>{locale === "es" ? "Ver trayectoria" : "View experience"}<ArrowRight aria-hidden="true" size={16} /></Link></div>
+        <div className="leadership-home">
+          <div className="leadership-home-copy">
+            <p className="display">{locale === "es" ? "Coordinar, conectar y convertir ideas en iniciativas." : "Coordinate, connect and turn ideas into initiatives."}</p>
+            <p className="muted">{locale === "es" ? "Sigma Data Club, UPV Investment Club y tutoría universitaria forman una parte real de mi perfil: liderazgo operativo, comunicación, mentoría y colaboración con empresas." : "Sigma Data Club, UPV Investment Club and peer tutoring are a real part of my profile: operational leadership, communication, mentoring and company collaboration."}</p>
+          </div>
+          <div className="leadership-metric-grid">{careerMetrics.map((metric) => <div key={metric.value}><strong className="display">{metric.value}</strong><span>{metric.label[locale]}</span></div>)}</div>
+          <div className="leadership-role-list">{leadershipAndCommunity.map((record) => <Link href={`${localePath(locale, "/experience")}#${record.id}`} key={record.id}><span>{record.organisation}</span><strong>{record.role[locale]}</strong><ArrowRight aria-hidden="true" size={15} /></Link>)}</div>
+        </div>
       </section>
 
       <section className="section-block">
-        <div className="section-heading"><div><p className="eyebrow">04 · GitHub</p><h2>{locale === "es" ? "Actividad reciente." : "Recent activity."}</h2></div><span className="status-line"><span className="status-dot" />{locale === "es" ? "Bootstrap verificado" : "Verified bootstrap"}</span></div>
+        <div className="section-heading"><div><p className="eyebrow">04 · Capabilities · Connections</p><h2>{locale === "es" ? "Explora el mapa del portfolio." : "Explore the portfolio map."}</h2></div><Link className="button button-ghost" href={localePath(locale, "/connections")}>{locale === "es" ? "Abrir grafo interactivo" : "Open interactive graph"}<ArrowRight aria-hidden="true" size={16} /></Link></div>
+        <div className="capability-grid">{capabilities.map((capability, index) => <Link href={`${localePath(locale, "/work")}?capability=${encodeURIComponent(capability)}`} key={capability}><strong>{String(index + 1).padStart(2, "0")}</strong>{capability}</Link>)}</div>
+        <Link aria-label={locale === "es" ? "Abrir Explore connections" : "Open Explore connections"} className="connections-teaser" href={localePath(locale, "/connections")}>
+          <div className="connections-teaser-copy"><span className="eyebrow">Obsidian-inspired</span><strong>{locale === "es" ? "Proyectos, capacidades, liderazgo e innovación en una sola red." : "Projects, capabilities, leadership and innovation in one network."}</strong><span>{locale === "es" ? "Selecciona un nodo para seguir sus relaciones." : "Select a node to follow its relationships."}</span></div>
+          <div aria-hidden="true" className="connections-teaser-network"><span className="network-node network-node-main">Sergio</span><span className="network-node network-node-project">UrbanFlow</span><span className="network-node network-node-leadership">Sigma</span><span className="network-node network-node-innovation">Akademia</span><span className="network-node network-node-capability">MLOps</span></div>
+        </Link>
+      </section>
+
+      <section className="section-block">
+        <div className="section-heading"><div><p className="eyebrow">05 · GitHub</p><h2>{locale === "es" ? "Actividad reciente." : "Recent activity."}</h2></div><span className="status-line"><span className="status-dot" />{locale === "es" ? "Bootstrap verificado" : "Verified bootstrap"}</span></div>
         <div className="repository-list">{latest.map((project) => <a className="repository-row" href={project.repositoryUrl} key={project.slug} rel="noreferrer" target="_blank"><strong>{project.repository}</strong><span className="muted">{project.stack[0]}</span><span className="muted">{formatDate(project.updatedAt, locale)}</span><ArrowRight aria-hidden="true" size={17} /></a>)}</div>
       </section>
 
       <section className="section-block">
-        <div className="section-heading"><div><p className="eyebrow">05 · Notes</p><h2>{locale === "es" ? "Decisiones detrás del resultado." : "Behind the result."}</h2></div><Link className="button button-ghost" href={localePath(locale, "/notes")}>{locale === "es" ? "Todas las notas" : "All notes"}<ArrowRight aria-hidden="true" size={16} /></Link></div>
+        <div className="section-heading"><div><p className="eyebrow">06 · Notes</p><h2>{locale === "es" ? "Decisiones detrás del resultado." : "Behind the result."}</h2></div><Link className="button button-ghost" href={localePath(locale, "/notes")}>{locale === "es" ? "Todas las notas" : "All notes"}<ArrowRight aria-hidden="true" size={16} /></Link></div>
         <div className="notes-grid">{notes.slice(0, 2).map((note) => <article className="card note-card" key={note.slug}><ProjectVisual compact title={note.title[locale]} variant={note.visual} /><div className="note-card-copy"><div className="note-meta"><span>{note.category}</span><span>{formatDate(note.date, locale)}</span></div><h2>{note.title[locale]}</h2><p className="muted">{note.excerpt[locale]}</p><Link className="button button-ghost" href={localePath(locale, `/notes/${note.slug}`)}>{locale === "es" ? "Leer nota" : "Read note"}<ArrowRight aria-hidden="true" size={15} /></Link></div></article>)}</div>
         {linkedinPosts.length > 0 ? <div className="linkedin-home-row"><p className="eyebrow">LinkedIn</p>{linkedinPosts.slice(0, 3).map((post) => <a href={post.url} key={post.id} rel="noreferrer" target="_blank"><strong>{post.title}</strong><span>{formatDate(post.publishedAt, locale)}</span><ArrowRight aria-hidden="true" size={15} /></a>)}</div> : null}
       </section>
 
       <section className="section-block about-grid">
         <div className="portrait-placeholder" role="img" aria-label={locale === "es" ? "Retrato pendiente de Sergio Ortiz" : "Sergio Ortiz portrait pending"}>{profile.initials}</div>
-        <div><p className="eyebrow">06 · About</p><h2 className="display" style={{ fontSize: "clamp(3.2rem, 6vw, 6.5rem)" }}>{locale === "es" ? "Me interesa lo que ocurre después de que el modelo funciona." : "I care about what happens after the model works."}</h2><p className="muted" style={{ fontSize: "1.1rem", lineHeight: 1.75 }}>{profile.bio[locale]}</p><Link className="button button-primary" href={localePath(locale, "/about")}>{locale === "es" ? "Sobre mí" : "More about me"}<ArrowRight aria-hidden="true" size={16} /></Link></div>
+        <div><p className="eyebrow">07 · About</p><h2 className="display" style={{ fontSize: "clamp(3.2rem, 6vw, 6.5rem)" }}>{locale === "es" ? "Me interesa lo que ocurre después de que el modelo funciona." : "I care about what happens after the model works."}</h2><p className="muted" style={{ fontSize: "1.1rem", lineHeight: 1.75 }}>{profile.bio[locale]}</p><Link className="button button-primary" href={localePath(locale, "/about")}>{locale === "es" ? "Sobre mí" : "More about me"}<ArrowRight aria-hidden="true" size={16} /></Link></div>
       </section>
     </div>
   );

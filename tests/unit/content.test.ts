@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { projects } from "@/content/projects";
-import { contactRequestSchema, projectRecordSchema } from "@/lib/schemas";
+import { careerRecords } from "@/content/career";
+import { careerRecordSchema, contactRequestSchema, projectRecordSchema } from "@/lib/schemas";
 
 describe("curated project records", () => {
   it("validates every public record", () => projects.forEach((project) => expect(projectRecordSchema.safeParse(project).success).toBe(true)));
@@ -12,6 +13,18 @@ describe("curated project records", () => {
     expect(project.summary.en.length).toBeGreaterThan(10);
     expect(project.summary.es.length).toBeGreaterThan(10);
   }));
+});
+
+describe("source-backed career records", () => {
+  it("validates every experience, leadership and community entry", () => careerRecords.forEach((record) => {
+    expect(careerRecordSchema.safeParse(record).success).toBe(true);
+    expect(record.source.url.startsWith("https://")).toBe(true);
+  }));
+
+  it("links related projects to real portfolio slugs", () => {
+    const slugs = new Set(projects.map((project) => project.slug));
+    careerRecords.flatMap((record) => record.relatedProjects).forEach((slug) => expect(slugs.has(slug)).toBe(true));
+  });
 });
 
 describe("job-focused contact requests", () => {

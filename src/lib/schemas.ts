@@ -17,6 +17,21 @@ export const sourceReferenceSchema = z.object({
   accessedAt: z.iso.date(),
 });
 
+export const careerRecordSchema = z.object({
+  id: z.string().regex(/^[a-z0-9-]+$/),
+  kind: z.enum(["experience", "leadership", "community", "innovation", "education"]),
+  organisation: z.string().min(1).max(140),
+  role: localizedTextSchema,
+  period: localizedTextSchema,
+  location: localizedTextSchema.optional(),
+  summary: localizedTextSchema,
+  bullets: z.array(localizedTextSchema).max(8).default([]),
+  capabilities: z.array(z.string().min(1).max(60)).min(1).max(12),
+  relatedProjects: z.array(z.string().regex(/^[a-z0-9-]+$/)).max(8).default([]),
+  source: sourceReferenceSchema,
+  order: z.number().int().min(0).max(100),
+});
+
 export const projectMetricSchema = z.object({
   label: localizedTextSchema,
   value: z.string().min(1).max(40),
@@ -99,6 +114,7 @@ export const contactRequestSchema = z.object({
 });
 
 export type ProjectRecord = z.infer<typeof projectRecordSchema>;
+export type CareerRecord = z.infer<typeof careerRecordSchema>;
 export type PublicProjectDTO = Omit<ProjectRecord, "sources"> & {
   sources: Array<z.infer<typeof sourceReferenceSchema>>;
 };
