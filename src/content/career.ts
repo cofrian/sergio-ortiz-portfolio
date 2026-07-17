@@ -5,8 +5,48 @@ const linkedInExperience = `${linkedInProfile}details/experience/`;
 const linkedInVolunteering = `${linkedInProfile}details/volunteering-experiences/`;
 const linkedInEducation = `${linkedInProfile}details/education/`;
 const linkedInCertifications = `${linkedInProfile}details/certifications/`;
+const githubProfile = "https://github.com/cofrian";
 
 const rawCareerRecords: CareerRecord[] = [
+  {
+    id: "freelance-data-ai",
+    kind: "experience",
+    organisation: "Freelance / Independent",
+    role: {
+      en: "Freelance Data & AI Specialist",
+      es: "Especialista freelance en Datos e IA",
+    },
+    period: { en: "Oct 2025 — Present", es: "Oct 2025 — Actualidad" },
+    location: { en: "Valencia, Spain · Hybrid", es: "Valencia, España · Híbrido" },
+    summary: {
+      en: "Independent work developed alongside my degree to help organisations move towards data-driven operations through data science, AI and process automation.",
+      es: "Trabajo independiente desarrollado durante el grado para ayudar a organizaciones a avanzar hacia operaciones data-driven mediante ciencia de datos, IA y automatización de procesos.",
+    },
+    bullets: [
+      {
+        en: "Turns fragmented data and manual workflows into measurable pipelines, internal tools and decision-support systems.",
+        es: "Convierte datos dispersos y flujos manuales en pipelines medibles, herramientas internas y sistemas de apoyo a decisiones.",
+      },
+      {
+        en: "Works across data foundations, analytics, machine learning, generative AI and maintainable automation according to each problem.",
+        es: "Trabaja sobre fundamentos de datos, analítica, machine learning, IA generativa y automatización mantenible según cada problema.",
+      },
+      {
+        en: "Has also taken part in GovTech and innovation challenges focused on cities, public services and real operational needs.",
+        es: "También ha participado en retos GovTech y de innovación centrados en ciudades, servicios públicos y necesidades operativas reales.",
+      },
+    ],
+    capabilities: ["Data Science", "Applied AI", "Automation", "Data Engineering", "GovTech", "Client Discovery"],
+    relatedProjects: ["urbanflow-valencia", "aion-emergency-routing", "genaq-market-selection"],
+    source: {
+      id: "github-independent-work",
+      title: "GitHub — public portfolio repositories",
+      url: githubProfile,
+      section: "Topic-filtered repositories and public case studies",
+      accessedAt: "2026-07-17",
+    },
+    order: 0,
+  },
   {
     id: "sigma-coordinator-vice-president",
     kind: "leadership",
@@ -86,26 +126,26 @@ const rawCareerRecords: CareerRecord[] = [
     kind: "experience",
     organisation: "AG INGENIEROS",
     role: {
-      en: "Technical Draftsperson / Engineering Project Support",
-      es: "Delineante técnico / apoyo a proyectos de ingeniería",
+      en: "Early Industrial Engineering Experience",
+      es: "Primera experiencia en ingeniería industrial",
     },
     period: { en: "Jun 2022 — Sep 2023", es: "Jun 2022 — Sep 2023" },
     location: { en: "Albacete, Spain", es: "Albacete, España" },
     summary: {
-      en: "Early professional experience supporting energy-efficiency, photovoltaic and building-services engineering projects during the summers of 2022 and 2023.",
-      es: "Primera experiencia profesional apoyando proyectos de eficiencia energética, fotovoltaica e instalaciones durante los veranos de 2022 y 2023.",
+      en: "A personal challenge I took on from the fourth year of secondary school: learning independently, adapting to a professional industrial-engineering environment and becoming useful in real projects.",
+      es: "Un reto personal que asumí desde cuarto de la ESO: aprender de forma autodidacta, desenvolverme en un entorno profesional de ingeniería industrial y llegar a aportar en proyectos reales.",
     },
     bullets: [
       {
-        en: "Produced technical drawings in AutoCAD and worked with CYPE tools and Office 365 documentation.",
-        es: "Elaboró planos técnicos en AutoCAD y trabajó con herramientas de CYPE y documentación en Office 365.",
+        en: "Learned AutoCAD, CYPE tools and technical documentation independently to contribute during the summers of 2022 and 2023.",
+        es: "Aprendió de forma autodidacta AutoCAD, herramientas de CYPE y documentación técnica para aportar durante los veranos de 2022 y 2023.",
       },
       {
-        en: "Supported calculations, energy certificates, legalisation work and grant documentation.",
-        es: "Apoyó cálculos, certificados energéticos, legalizaciones y documentación de subvenciones.",
+        en: "Developed professional autonomy, attention to detail and the confidence to learn unfamiliar technical work quickly.",
+        es: "Desarrolló autonomía profesional, atención al detalle y confianza para aprender con rapidez trabajo técnico desconocido.",
       },
     ],
-    capabilities: ["Engineering", "Technical Documentation", "AutoCAD", "Energy Systems", "Project Support"],
+    capabilities: ["Self-directed Learning", "Adaptability", "Technical Documentation", "AutoCAD", "Industrial Engineering"],
     relatedProjects: [],
     source: {
       id: "linkedin-ag-engineers-experience",
@@ -115,6 +155,38 @@ const rawCareerRecords: CareerRecord[] = [
       accessedAt: "2026-07-17",
     },
     order: 3,
+  },
+  {
+    id: "the-pink-force-ambassador",
+    kind: "community",
+    organisation: "The Pink Force Foundation",
+    role: { en: "Ambassador", es: "Embajador" },
+    period: { en: "May 2026 — Present", es: "May 2026 — Actualidad" },
+    location: { en: "Spain", es: "España" },
+    summary: {
+      en: "Ambassador for a nonprofit that brings joy, hope and emotional support to hospitalised children—especially those facing childhood cancer—through R2-KT, education and technology with purpose.",
+      es: "Embajador de una entidad sin ánimo de lucro que lleva alegría, ilusión y acompañamiento emocional a niños hospitalizados —especialmente frente al cáncer infantil— mediante R2-KT, educación y tecnología con propósito.",
+    },
+    bullets: [
+      {
+        en: "Helps introduce the foundation and its mission at events, universities and institutions, connecting technology with social impact.",
+        es: "Ayuda a dar a conocer la fundación y su misión en eventos, universidades e instituciones, conectando tecnología e impacto social.",
+      },
+      {
+        en: "Collaborates when possible in outreach activities such as Up! Steam 7 at UPV and supports the visibility of its initiatives.",
+        es: "Colabora cuando puede en acciones de divulgación como Up! Steam 7 en la UPV y apoya la visibilidad de sus iniciativas.",
+      },
+    ],
+    capabilities: ["Social Impact", "STEM Outreach", "Communication", "Community", "Technology for Good"],
+    relatedProjects: [],
+    source: {
+      id: "linkedin-pink-force-ambassador",
+      title: "LinkedIn — The Pink Force at Up! Steam 7",
+      url: "https://www.linkedin.com/feed/update/urn:li:activity:7463151444582567937/",
+      section: "Public post naming Sergio as an ambassador and his public comment",
+      accessedAt: "2026-07-17",
+    },
+    order: 5,
   },
   {
     id: "upv-investment-club",
@@ -296,8 +368,8 @@ export const careerMetrics = [
     evidenceRef: "linkedin-samsung-certification",
   },
   {
-    value: "3",
-    label: { en: "community and mentoring roles", es: "roles de comunidad y mentoría" },
-    evidenceRef: "linkedin-investment-club",
+    value: "4",
+    label: { en: "leadership, mentoring and ambassador roles", es: "roles de liderazgo, mentoría y representación" },
+    evidenceRef: "linkedin-pink-force-ambassador",
   },
 ] as const;

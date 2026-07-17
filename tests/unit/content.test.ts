@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { projects } from "@/content/projects";
 import { careerRecords } from "@/content/career";
+import { linkedinPosts } from "@/content/linkedin";
 import { careerRecordSchema, contactRequestSchema, projectRecordSchema } from "@/lib/schemas";
 
 describe("curated project records", () => {
@@ -24,6 +25,29 @@ describe("source-backed career records", () => {
   it("links related projects to real portfolio slugs", () => {
     const slugs = new Set(projects.map((project) => project.slug));
     careerRecords.flatMap((record) => record.relatedProjects).forEach((slug) => expect(slugs.has(slug)).toBe(true));
+  });
+
+  it("includes the independent work and The Pink Force records without referring to Ordantis", () => {
+    const freelance = careerRecords.find((record) => record.id === "freelance-data-ai");
+    const pinkForce = careerRecords.find((record) => record.id === "the-pink-force-ambassador");
+
+    expect(freelance?.period.en).toBe("Oct 2025 — Present");
+    expect(freelance?.summary.en.toLowerCase()).toContain("data-driven");
+    expect(JSON.stringify(freelance).toLowerCase()).not.toContain("ordantis");
+    expect(pinkForce?.role.en).toBe("Ambassador");
+    expect(pinkForce?.source.url).toContain("7463151444582567937");
+  });
+});
+
+describe("curated LinkedIn evidence", () => {
+  it("includes the delivered Sigma hackathon and The Pink Force event with local images", () => {
+    const hackathon = linkedinPosts.find((post) => post.id === "sigma-genai-hackathon-delivered-2026");
+    const pinkForce = linkedinPosts.find((post) => post.id === "pink-force-up-steam-ambassador-2026");
+
+    expect(hackathon?.content).toContain("más de 60 participantes");
+    expect(hackathon?.image).toMatch(/^\/images\/linkedin\//);
+    expect(pinkForce?.content).toContain("embajador");
+    expect(pinkForce?.image).toMatch(/^\/images\/linkedin\//);
   });
 });
 

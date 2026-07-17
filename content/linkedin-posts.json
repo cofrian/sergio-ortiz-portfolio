@@ -1,5 +1,29 @@
 [
   {
+    "id": "pink-force-up-steam-ambassador-2026",
+    "url": "https://www.linkedin.com/feed/update/urn:li:activity:7463151444582567937/",
+    "title": "Embajador de The Pink Force en Up! Steam 7",
+    "excerpt": "Tecnología, educación y solidaridad se encontraron en la UPV para acercar la misión de The Pink Force y R2-KT a estudiantes, autoridades e instituciones.",
+    "content": "La publicación pública de The Pink Force identifica a Sergio como embajador del proyecto durante Up! Steam 7 en la Universitat Politècnica de València. La fundación utiliza R2-KT, la educación y la tecnología con propósito para llevar alegría, esperanza y acompañamiento emocional a niños hospitalizados, especialmente ante el cáncer infantil. Como embajador, Sergio ayuda a dar a conocer la misión en eventos, universidades e instituciones y colabora cuando puede en sus acciones de divulgación e impacto social.",
+    "publishedAt": "2026-05-21",
+    "categories": ["Social Impact", "STEM", "Community"],
+    "image": "/images/linkedin/pink-force-up-steam.jpg",
+    "featured": true,
+    "needsEditorialReview": false
+  },
+  {
+    "id": "sigma-genai-hackathon-delivered-2026",
+    "url": "https://www.linkedin.com/posts/pablogandia_aicommunity-inteligenciaartificial-ugcPost-7432461355523145732-F-KU/",
+    "title": "Más de 60 participantes construyendo con IA en Sigma",
+    "excerpt": "Sigma coordinó y mentorizó un hackathon de seis horas con GPTadvisor, MyInvestor y Lovable para convertir ideas de finanzas personales en prototipos con IA generativa.",
+    "content": "El GenAI Hackathon From Idea to Product reunió a más de 60 participantes en la UPV. Desde la junta y la organización de Sigma Data Club, el equipo coordinó la jornada y mentorizó a los grupos en la ejecución y viabilidad de sus soluciones financieras con IA. Las fotografías públicas muestran el aula llena, el trabajo por equipos y el cierre colectivo del evento.",
+    "publishedAt": "2026-02-25",
+    "categories": ["Leadership", "Generative AI", "Community"],
+    "image": "/images/linkedin/sigma-genai-hackathon-group.jpg",
+    "featured": true,
+    "needsEditorialReview": false
+  },
+  {
     "id": "genai-hackathon-sigma-2026",
     "url": "https://www.linkedin.com/feed/update/urn:li:activity:7426741145478692865/",
     "title": "GenAI Hackathon: de la idea al producto en seis horas",
@@ -12,6 +36,18 @@
     "needsEditorialReview": false
   },
   {
+    "id": "sigma-career-workshop-2026",
+    "url": "https://www.linkedin.com/feed/update/urn:li:activity:7425302409192636417/",
+    "title": "Orientación profesional para que los estudiantes dejen de aplicar a ciegas",
+    "excerpt": "Sigma organizó con Ana Oropesa un taller práctico sobre candidaturas, entrevistas, seguimiento y hábitos sostenibles para buscar prácticas y empleo.",
+    "content": "Como parte de su trabajo de coordinación en Sigma Data Club, Sergio compartió y apoyó la organización de un workshop de orientación profesional con Ana Oropesa. La actividad ofreció a estudiantes un sistema práctico para ordenar candidaturas, preparar entrevistas, hacer seguimiento y avanzar con una rutina sostenible en su búsqueda de empleo.",
+    "publishedAt": "2026-02-05",
+    "categories": ["Leadership", "Employability", "Community"],
+    "image": "",
+    "featured": false,
+    "needsEditorialReview": false
+  },
+  {
     "id": "bugamap-business-strategy-2025",
     "url": "https://www.linkedin.com/feed/update/urn:li:activity:7411345727760584704/",
     "title": "Primer puesto en la fase universitaria de bugaMAP",
@@ -20,6 +56,18 @@
     "publishedAt": "2025-12-29",
     "categories": ["Business Strategy", "Investment", "Teamwork"],
     "image": "/images/linkedin/bugamap-team.jpg",
+    "featured": false,
+    "needsEditorialReview": false
+  },
+  {
+    "id": "planning-podcast-upv-2025",
+    "url": "https://www.linkedin.com/feed/update/urn:li:activity:7402449213965602816/",
+    "title": "Planificación en la vida y en la empresa: un podcast para estudiantes",
+    "excerpt": "Participación en una serie breve de siete episodios sobre organización, proyectos, hábitos y salud mental junto a estudiantes y profesorado de la UPV.",
+    "content": "Sergio participó junto a otros estudiantes de la UPV en la temporada de podcast Planificación y control en la vida y en la empresa, coordinada por el profesor Juanjo Lull. Los siete episodios breves traducen herramientas de planificación empresarial a la organización de estudios y proyectos sin perder de vista la salud mental.",
+    "publishedAt": "2025-12-04",
+    "categories": ["Communication", "Education", "Planning"],
+    "image": "",
     "featured": false,
     "needsEditorialReview": false
   },

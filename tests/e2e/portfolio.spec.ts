@@ -26,6 +26,8 @@ test("experience includes leadership, clubs and innovation", async ({ page }) =>
   await page.goto("/en/experience");
   await expect(page.getByRole("heading", { name: /Building technology also means/i })).toBeVisible();
   await expect(page.getByText("Sigma Data Club UPV", { exact: true })).toBeVisible();
+  await expect(page.getByText("Freelance / Independent", { exact: true })).toBeVisible();
+  await expect(page.getByText("The Pink Force Foundation", { exact: true })).toBeVisible();
   await expect(page.getByText("UPV Investment Club", { exact: true })).toBeVisible();
   await expect(page.getByText("Samsung Innovation Campus", { exact: true })).toBeVisible();
 });
