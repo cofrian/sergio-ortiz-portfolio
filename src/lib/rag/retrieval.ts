@@ -33,10 +33,30 @@ export function normalizeRagText(value: string) {
     .toLowerCase();
 }
 
-function isOverviewQuery(message: string) {
+export function isRepositoryOverviewQuestion(message: string) {
   const normalized = normalizeRagText(message);
   return /\b(all|every|overview|catalog|list|todos|todas|lista|resumen)\b/.test(normalized)
     || /\b(github|repositorios?)\b/.test(normalized) && /\b(projects?|proyectos?|work|trabajos?)\b/.test(normalized);
+}
+
+export function buildRepositoryOverview(locale: Locale) {
+  const groups = {
+    systems: [] as string[],
+    ai: [] as string[],
+    analytics: [] as string[],
+  };
+  for (const repository of corpus.included) {
+    const topics = new Set(repository.topics);
+    if (["smart-city", "traffic-prediction", "emergency-services", "mlops", "data-engineering", "devops", "containerization", "real-time"].some((topic) => topics.has(topic))) {
+      groups.systems.push(repository.repository);
+    } else if (["llm", "machine-learning", "deep-learning", "nlp", "research-project", "rag", "multimodal", "multimodal-learning"].some((topic) => topics.has(topic))) {
+      groups.ai.push(repository.repository);
+    } else groups.analytics.push(repository.repository);
+  }
+  const list = (items: string[]) => items.length ? items.join(", ") : (locale === "es" ? "ninguno" : "none");
+  return locale === "es"
+    ? `El índice verificado contiene ${corpus.included.length} repositorios públicos con topics. Sistemas, infraestructura y ciudades: ${list(groups.systems)}. Investigación e IA: ${list(groups.ai)}. Analítica y productos: ${list(groups.analytics)}. Las fuentes inferiores enlazan al índice general y a los casos más relevantes para profundizar.`
+    : `The verified index contains ${corpus.included.length} public repositories with topics. Systems, infrastructure and cities: ${list(groups.systems)}. Research and AI: ${list(groups.ai)}. Analytics and products: ${list(groups.analytics)}. The source cards below link to the full index and the most relevant case studies.`;
 }
 
 function expandedTerms(message: string) {
@@ -115,7 +135,7 @@ function profileSource(locale: Locale): RetrievedSource {
 
 export function retrieveLocalSources(message: string, locale: Locale, limit = 6): RetrievedSource[] {
   const terms = expandedTerms(message);
-  const overview = isOverviewQuery(message);
+  const overview = isRepositoryOverviewQuestion(message);
   const career = /\b(experience|skills?|education|hire|hiring|job|candidate|career|experiencia|habilidades?|formacion|contratar|empleo|candidato|trayectoria)\b/.test(normalizeRagText(message));
   const curated: RetrievedSource[] = projectSourceContent(locale).map((source) => {
     const normalized = normalizeRagText(source.searchable);
