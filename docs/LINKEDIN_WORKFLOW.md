@@ -4,7 +4,7 @@ The portfolio never scrapes LinkedIn. It supports two reviewed routes for bringi
 
 ## 1. Official automatic sync
 
-The daily `Sync LinkedIn posts` workflow calls LinkedIn's Posts API and opens a pull request when it finds new public posts. It never publishes generated copy directly.
+The daily `Sync LinkedIn posts` workflow calls LinkedIn's Posts API and opens a pull request when it finds new authored public posts. It stores the complete public commentary for RAG plus a bounded excerpt for the visual card. It never publishes generated copy directly.
 
 Required GitHub `production` environment secrets:
 
@@ -24,8 +24,10 @@ Official references:
 
 ## 2. Curated fallback
 
-Open the `Add LinkedIn post` issue form and paste the public URL, title, short excerpt, publication date, category and an approved image URL. The action validates these fields and creates a pull request.
+Open the `Add LinkedIn post` issue form and paste the public URL, title, full public post text, short excerpt, publication date, category and an approved image URL. The action validates these fields and creates a pull request.
 
 No scraping occurs. Before merge, verify the excerpt, image rights and whether it should be featured. Merging re-triggers the RAG workflow when configured.
 
 This fallback remains available even if LinkedIn does not grant read access to the official API.
+
+LinkedIn profile fields are not scraped. The assistant combines the reviewed local profile, verified milestones and public GitHub profile README. Additional employment records should be added only from the verified CV or an approved structured profile source.

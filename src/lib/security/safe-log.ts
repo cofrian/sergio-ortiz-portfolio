@@ -13,8 +13,8 @@ export function redactSecrets(value: string) {
   return secretPatterns.reduce((result, pattern) => result.replace(pattern, "[REDACTED]"), value);
 }
 
-export function safeLog(operation: string, data: { requestId: string; status: string; latencyMs?: number; code?: string }) {
-  const event = { operation, requestId: data.requestId, status: data.status, latencyMs: data.latencyMs, code: data.code };
+export function safeLog(operation: string, data: { requestId?: string; status: string; latencyMs?: number; code?: string; sourceCount?: number }) {
+  const event = { operation, requestId: data.requestId, status: data.status, latencyMs: data.latencyMs, code: data.code, sourceCount: data.sourceCount };
   console.info(JSON.stringify(event));
 }
 

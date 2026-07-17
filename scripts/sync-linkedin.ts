@@ -18,6 +18,7 @@ type StoredPost = {
   url: string;
   title: string;
   excerpt: string;
+  content?: string;
   publishedAt: string;
   categories: string[];
   image: string;
@@ -80,6 +81,7 @@ async function main() {
       url,
       title: titleFrom(commentary),
       excerpt: commentary.length <= 600 ? commentary : `${commentary.slice(0, 597).trimEnd()}…`,
+      content: commentary,
       publishedAt,
       categories: ["LinkedIn"],
       image: "",

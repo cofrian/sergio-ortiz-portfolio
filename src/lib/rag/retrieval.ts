@@ -1,38 +1,298 @@
 import "server-only";
+import githubRagJson from "@/content/generated-github-rag.json";
+import { linkedinPosts } from "@/content/linkedin";
+import { notes } from "@/content/notes";
+import { localize, profile, verifiedMilestones } from "@/content/profile";
 import { projects } from "@/content/projects";
+import { githubRagCorpusSchema, sanitizeGithubRagText } from "@/lib/github/rag-sources";
 import type { Locale } from "@/lib/i18n-types";
-import { localize } from "@/content/profile";
+import { safeLog } from "@/lib/security/safe-log";
+import { getSupabaseAdmin } from "@/lib/supabase/admin";
 
+export interface RetrievedSource {
+  title: string;
+  url: string;
+  section: string;
+  content: string;
+  score: number;
+  repository?: string;
+  origin: "supabase" | "local";
+}
+
+const corpus = githubRagCorpusSchema.parse(githubRagJson);
 const stopWords = new Set([
-  "what", "which", "with", "from", "about", "that", "this", "have", "does", "show", "tell", "project", "projects", "sergio", "result", "results", "demonstrate", "demonstrates",
-  "que", "cual", "cuales", "con", "para", "los", "las", "del", "una", "por", "proyecto", "proyectos", "sergio", "resultado", "resultados", "demuestra", "tiene", "son", "sus",
+  "what", "which", "with", "from", "about", "that", "this", "have", "does", "show", "tell", "project", "projects", "sergio", "result", "results", "demonstrate", "demonstrates", "built", "work", "works",
+  "que", "cual", "cuales", "con", "para", "los", "las", "del", "una", "por", "proyecto", "proyectos", "sergio", "resultado", "resultados", "demuestra", "tiene", "son", "sus", "trabajo", "trabajos", "repositorio", "repositorios",
 ]);
 
-function normalize(value: string) {
-  return value.normalize("NFD").replace(/\p{Diacritic}/gu, "").toLowerCase();
+export function normalizeRagText(value: string) {
+  return value
+    .normalize("NFD")
+    .replace(/\p{Diacritic}/gu, "")
+    .replace(/[\u200B-\u200D\uFEFF]/g, "")
+    .toLowerCase();
+}
+
+function isOverviewQuery(message: string) {
+  const normalized = normalizeRagText(message);
+  return /\b(all|every|overview|catalog|list|todos|todas|lista|resumen)\b/.test(normalized)
+    || /\b(github|repositorios?)\b/.test(normalized) && /\b(projects?|proyectos?|work|trabajos?)\b/.test(normalized);
 }
 
 function expandedTerms(message: string) {
-  const normalized = normalize(message);
+  const normalized = normalizeRagText(message);
   const terms = normalized
     .split(/[^\p{L}\p{N}+#.-]+/u)
     .filter((term) => term.length > 2 && !stopWords.has(term));
-  if (/\bproduction\s+ml\b/.test(normalized)) {
-    terms.push("mlops", "deployment", "monitoring", "fastapi", "docker");
-  }
-  if (/\bpublic\s+demos?\b/.test(normalized)) {
-    terms.push("public-demo");
+  const expansions: Array<[RegExp, string[]]> = [
+    [/\bproduction\s+ml\b|\bml\s+en\s+produccion\b/, ["mlops", "deployment", "monitoring", "fastapi", "docker"]],
+    [/\bpublic\s+demos?\b|\bdemos?\s+publicas?\b/, ["public-demo", "deployment", "homepage"]],
+    [/\breal[ -]?time\b|\btiempo\s+real\b/, ["websocket", "streaming", "events", "pipeline"]],
+    [/\bsmart[ -]?cit(?:y|ies)\b|\bciudades?\s+inteligentes?\b/, ["traffic", "valencia", "urban", "geospatial"]],
+    [/\bllms?\b|\bmodelos?\s+de\s+lenguaje\b/, ["llm", "rag", "gemini", "ollama", "nlp"]],
+    [/\bjob\b|\bhire\b|\bcontratar\b|\bempleo\b/, ["mlops", "machine-learning", "data-engineering", "fastapi", "python"]],
+  ];
+  for (const [pattern, additions] of expansions) {
+    if (pattern.test(normalized)) terms.push(...additions);
   }
   return [...new Set(terms)];
 }
 
-export function retrieveLocalSources(message: string, locale: Locale, limit = 4) {
+function projectSourceContent(locale: Locale) {
+  return projects.map((project) => ({
+    title: project.title,
+    url: project.repositoryUrl,
+    section: project.sources[0]?.section ?? "Verified portfolio case study",
+    repository: project.repository,
+    searchable: [
+      project.title,
+      project.repository,
+      localize(project.summary, locale),
+      ...project.categories,
+      ...project.stack,
+      ...project.sections.flatMap((section) => [localize(section.title, locale), localize(section.body, locale)]),
+      project.demoUrl ? "public-demo deployed homepage" : "",
+    ].join("\n"),
+    content: [
+      localize(project.summary, locale),
+      ...project.sections.map((section) => `${localize(section.title, locale)}: ${localize(section.body, locale)}`),
+      project.metrics.length ? `Verified metrics: ${project.metrics.map((metric) => `${localize(metric.label, locale)} ${metric.value}`).join("; ")}` : "",
+      project.limitations ? `Limitations: ${localize(project.limitations, locale)}` : "",
+    ].filter(Boolean).join("\n\n"),
+  }));
+}
+
+function githubIndexSource(): RetrievedSource {
+  return {
+    title: "Sergio Ortiz — public GitHub project index",
+    url: `https://github.com/${corpus.owner}?tab=repositories`,
+    section: `Index of ${corpus.included.length} public project repositories`,
+    content: [
+      `The knowledge index currently contains ${corpus.included.length} public project repositories owned by or forked into Sergio Ortiz's GitHub account.`,
+      ...corpus.included.map((repository) => `${repository.repository}: ${repository.description || "Public repository without a description."} Topics: ${repository.topics.join(", ") || "not specified"}.`),
+    ].join("\n\n").slice(0, 12_000),
+    score: 1_000,
+    origin: "local",
+  };
+}
+
+function profileSource(locale: Locale): RetrievedSource {
+  return {
+    title: "Sergio Ortiz — verified public profile",
+    url: profile.github,
+    section: "Profile, education, focus and verified milestones",
+    content: [
+      localize(profile.bio, locale),
+      localize(profile.education, locale),
+      `Focus: ${profile.focus.join(", ")}`,
+      ...verifiedMilestones.map((milestone) => `${milestone.year} — ${milestone.title}: ${localize(milestone.description, locale)}`),
+      corpus.profile?.readme ? `Public GitHub profile README:\n${corpus.profile.readme.slice(0, 6_000)}` : "",
+    ].filter(Boolean).join("\n\n"),
+    score: 900,
+    origin: "local",
+  };
+}
+
+export function retrieveLocalSources(message: string, locale: Locale, limit = 6): RetrievedSource[] {
   const terms = expandedTerms(message);
-  const ranked = projects.map((project) => {
-    const haystack = normalize([project.title, project.repository, localize(project.summary, locale), ...project.categories, ...project.stack, project.demoUrl ? "public-demo deployed" : ""].join(" "));
-    const score = terms.reduce((total, term) => total + (haystack.includes(term) ? 1 : 0), 0);
-    return { project, score };
-  }).filter((item) => item.score > 0).sort((a, b) => b.score - a.score || Number(b.project.featured) - Number(a.project.featured));
-  const bestScore = ranked[0]?.score ?? 0;
-  return ranked.filter((item) => bestScore === 1 || item.score === bestScore).slice(0, limit);
+  const overview = isOverviewQuery(message);
+  const career = /\b(experience|skills?|education|hire|hiring|job|candidate|career|experiencia|habilidades?|formacion|contratar|empleo|candidato|trayectoria)\b/.test(normalizeRagText(message));
+  const curated: RetrievedSource[] = projectSourceContent(locale).map((source) => {
+    const normalized = normalizeRagText(source.searchable);
+    const title = normalizeRagText(`${source.title} ${source.repository}`);
+    const score = terms.reduce((total, term) => total + (title.includes(term) ? 8 : normalized.includes(term) ? 3 : 0), 0) + 2;
+    return { ...source, score, origin: "local" as const };
+  });
+  const github: RetrievedSource[] = corpus.included.map((repository) => {
+    const title = normalizeRagText(`${repository.title} ${repository.repository}`);
+    const topics = normalizeRagText(repository.topics.join(" "));
+    const description = normalizeRagText(repository.description);
+    const readme = normalizeRagText(repository.readme);
+    const score = terms.reduce((total, term) => {
+      if (title.includes(term)) return total + 10;
+      if (topics.includes(term)) return total + 5;
+      if (description.includes(term)) return total + 3;
+      if (readme.includes(term)) return total + 1;
+      return total;
+    }, 0);
+    return {
+      title: repository.title,
+      url: repository.repositoryUrl,
+      section: "GitHub README and public repository metadata",
+      content: [
+        repository.description,
+        repository.language ? `Primary language: ${repository.language}` : "",
+        repository.topics.length ? `Topics: ${repository.topics.join(", ")}` : "",
+        repository.readme,
+      ].filter(Boolean).join("\n\n").slice(0, 5_000),
+      score,
+      repository: repository.repository,
+      origin: "local" as const,
+    };
+  });
+  const editorial: RetrievedSource[] = notes.map((note) => {
+    const content = [
+      localize(note.excerpt, locale),
+      ...note.sections.map((section) => `${localize(section.title, locale)}: ${localize(section.body, locale)}`),
+      `${locale === "es" ? "Idea central" : "Takeaway"}: ${localize(note.takeaway, locale)}`,
+    ].join("\n\n");
+    const searchable = normalizeRagText(`${localize(note.title, locale)} ${note.category} ${content}`);
+    return {
+      title: localize(note.title, locale),
+      url: `https://www.sergioortiz.dev/${locale}/notes/${note.slug}`,
+      section: "Reviewed portfolio note",
+      content,
+      score: terms.reduce((total, term) => total + (searchable.includes(term) ? 2 : 0), 0),
+      origin: "local" as const,
+    };
+  });
+  const linkedIn: RetrievedSource[] = linkedinPosts.map((post) => {
+    const content = post.content || post.excerpt;
+    const searchable = normalizeRagText(`linkedin publicacion publication social post ${post.title} ${post.categories.join(" ")} ${content}`);
+    return {
+      title: post.title,
+      url: post.url,
+      section: "Reviewed public LinkedIn post",
+      content,
+      score: terms.reduce((total, term) => total + (searchable.includes(term) ? 3 : 0), 0),
+      origin: "local" as const,
+    };
+  });
+
+  const ranked = [...curated, ...github, ...editorial, ...linkedIn]
+    .filter((source) => overview || source.score > (source.repository && projects.some((project) => project.repository === source.repository) ? 2 : 0))
+    .sort((a, b) => b.score - a.score || a.title.localeCompare(b.title));
+  const results: RetrievedSource[] = [
+    ...(overview ? [githubIndexSource()] : []),
+    ...(career ? [profileSource(locale)] : []),
+  ];
+  const seen = new Set(results.map((source) => source.url));
+  for (const source of ranked) {
+    if (seen.has(source.url)) continue;
+    results.push(source);
+    seen.add(source.url);
+    if (results.length >= limit) break;
+  }
+  return results.slice(0, limit);
+}
+
+interface LexicalRow {
+  title: string;
+  public_url: string;
+  section: string;
+  content: string;
+  metadata: Record<string, unknown> | null;
+  rank: number;
+}
+
+async function retrieveSupabaseSources(message: string, limit: number, requestId?: string): Promise<RetrievedSource[]> {
+  const client = getSupabaseAdmin();
+  if (!client) return [];
+  const { data, error } = await client.rpc("search_content_chunks", {
+    p_query: message,
+    p_count: Math.min(Math.max(limit * 2, 4), 12),
+  });
+  if (error) {
+    safeLog("rag_retrieval", { requestId, status: "fallback", code: "LEXICAL_SEARCH_UNAVAILABLE" });
+    return retrieveSupabaseRowsFallback(message, limit, requestId);
+  }
+  return ((data ?? []) as LexicalRow[]).map((row) => ({
+    title: sanitizeGithubRagText(row.title, 180),
+    url: row.public_url,
+    section: sanitizeGithubRagText(String(row.metadata?.sourceSection ?? row.section), 180),
+    content: sanitizeGithubRagText(row.content, 5_000),
+    score: 100 + Number(row.rank || 0),
+    repository: typeof row.metadata?.repository === "string" ? row.metadata.repository : undefined,
+    origin: "supabase" as const,
+  }));
+}
+
+interface ChunkFallbackRow {
+  section: string;
+  content: string;
+  metadata: Record<string, unknown> | null;
+  content_documents: {
+    title: string;
+    public_url: string;
+    visibility: string;
+    approved_for_rag: boolean;
+  } | Array<{
+    title: string;
+    public_url: string;
+    visibility: string;
+    approved_for_rag: boolean;
+  }>;
+}
+
+async function retrieveSupabaseRowsFallback(message: string, limit: number, requestId?: string): Promise<RetrievedSource[]> {
+  const client = getSupabaseAdmin();
+  if (!client) return [];
+  const { data, error } = await client
+    .from("content_chunks")
+    .select("section, content, metadata, content_documents!inner(title, public_url, visibility, approved_for_rag)")
+    .eq("content_documents.visibility", "public")
+    .eq("content_documents.approved_for_rag", true)
+    .limit(400);
+  if (error) {
+    safeLog("rag_retrieval", { requestId, status: "fallback", code: "CHUNK_FALLBACK_UNAVAILABLE" });
+    return [];
+  }
+  const terms = expandedTerms(message);
+  return ((data ?? []) as unknown as ChunkFallbackRow[])
+    .map((row) => {
+      const document = Array.isArray(row.content_documents) ? row.content_documents[0] : row.content_documents;
+      const normalized = normalizeRagText(`${document?.title ?? ""} ${row.content}`);
+      const score = terms.reduce((total, term) => total + (normalized.includes(term) ? 1 : 0), 0);
+      return { row, document, score };
+    })
+    .filter(({ document, score }) => document?.approved_for_rag && score > 0)
+    .sort((a, b) => b.score - a.score)
+    .slice(0, limit)
+    .map(({ row, document, score }) => ({
+      title: sanitizeGithubRagText(document.title, 180),
+      url: document.public_url,
+      section: sanitizeGithubRagText(String(row.metadata?.sourceSection ?? row.section), 180),
+      content: sanitizeGithubRagText(row.content, 5_000),
+      score: 50 + score,
+      repository: typeof row.metadata?.repository === "string" ? row.metadata.repository : undefined,
+      origin: "supabase" as const,
+    }));
+}
+
+export async function retrieveSources(message: string, locale: Locale, limit = 6, requestId?: string) {
+  const local = retrieveLocalSources(message, locale, limit);
+  const remote = await retrieveSupabaseSources(message, limit, requestId);
+  const pinned = local.filter((source) =>
+    source.section.startsWith("Index of") || source.section.startsWith("Profile, education"),
+  );
+  const ordered = [...pinned, ...remote, ...local];
+  const results: RetrievedSource[] = [];
+  const seen = new Set<string>();
+  for (const source of ordered) {
+    if (!source.url.startsWith("https://") || seen.has(source.url)) continue;
+    results.push(source);
+    seen.add(source.url);
+    if (results.length >= limit) break;
+  }
+  return results;
 }

@@ -23,6 +23,13 @@ body:
       description: A short, verified summary. Do not paste the full post.
     validations:
       required: true
+  - type: textarea
+    id: content
+    attributes:
+      label: Full public post text
+      description: Paste the complete text of your own public post. It will be indexed for the portfolio assistant after review.
+    validations:
+      required: true
   - type: input
     id: date
     attributes:
