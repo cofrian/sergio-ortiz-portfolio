@@ -9,4 +9,6 @@ describe("portfolio topics", () => {
     expect(classifyPortfolioTopics([], { strict: true, repository: "demo", bootstrapRepositories: ["demo"] }).include).toBe(false);
   });
   it("rejects forks without explicit override", () => expect(classifyPortfolioTopics(["portfolio"], { strict: true, repository: "demo", fork: true }).reason).toBe("fork-requires-override"));
+  it("includes an explicitly approved fork", () => expect(classifyPortfolioTopics(["portfolio"], { strict: true, repository: "demo", fork: true, allowFork: true }).include).toBe(true));
+  it("keeps hidden above a fork override", () => expect(classifyPortfolioTopics(["portfolio", "portfolio-hidden"], { strict: true, repository: "demo", fork: true, allowFork: true }).reason).toBe("portfolio-hidden"));
 });

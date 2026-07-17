@@ -1,6 +1,6 @@
 import { readFile, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
-import { githubRepositorySchema, repositoryPortfolioSchema } from "../src/lib/github/schemas";
+import { githubRepositorySchema, manualProjectOverridesSchema, repositoryPortfolioSchema } from "../src/lib/github/schemas";
 import { classifyPortfolioTopics } from "../src/lib/github/topics";
 
 const bootstrapRepositories = ["exist2026-ordantis", "urbanflow-valencia-mlops", "upv-earth-planetary-boundaries", "aion-emergency-routing-valencia", "outfit-ai-recommender", "genaq-market-selection", "Exam_Box", "nobil_data", "nba-scouting-analytics", "covid19-wealth-mortality", "Proyecto_fitplanner"];
@@ -26,13 +26,22 @@ async function optionalFile(repository: string, file: string) {
 }
 
 async function main() {
+  const overrides = manualProjectOverridesSchema.parse(
+    JSON.parse(await readFile(resolve("src/content/manual-project-overrides.json"), "utf8")),
+  );
   const payload = await github(`/users/${username}/repos?per_page=100&sort=pushed&type=owner`);
   if (!Array.isArray(payload)) throw new Error("Unexpected GitHub response");
   const repositories = payload.map((item) => githubRepositorySchema.parse(item));
   const included = [];
   const excluded = [];
   for (const repository of repositories) {
-    const classification = classifyPortfolioTopics(repository.topics, { strict, bootstrapRepositories, repository: repository.name, fork: repository.fork });
+    const classification = classifyPortfolioTopics(repository.topics, {
+      strict,
+      bootstrapRepositories,
+      repository: repository.name,
+      fork: repository.fork,
+      allowFork: overrides[repository.name]?.allowFork === true,
+    });
     if (!classification.include || repository.archived || repository.size === 0) {
       excluded.push({ repository: repository.name, reason: repository.archived ? "archived" : repository.size === 0 ? "empty" : classification.reason });
       continue;

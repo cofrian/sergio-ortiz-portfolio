@@ -33,4 +33,11 @@ export const repositoryPortfolioSchema = z.object({
   sections: z.record(z.string(), z.string().max(5_000)).optional(),
 });
 
+export const manualProjectOverridesSchema = z.record(
+  z.string(),
+  z.object({
+    allowFork: z.boolean().optional(),
+  }).passthrough(),
+);
+
 export type GitHubRepository = z.infer<typeof githubRepositorySchema>;
