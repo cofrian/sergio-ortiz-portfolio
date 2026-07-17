@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { NextRequest } from "next/server";
 import { proxy } from "@/proxy";
 import { validateGeneratedAnswer } from "@/lib/rag/output-security";
-import { buildRepositoryOverview, retrieveLocalSources } from "@/lib/rag/retrieval";
+import { buildRepositoryOverview, isEducationQuestion, retrieveLocalSources, retrieveSources } from "@/lib/rag/retrieval";
 import { classifyScope } from "@/lib/rag/scope-classifier";
 import { extractNotebookCode, sanitizeGithubRagText, sanitizeRepositoryCode, selectRepositoryCodeFiles } from "@/lib/github/rag-sources";
 import {
@@ -66,6 +66,21 @@ describe("security boundaries", () => {
       "Sigma Data Club UPV — Coordinator & Vice President",
     );
     expect(sources.some((source) => source.url.endsWith("/en/experience#sigma-coordinator-vice-president"))).toBe(true);
+  });
+  it("routes academic credentials to the verified UPV education record", async () => {
+    const question = "What is Sergio studying and which academic honours has he received?";
+    expect(isEducationQuestion(question)).toBe(true);
+    const [education] = await retrieveSources(question, "en");
+    expect(education.url).toMatch(/\/en\/experience#upv-data-science$/);
+    expect(education.content).toContain("Data Processing Infrastructure");
+    expect(education.content).toContain("Economics and Business");
+    expect(education.content).not.toContain("10/10");
+  });
+  it("accepts Spanish questions about academic honours", async () => {
+    expect(classifyScope("¿Qué matrículas de honor tiene?")).toBe("IN_SCOPE");
+    const [education] = await retrieveSources("¿Qué matrículas de honor tiene?", "es");
+    expect(education.content).toContain("Infraestructura de Procesamiento para Datos");
+    expect(education.content).toContain("Economía y Empresa");
   });
   it("retrieves a secondary topic-curated repository", () => {
     expect(

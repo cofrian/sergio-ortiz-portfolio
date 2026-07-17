@@ -16,8 +16,8 @@ const injectionPatterns = [
 ];
 
 const scopeTerms = [
-  "sergio", "project", "portfolio", "github", "repository", "repositories", "linkedin", "publication", "post", "note", "research", "experience", "skills", "hire", "job", "candidate", "education", "leadership", "community", "club", "mentoring", "innovation", "sigma", "investment", "artecoin", "samsung", "akademia", "gemf", "exist", "urbanflow", "aion", "upv", "earth", "mlops", "llm", "smart city", "smart-city", "data", "deployment", "demo", "optimisation", "automation",
-  "modelo", "proyecto", "portfolio", "repositorio", "github", "linkedin", "publicacion", "nota", "investigacion", "experiencia", "habilidades", "contratar", "empleo", "candidato", "formacion", "liderazgo", "comunidad", "club", "mentoria", "tutoria", "innovacion", "sigma", "inversion", "artecoin", "samsung", "akademia", "despliegue", "demo", "optimizacion", "automatizacion", "datos",
+  "sergio", "project", "portfolio", "github", "repository", "repositories", "linkedin", "publication", "post", "note", "research", "experience", "skills", "hire", "job", "candidate", "education", "degree", "student", "academic", "honour", "honor", "distinction", "university", "ects", "leadership", "community", "club", "mentoring", "innovation", "sigma", "investment", "artecoin", "samsung", "akademia", "gemf", "exist", "urbanflow", "aion", "upv", "earth", "mlops", "llm", "smart city", "smart-city", "data", "deployment", "demo", "optimisation", "automation",
+  "modelo", "proyecto", "portfolio", "repositorio", "github", "linkedin", "publicacion", "nota", "investigacion", "experiencia", "habilidades", "contratar", "empleo", "candidato", "formacion", "grado", "estudiante", "academica", "academico", "matricula de honor", "universidad", "ects", "liderazgo", "comunidad", "club", "mentoria", "tutoria", "innovacion", "sigma", "inversion", "artecoin", "samsung", "akademia", "despliegue", "demo", "optimizacion", "automatizacion", "datos",
 ];
 
 function normalize(value: string) {
