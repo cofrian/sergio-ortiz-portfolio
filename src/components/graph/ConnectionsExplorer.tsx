@@ -38,7 +38,7 @@ export function ConnectionsExplorer({ projects, locale }: { projects: ProjectRec
         layout: { name: "cose", animate: false, padding: 38 },
         style: [
           { selector: "node", style: { "background-color": "#315c72", color: "#151a18", label: "data(label)", "font-family": "Geist", "font-size": 9, "text-valign": "bottom", "text-margin-y": 8, width: 17, height: 17 } },
-          { selector: "node[type = 'project']", style: { "background-color": "#064e47", color: "#064e47", "font-size": 12, "font-weight": 650, width: 32, height: 32 } },
+          { selector: "node[type = 'project']", style: { "background-color": "#064e47", color: "#064e47", "font-size": 12, "font-weight": 600, width: 32, height: 32 } },
           { selector: "edge", style: { width: 1, "line-color": "#bfc9c2", opacity: 0.7, "curve-style": "bezier" } },
           { selector: ":selected", style: { "border-color": "#d3a94f", "border-width": 4 } },
         ],

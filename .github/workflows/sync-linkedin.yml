@@ -18,9 +18,9 @@ jobs:
       - name: Integration not configured
         if: ${{ env.LINKEDIN_ACCESS_TOKEN == '' || env.LINKEDIN_PERSON_URN == '' }}
         run: echo "LinkedIn sync is safely disabled until official API access is configured."
-      - uses: actions/checkout@v7
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7
         if: ${{ env.LINKEDIN_ACCESS_TOKEN != '' && env.LINKEDIN_PERSON_URN != '' }}
-      - uses: actions/setup-node@v7
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
         if: ${{ env.LINKEDIN_ACCESS_TOKEN != '' && env.LINKEDIN_PERSON_URN != '' }}
         with:
           node-version: 24
@@ -29,7 +29,7 @@ jobs:
         if: ${{ env.LINKEDIN_ACCESS_TOKEN != '' && env.LINKEDIN_PERSON_URN != '' }}
       - run: npm run sync:linkedin
         if: ${{ env.LINKEDIN_ACCESS_TOKEN != '' && env.LINKEDIN_PERSON_URN != '' }}
-      - uses: peter-evans/create-pull-request@v8
+      - uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8
         if: ${{ env.LINKEDIN_ACCESS_TOKEN != '' && env.LINKEDIN_PERSON_URN != '' }}
         with:
           branch: automation/linkedin-sync
