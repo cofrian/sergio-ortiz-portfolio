@@ -20,6 +20,7 @@ The audit did identify several defense-in-depth gaps. They were remediated befor
 | Supabase | Legacy defaults and the server role had privileges broader than the application needed. | Revoked public schema access, denied future application-owned objects by default and reduced the server role to explicit row-level operations and two RPCs. |
 | GitHub Actions | Actions used mutable major-version tags and repository policy allowed arbitrary actions. | Pinned every Action to a full commit SHA, enabled mandatory SHA pinning and allowlisted only GitHub-owned plus the two required third-party Actions. |
 | GitHub permissions | Workflows could approve pull requests. | Disabled workflow PR approval; default token access remains read-only and write jobs declare permissions explicitly. |
+| Main branch | The default branch had no merge guardrails. | Required an up-to-date pull request with passing `quality`, `codeql` and `secrets-and-bundle` checks; force pushes and deletion are blocked and unresolved review conversations prevent merging. |
 | Abuse controls | Only application-level limits protected public APIs. | Published a Vercel firewall rule limiting `/api/` traffic to 60 requests per minute per IP, in addition to tighter fail-closed application limits. |
 | Admin login | The optional diagnostics login had no attempt limit. | Added the same atomic, HMAC-anonymized limiter; the route remains a 404 when no admin secret is configured. |
 
@@ -34,7 +35,12 @@ The audit did identify several defense-in-depth gaps. They were remediated befor
 - Supabase security advisors returned no findings after migration.
 - Anonymous access probes to every application table were denied, and private RPCs were unavailable anonymously.
 - Current public-schema tables grant no privileges to `anon` or `authenticated`; server grants exclude `TRUNCATE`, `REFERENCES` and `TRIGGER`.
-- Local lint, type checking, unit tests, production build, secret/bundle scan and dependency audit completed successfully.
+- The deployed RAG returned a grounded UrbanFlow answer with a public source, no internal fields and `no-store`; a prompt-injection request was refused without sources or secret-shaped output.
+- The deployed contact route completed a real provider delivery test without exposing provider data, tokens, stack traces or internal fields.
+- Production HTML plus all eleven referenced browser scripts (approximately 855 KB) contained no provider key, privileged JWT, database URL, private key or private service hostname.
+- The inspected production logs contained no secret-shaped value, and the browser reported no console or runtime errors.
+- Local and GitHub lint, type checking, 24 unit tests, 33 end-to-end tests, production build, CodeQL, Gitleaks, secret/bundle scan and dependency audit completed successfully.
+- A production RAG reindex and the twice-monthly GitHub synchronization in `DRY_RUN` mode both completed successfully after hardening.
 
 ## Intentional public information
 
@@ -49,4 +55,4 @@ Project repositories, verified project evidence, LinkedIn URLs and the portfolio
 
 ## Ongoing controls
 
-Weekly CodeQL, Gitleaks, bundle inspection and dependency audit; Dependabot vulnerability alerts and security updates; reviewed synchronization pull requests; twice-monthly portfolio sync; production-only secrets; and periodic verification of Vercel firewall events, Supabase advisors and GitHub security alerts.
+Weekly CodeQL, Gitleaks, bundle inspection and dependency audit; Dependabot vulnerability alerts and security updates; protected-main pull requests with mandatory checks; reviewed synchronization pull requests; twice-monthly portfolio sync; production-only secrets; and periodic verification of Vercel firewall events, Supabase advisors and GitHub security alerts.
