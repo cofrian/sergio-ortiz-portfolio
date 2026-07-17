@@ -931,7 +931,7 @@ a {
 .home-ask-copy .eyebrow { color: #b7d8ce; }
 .home-ask-copy h2 { max-width: 680px; margin: 0.6rem 0 1rem; font-size: clamp(2.8rem, 5vw, 5.4rem); line-height: 0.94; }
 .home-ask-copy > p:not(.eyebrow) { max-width: 600px; color: #d5e5df; line-height: 1.7; }
-.home-ask .ask-panel { align-self: start; color: var(--text); background: var(--background); }
+.home-ask .ask-panel { align-self: start; color: var(--foreground); background: var(--background); }
 .home-ask-proof { display: grid; gap: 0.65rem; margin: 1.5rem 0; padding: 0; list-style: none; }
 .home-ask-proof li { display: flex; align-items: center; gap: 0.65rem; color: #edf5f2; }
 .home-ask-proof li::before { width: 7px; height: 7px; border-radius: 50%; background: #89c8b5; content: ""; }
@@ -943,7 +943,7 @@ a {
 .ask-submit { position: absolute; top: 9px; right: 9px; bottom: 9px; }
 .ask-error { margin-top: 1rem; }
 .suggestions { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem; }
-.answer-panel { margin-top: 1rem; padding: 1.2rem; border-left: 3px solid var(--primary); color: var(--text); background: #f0f3ef; }
+.answer-panel { margin-top: 1rem; padding: 1.2rem; border-left: 3px solid var(--primary); color: var(--foreground); background: #f0f3ef; }
 .answer-panel p { margin: 0; line-height: 1.65; }
 .source-list { display: grid; gap: 0.5rem; margin-top: 1rem; }
 .source-card { padding: 0.85rem; border: 1px solid var(--border); border-radius: 8px; background: var(--surface); }
@@ -961,7 +961,7 @@ a {
 .note-detail-intro .button { margin-bottom: 2rem; }
 .note-conclusion { margin-bottom: 4rem; }
 .note-conclusion > div:last-child { display: grid; gap: 1.4rem; }
-.note-takeaway { color: var(--text) !important; font-family: var(--font-instrument-serif), Georgia, serif; font-size: clamp(1.65rem, 3vw, 2.45rem) !important; line-height: 1.15 !important; }
+.note-takeaway { color: var(--foreground) !important; font-family: var(--font-instrument-serif), Georgia, serif; font-size: clamp(1.65rem, 3vw, 2.45rem) !important; line-height: 1.15 !important; }
 .note-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; }
 .sources-list { display: grid; gap: 0.6rem; padding: 0; list-style: none; }
 .sources-list a { display: flex; justify-content: space-between; gap: 1rem; padding: 1rem; border: 1px solid var(--border); border-radius: 9px; background: var(--surface); }
