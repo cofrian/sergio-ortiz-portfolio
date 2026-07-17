@@ -83,11 +83,13 @@ export const chatResponseSchema = z.object({
 export const contactRequestSchema = z.object({
   name: z.string().trim().min(2).max(80),
   email: z.email().max(180),
-  organisation: z.string().trim().max(120).optional().default(""),
+  organisation: z.string().trim().min(2).max(120),
+  role: z.string().trim().max(140).optional().default(""),
   category: z.enum([
+    "employment",
+    "internship",
+    "collaboration",
     "research",
-    "ai-data",
-    "govtech",
     "community",
     "other",
   ]),

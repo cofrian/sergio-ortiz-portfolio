@@ -1,5 +1,6 @@
-import { GitBranch, Mail, Network } from "lucide-react";
-import type { Locale } from "@/lib/i18n";
+import { BriefcaseBusiness, GitBranch, Mail, Network } from "lucide-react";
+import Link from "next/link";
+import { localePath, type Locale } from "@/lib/i18n";
 import { profile } from "@/content/profile";
 
 interface SiteFooterProps {
@@ -21,10 +22,10 @@ export function SiteFooter({ locale, title, subtitle }: SiteFooterProps) {
             <Mail aria-hidden="true" size={19} /> {profile.email}
           </a>
         ) : (
-          <span title={locale === "es" ? "Correo pendiente" : "Email pending"}>
-            <Mail aria-hidden="true" size={19} />
-            {locale === "es" ? "Correo pendiente" : "Email pending"}
-          </span>
+          <Link href={localePath(locale, "/contact")}>
+            <BriefcaseBusiness aria-hidden="true" size={19} />
+            {locale === "es" ? "Proponer una oportunidad" : "Share an opportunity"}
+          </Link>
         )}
         <a href={profile.github} rel="noreferrer" target="_blank">
           <GitBranch aria-hidden="true" size={19} /> github.com/cofrian

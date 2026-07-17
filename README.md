@@ -10,7 +10,7 @@ Live site: [portfolio-seven-red-73.vercel.app](https://portfolio-seven-red-73.ve
 - Home, Work, Project Detail, Research, Experience, About, Notes, Contact, Ask and Connections.
 - Ivory editorial design with project-specific visuals and accessible mobile alternatives.
 - Every displayed project metric points to a public source reference.
-- Real CV, portrait, public email and LinkedIn posts remain disabled until supplied.
+- Real CV, portrait and LinkedIn posts remain disabled until supplied. The contact recipient stays private on the server.
 
 ## Local development
 
@@ -60,7 +60,7 @@ GitHub-generated content never goes directly to production. The sync workflow op
 - Supabase: apply `supabase/migrations`, set server secrets, then run `npm run ingest:rag`.
 - NVIDIA NIM: set `NVIDIA_API_KEY`, `LLM_BASE_URL` and `LLM_MODEL`. Without it, Ask returns verified search results and citations.
 - LinkedIn: create an issue using “Add LinkedIn post”; the workflow creates a PR without scraping.
-- Contact: set `RESEND_API_KEY` and `CONTACT_EMAIL`.
+- Contact: apply the Supabase migration for atomic rate limiting, then set `RATE_LIMIT_HMAC_SECRET`, `RESEND_API_KEY` and the private `CONTACT_EMAIL` recipient.
 - CV: add `public/cv/Sergio_Ortiz_EN.pdf` and `public/cv/Sergio_Ortiz_ES.pdf`, then update the profile config.
 - Portrait: replace the monogram placeholder with an approved local asset.
 
