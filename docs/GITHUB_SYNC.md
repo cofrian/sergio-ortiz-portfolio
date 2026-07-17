@@ -9,6 +9,8 @@ Two independent outputs are generated:
 
 The public README is sanitized, credential-like strings and instruction-like content are removed, and its length is bounded before it enters `src/content/generated-github-rag.json`. The `cofrian` profile README is stored separately as profile evidence.
 
+For topic-curated repositories, the sync also selects a small set of high-signal public source files so the assistant can answer implementation questions. Selection is allowlist-based and bounded: application code, SQL, infrastructure manifests and notebook code cells are supported, while environments, credentials, data, model weights, generated output, dependencies, binaries and notebook outputs are excluded. Each indexed file keeps its GitHub blob URL and repository path as evidence. Documentation-only or empty repositories remain searchable through their public README and metadata; the assistant must not claim access to code that is not public.
+
 Priority is `portfolio.json`, manual override, structured README, GitHub metadata, then a minimal record. Missing editorial fields produce `needsEditorialReview`; they are not invented.
 
 Before strict topic mode, only the reviewed bootstrap repositories can enter. Run locally with:

@@ -1,4 +1,5 @@
-import { ArrowUpRight, BriefcaseBusiness, GraduationCap, Lightbulb, UsersRound } from "lucide-react";
+import { ArrowUpRight, BriefcaseBusiness, ChevronDown, GraduationCap, Lightbulb, UsersRound } from "lucide-react";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import {
   careerMetrics,
@@ -27,14 +28,17 @@ function CareerTimeline({ locale, records }: { locale: "en" | "es"; records: Car
           </div>
           <div className="career-entry-copy">
             <p>{localize(record.summary, locale)}</p>
-            {record.bullets.length ? (
-              <ul>
-                {record.bullets.map((bullet) => <li key={bullet.en}>{localize(bullet, locale)}</li>)}
-              </ul>
-            ) : null}
             <div className="filter-row">
-              {record.capabilities.slice(0, 5).map((capability) => <span className="tag" key={capability}>{capability}</span>)}
+              {record.capabilities.slice(0, 3).map((capability) => <span className="tag" key={capability}>{capability}</span>)}
             </div>
+            {record.bullets.length ? (
+              <details className="career-details">
+                <summary>{locale === "es" ? "Responsabilidades y resultados" : "Responsibilities and outcomes"}<ChevronDown aria-hidden="true" size={17} /></summary>
+                <ul>
+                  {record.bullets.map((bullet) => <li key={bullet.en}>{localize(bullet, locale)}</li>)}
+                </ul>
+              </details>
+            ) : null}
           </div>
           <a aria-label={`${locale === "es" ? "Ver fuente" : "View source"}: ${record.organisation}`} className="career-source" href={record.source.url} rel="noreferrer" target="_blank">
             <ArrowUpRight aria-hidden="true" size={17} />
@@ -71,6 +75,23 @@ export default async function ExperiencePage({ params }: { params: Promise<{ loc
             <span>{localize(metric.label, locale)}</span>
           </div>
         ))}
+      </section>
+
+      <section aria-label={locale === "es" ? "Momentos de liderazgo e innovación" : "Leadership and innovation moments"} className="career-story">
+        <a className="career-story-main" href="https://www.linkedin.com/feed/update/urn:li:activity:7375860826659766273/" rel="noreferrer" target="_blank">
+          <Image alt={locale === "es" ? "Sergio presenta Sigma Data Club ante estudiantes de la UPV" : "Sergio presents Sigma Data Club to UPV students"} fill priority sizes="(max-width: 720px) 100vw, 62vw" src="/images/linkedin/sigma-presentation.jpg" />
+          <span><strong>{locale === "es" ? "Construir comunidad" : "Building community"}</strong>{locale === "es" ? "Presentación de Sigma Data Club · UPV" : "Sigma Data Club presentation · UPV"}</span>
+        </a>
+        <div className="career-story-side">
+          <a href="https://www.linkedin.com/feed/update/urn:li:activity:7402474082757320704/" rel="noreferrer" target="_blank">
+            <Image alt={locale === "es" ? "Presentación del prototipo ganador en Accenture GenAI Maverick" : "Presentation of the winning prototype at Accenture GenAI Maverick"} fill sizes="(max-width: 720px) 100vw, 34vw" src="/images/linkedin/accenture-presentation.jpg" />
+            <span>{locale === "es" ? "De prototipo a premio · Accenture" : "From prototype to award · Accenture"}</span>
+          </a>
+          <a href="https://www.linkedin.com/feed/update/urn:li:activity:7375860826659766273/" rel="noreferrer" target="_blank">
+            <Image alt={locale === "es" ? "Equipo de Sigma Data Club durante su presentación" : "Sigma Data Club team during its presentation"} fill sizes="(max-width: 720px) 100vw, 34vw" src="/images/linkedin/sigma-onboarding.jpg" />
+            <span>{locale === "es" ? "Equipo, organización y más de 50 inscripciones" : "Teamwork, organisation and 50+ registrations"}</span>
+          </a>
+        </div>
       </section>
 
       <section className="section-block">

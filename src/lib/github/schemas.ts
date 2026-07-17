@@ -20,6 +20,7 @@ export const githubRepositorySchema = z.object({
   archived: z.boolean(),
   size: z.number().int().nonnegative(),
   license: z.object({ spdx_id: z.string().nullable() }).nullable(),
+  default_branch: z.string().min(1).max(240).default("main"),
 });
 
 export const repositoryPortfolioSchema = z.object({

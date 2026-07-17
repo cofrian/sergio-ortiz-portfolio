@@ -577,10 +577,12 @@ a {
 .timeline-item h3 { margin: 0; font-size: 1.1rem; }
 .timeline-item p { margin: 0; color: var(--muted); line-height: 1.55; }
 
-.career-intro { max-width: 1180px; }
+.career-intro { max-width: 1060px; }
+.career-intro h1 { max-width: 940px; font-size: clamp(3.8rem, 7vw, 7rem); }
 .career-metrics {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-top: 0.5rem;
   border-block: 1px solid var(--border);
 }
 .career-metrics > div {
@@ -590,14 +592,23 @@ a {
   border-right: 1px solid var(--border);
 }
 .career-metrics > div:last-child { border-right: 0; }
-.career-metrics strong { color: var(--primary); font-size: clamp(3rem, 6vw, 5.5rem); font-weight: 400; line-height: 0.9; }
+.career-metrics strong { color: var(--primary); font-size: clamp(2.5rem, 4.8vw, 4.6rem); font-weight: 400; line-height: 0.95; }
 .career-metrics span { max-width: 180px; color: var(--muted); font-size: 0.85rem; line-height: 1.4; }
+.career-story { display: grid; grid-template-columns: minmax(0, 1.45fr) minmax(300px, 0.55fr); gap: 0.8rem; padding-block: clamp(2rem, 4vw, 4rem); }
+.career-story a { position: relative; display: block; min-height: 250px; overflow: hidden; border-radius: 16px; color: white; background: #193d38; }
+.career-story a::after { position: absolute; inset: 35% 0 0; content: ""; background: linear-gradient(transparent, rgb(4 20 17 / 78%)); }
+.career-story img { object-fit: cover; transition: transform 350ms ease; }
+.career-story a:hover img { transform: scale(1.025); }
+.career-story span { position: absolute; right: 1rem; bottom: 1rem; left: 1rem; z-index: 1; display: grid; gap: 0.2rem; font-size: 0.78rem; line-height: 1.35; }
+.career-story strong { font-family: var(--font-instrument-serif), Georgia, serif; font-size: clamp(1.8rem, 3vw, 3.2rem); font-weight: 400; line-height: 1; }
+.career-story-main { min-height: 560px !important; }
+.career-story-side { display: grid; gap: 0.8rem; }
 .career-timeline { border-top: 1px solid var(--border); }
 .career-entry {
   display: grid;
-  grid-template-columns: 180px minmax(230px, 0.75fr) minmax(0, 1.25fr) 32px;
+  grid-template-columns: 145px minmax(250px, 0.75fr) minmax(0, 1.25fr) 32px;
   gap: clamp(1rem, 2.5vw, 2.5rem);
-  padding: 1.75rem 0;
+  padding: clamp(1.5rem, 3vw, 2.3rem) 0;
   border-bottom: 1px solid var(--border);
 }
 .career-entry-period { display: flex; align-items: flex-start; flex-direction: column; gap: 0.7rem; }
@@ -607,15 +618,21 @@ a {
 .career-kind-innovation { color: #8a3e2e; background: #f6e5df; }
 .career-entry-heading h3 { margin: 0.35rem 0; font-family: var(--font-instrument-serif), Georgia, serif; font-size: clamp(1.9rem, 3vw, 2.7rem); font-weight: 400; line-height: 1; }
 .career-entry-heading p { margin: 0; }
-.career-entry-copy > p { margin: 0 0 0.8rem; line-height: 1.65; }
-.career-entry-copy ul { display: grid; gap: 0.55rem; margin: 0 0 1rem; padding-left: 1.1rem; color: var(--muted); line-height: 1.55; }
+.career-entry-copy > p { max-width: 720px; margin: 0 0 1rem; color: #3e4a45; line-height: 1.72; }
+.career-entry-copy .filter-row { gap: 0.4rem; }
+.career-details { max-width: 720px; margin-top: 1.1rem; border-top: 1px solid var(--border); }
+.career-details summary { display: flex; min-height: 48px; align-items: center; justify-content: space-between; gap: 1rem; color: var(--primary); font-size: 0.84rem; font-weight: 650; cursor: pointer; list-style: none; }
+.career-details summary::-webkit-details-marker { display: none; }
+.career-details summary svg { flex: 0 0 auto; transition: transform 180ms ease; }
+.career-details[open] summary svg { transform: rotate(180deg); }
+.career-details ul { display: grid; gap: 0.6rem; margin: 0 0 0.4rem; padding: 0 0 0 1.2rem; color: var(--muted); line-height: 1.6; }
 .career-source { display: grid; width: 32px; height: 32px; place-items: center; border: 1px solid var(--border); border-radius: 50%; color: var(--foreground); }
 .career-source:hover { color: white; border-color: var(--primary); background: var(--primary); }
 .innovation-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
-.innovation-card { display: flex; min-height: 390px; flex-direction: column; padding: 1.4rem; }
+.innovation-card { display: flex; min-height: 350px; flex-direction: column; padding: 1.4rem; }
 .innovation-card > div:first-child { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; }
 .innovation-card h3 { margin: 0.4rem 0 0.8rem; font-family: var(--font-instrument-serif), Georgia, serif; font-size: 2.25rem; font-weight: 400; line-height: 1; }
-.innovation-card > p:not(.eyebrow) { color: var(--muted); line-height: 1.65; }
+.innovation-card > p:not(.eyebrow) { color: var(--muted); line-height: 1.7; }
 .innovation-card .button { align-self: flex-start; margin-top: auto; }
 .career-education { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(320px, 0.8fr); gap: clamp(1.5rem, 4vw, 4rem); }
 .career-education h2 { max-width: 760px; margin: 0.5rem 0 1rem; font-size: clamp(3rem, 6vw, 6rem); font-weight: 400; line-height: 0.95; }
@@ -681,7 +698,9 @@ a {
 .note-card-copy { padding: 1.25rem; }
 .note-card h2 { margin: 0.7rem 0; font-family: var(--font-instrument-serif), Georgia, serif; font-size: 2.2rem; font-weight: 400; line-height: 1; }
 .linkedin-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1rem; }
-.linkedin-card { display: grid; align-content: start; gap: 0.9rem; min-height: 280px; padding: 1.35rem; color: inherit; text-decoration: none; transition: transform 180ms ease, border-color 180ms ease; }
+.linkedin-card { display: grid; align-content: start; gap: 0.9rem; min-height: 280px; padding: 1.35rem; overflow: hidden; color: inherit; text-decoration: none; transition: transform 180ms ease, border-color 180ms ease; }
+.linkedin-card-image { position: relative; height: 220px; margin: -1.35rem -1.35rem 0.25rem; overflow: hidden; background: #e6ebe6; }
+.linkedin-card-image img { object-fit: cover; }
 .linkedin-card:hover { border-color: var(--primary); transform: translateY(-3px); }
 .linkedin-card h3 { margin: 0; font-family: var(--font-instrument-serif), Georgia, serif; font-size: 1.75rem; font-weight: 400; line-height: 1.05; }
 .linkedin-card .button { align-self: end; justify-self: start; }
@@ -1012,6 +1031,42 @@ a {
 
 .ask-panel,
 .connections-panel { padding: clamp(1.2rem, 3vw, 2.3rem); }
+.floating-assistant-button {
+  position: fixed;
+  right: clamp(1rem, 2.2vw, 2rem);
+  bottom: clamp(1rem, 2.2vw, 2rem);
+  z-index: 65;
+  display: grid;
+  width: 66px;
+  height: 66px;
+  place-items: center;
+  border: 1px solid color-mix(in srgb, white 28%, var(--primary));
+  border-radius: 50%;
+  color: white;
+  background: var(--primary);
+  box-shadow: 0 16px 36px rgb(4 39 34 / 24%);
+  cursor: pointer;
+  transition: background 180ms ease, transform 180ms ease, box-shadow 180ms ease;
+}
+.floating-assistant-button span { position: absolute; right: 6px; bottom: 5px; display: grid; width: 22px; height: 22px; place-items: center; border: 2px solid var(--primary); border-radius: 50%; color: var(--primary); background: #f4d87a; font: 700 0.55rem/1 var(--font-geist-mono), monospace; }
+.floating-assistant-button:hover { background: var(--primary-hover); box-shadow: 0 20px 45px rgb(4 39 34 / 30%); transform: translateY(-2px); }
+.assistant-overlay { position: fixed; inset: 0; z-index: 80; background: rgb(10 24 20 / 34%); backdrop-filter: blur(5px); animation: assistant-fade-in 160ms ease-out; }
+.assistant-dialog { position: fixed; right: clamp(1rem, 2.4vw, 2.2rem); bottom: clamp(1rem, 2.4vw, 2.2rem); z-index: 90; width: min(720px, calc(100vw - 2rem)); max-height: min(840px, calc(100dvh - 2rem)); padding: clamp(1.1rem, 3vw, 2rem); overflow-y: auto; border: 1px solid var(--border); border-radius: 20px; background: var(--background); box-shadow: 0 28px 90px rgb(10 32 26 / 25%); animation: assistant-rise-in 190ms ease-out; }
+.assistant-dialog-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 1.5rem; }
+.assistant-dialog-header .eyebrow { display: flex; align-items: center; gap: 0.4rem; }
+.assistant-dialog-header h2 { margin: 0.3rem 0 0; font-family: var(--font-instrument-serif), Georgia, serif; font-size: clamp(2.5rem, 5vw, 4.5rem); font-weight: 400; line-height: 0.95; }
+.assistant-close { display: grid; width: 42px; height: 42px; flex: 0 0 auto; place-items: center; border: 1px solid var(--border); border-radius: 50%; color: var(--foreground); background: var(--surface); cursor: pointer; }
+.assistant-description { max-width: 590px; margin: 1rem 0 1.2rem; color: var(--muted); line-height: 1.6; }
+.assistant-dialog .ask-panel { padding: 0; border: 0; background: transparent; box-shadow: none; }
+@keyframes assistant-fade-in { from { opacity: 0; } }
+@keyframes assistant-rise-in { from { opacity: 0; transform: translateY(16px) scale(0.985); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .assistant-overlay,
+  .assistant-dialog { animation: none; }
+  .floating-assistant-button,
+  .career-story img { transition: none; }
+}
 .connections-explorer { width: 100%; }
 .connections-tools { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 1rem; }
 .connections-filters { display: flex; flex-wrap: wrap; gap: 0.45rem; }
@@ -1365,8 +1420,11 @@ a {
   .career-source { grid-row: 1; grid-column: 2; }
   .innovation-grid,
   .career-education,
+  .career-story,
   .leadership-home,
   .connections-teaser { grid-template-columns: 1fr; }
+  .career-story-main { min-height: 420px !important; }
+  .career-story-side { grid-template-columns: 1fr; }
   .innovation-card { min-height: 330px; }
   .connections-teaser-network { min-height: 300px; }
   .connections-tools { align-items: stretch; flex-direction: column; }
@@ -1384,6 +1442,8 @@ a {
   .ask-input-wrap { display: grid; gap: 0.65rem; }
   .ask-input { padding-right: 1rem; }
   .ask-submit { position: static; min-height: 48px; width: 100%; }
+  .floating-assistant-button { width: 58px; height: 58px; }
+  .assistant-dialog { right: 0.6rem; bottom: 0.6rem; width: calc(100vw - 1.2rem); max-height: calc(100dvh - 1.2rem); padding: 1.1rem; border-radius: 17px; }
   .contact-opportunity { gap: 2.5rem; }
   .contact-context h2 { font-size: clamp(3rem, 15vw, 4.6rem); }
   .contact-links { grid-template-columns: 1fr; }

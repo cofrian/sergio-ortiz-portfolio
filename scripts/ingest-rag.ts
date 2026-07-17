@@ -18,7 +18,7 @@ const model = process.env.EMBEDDING_MODEL || "Xenova/multilingual-e5-small";
 const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL || "https://www.sergioortiz.dev").replace(/\/$/, "");
 
 interface RagRecord {
-  sourceType: "project" | "github" | "github-index" | "profile" | "career" | "note" | "linkedin";
+  sourceType: "project" | "github" | "github-code" | "github-index" | "profile" | "career" | "note" | "linkedin";
   title: string;
   publicUrl: string;
   content: string;
@@ -140,6 +140,25 @@ function buildRecords(): RagRecord[] {
     },
   }));
 
+  const githubCodeRecords: RagRecord[] = githubCorpus.included.flatMap((repository) => repository.code.map((file) => ({
+    sourceType: "github-code" as const,
+    title: `${repository.title} — ${file.path}`,
+    publicUrl: file.url,
+    content: [
+      `Public source code from GitHub repository: ${repository.repository}`,
+      `File: ${file.path}`,
+      `Language: ${file.language}`,
+      file.content,
+    ].join("\n\n"),
+    metadata: {
+      repository: repository.repository,
+      codePath: file.path,
+      language: file.language,
+      updatedAt: repository.updatedAt,
+      sourceSection: `Source code · ${file.path}`,
+    },
+  })));
+
   const githubIndex: RagRecord = {
     sourceType: "github-index",
     title: "Sergio Ortiz public GitHub project index",
@@ -171,13 +190,13 @@ function buildRecords(): RagRecord[] {
     metadata: { updatedAt: githubCorpus.generatedAt, sourceSection: "Verified portfolio profile" },
   };
 
-  return [profileRecord, githubIndex, ...careerRecordSources, ...projectRecords, ...githubRecords, ...noteRecords, ...linkedInRecords];
+  return [profileRecord, githubIndex, ...careerRecordSources, ...projectRecords, ...githubRecords, ...githubCodeRecords, ...noteRecords, ...linkedInRecords];
 }
 
 async function main() {
   const records = buildRecords();
   const activeKeys = new Set(records.map((record) => `${record.sourceType}:${record.publicUrl}`));
-  const managedTypes = ["project", "github", "github-index", "profile", "career", "note", "linkedin"];
+  const managedTypes = ["project", "github", "github-code", "github-index", "profile", "career", "note", "linkedin"];
   const { data: existingDocuments, error: existingError } = await client
     .from("content_documents")
     .select("id, source_type, public_url")

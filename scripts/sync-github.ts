@@ -1,8 +1,16 @@
 import { readFile, writeFile } from "node:fs/promises";
 import { resolve } from "node:path";
+import { z } from "zod";
 import { githubRepositorySchema, manualProjectOverridesSchema, repositoryPortfolioSchema } from "../src/lib/github/schemas";
 import { classifyPortfolioTopics } from "../src/lib/github/topics";
-import { repositoryDisplayName, sanitizeGithubRagText } from "../src/lib/github/rag-sources";
+import {
+  extractNotebookCode,
+  repositoryCodeLanguage,
+  repositoryDisplayName,
+  sanitizeGithubRagText,
+  sanitizeRepositoryCode,
+  selectRepositoryCodeFiles,
+} from "../src/lib/github/rag-sources";
 
 const bootstrapRepositories = ["exist2026-ordantis", "urbanflow-valencia-mlops", "upv-earth-planetary-boundaries", "aion-emergency-routing-valencia", "outfit-ai-recommender", "genaq-market-selection", "Exam_Box", "nobil_data", "nba-scouting-analytics", "covid19-wealth-mortality", "Proyecto_fitplanner"];
 const username = process.env.GITHUB_USERNAME || "cofrian";
@@ -23,6 +31,44 @@ async function optionalFile(repository: string, file: string, maxLength = 350_00
   if (!response.ok) throw new Error(`Unable to read ${repository}/${file}`);
   const text = await response.text();
   return text.slice(0, maxLength);
+}
+
+const treeSchema = z.object({
+  tree: z.array(z.object({ path: z.string(), type: z.string(), size: z.number().int().nonnegative().optional() })).max(100_000),
+  truncated: z.boolean().default(false),
+});
+
+async function repositoryFile(repository: string, branch: string, file: string, maxLength = 300_000) {
+  const safeBranch = encodeURIComponent(branch);
+  const safePath = file.split("/").map(encodeURIComponent).join("/");
+  const response = await fetch(`https://raw.githubusercontent.com/${username}/${encodeURIComponent(repository)}/${safeBranch}/${safePath}`, {
+    headers: process.env.GITHUB_TOKEN ? { authorization: `Bearer ${process.env.GITHUB_TOKEN}`, "user-agent": headers["user-agent"] } : { "user-agent": headers["user-agent"] },
+  });
+  if (response.status === 404) return null;
+  if (!response.ok) throw new Error(`Unable to read public source file ${repository}/${file}`);
+  return (await response.text()).slice(0, maxLength);
+}
+
+async function repositoryCode(repository: string, branch: string, repositoryUrl: string) {
+  const rawTree = await github(`/repos/${username}/${encodeURIComponent(repository)}/git/trees/${encodeURIComponent(branch)}?recursive=1`).catch(() => null);
+  if (!rawTree) return [];
+  const tree = treeSchema.parse(rawTree);
+  const selected = selectRepositoryCodeFiles(tree.tree);
+  const files = await Promise.all(selected.map(async (entry) => {
+    const raw = await repositoryFile(repository, branch, entry.path).catch(() => null);
+    if (!raw) return null;
+    const content = entry.path.toLowerCase().endsWith(".ipynb")
+      ? extractNotebookCode(raw)
+      : sanitizeRepositoryCode(raw);
+    if (content.length < 20) return null;
+    return {
+      path: entry.path,
+      language: repositoryCodeLanguage(entry.path) ?? "Code",
+      url: `${repositoryUrl}/blob/${encodeURIComponent(branch)}/${entry.path.split("/").map(encodeURIComponent).join("/")}`,
+      content,
+    };
+  }));
+  return files.filter((file): file is NonNullable<typeof file> => file !== null);
 }
 
 async function main() {
@@ -56,6 +102,7 @@ async function main() {
       });
     } else {
       const ragReadme = await optionalFile(repository.name, "README.md", 80_000).catch(() => null);
+      const code = await repositoryCode(repository.name, repository.default_branch, repository.html_url);
       ragIncluded.push({
         repository: repository.name,
         title: repositoryDisplayName(repository.name),
@@ -66,6 +113,7 @@ async function main() {
         updatedAt: repository.pushed_at,
         fork: repository.fork,
         readme: sanitizeGithubRagText(ragReadme ?? "", 60_000),
+        code,
       });
     }
 

@@ -1,4 +1,5 @@
 import { ArrowRight, ExternalLink } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ProjectVisual } from "@/components/projects/ProjectVisual";
@@ -52,6 +53,7 @@ export default async function NotesPage({ params }: { params: Promise<{ locale: 
           <div className="linkedin-grid">
             {linkedinPosts.map((post) => (
               <a className="card linkedin-card" href={post.url} key={post.id} rel="noreferrer" target="_blank">
+                {post.image ? <div className="linkedin-card-image"><Image alt="" fill sizes="(max-width: 720px) 100vw, 33vw" src={post.image} /></div> : null}
                 <div className="note-meta"><span>{post.categories[0]}</span><span>{formatDate(post.publishedAt, candidate)}</span></div>
                 <h3>{post.title}</h3>
                 <p className="muted">{post.excerpt}</p>

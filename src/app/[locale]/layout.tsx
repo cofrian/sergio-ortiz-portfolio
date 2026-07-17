@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { SiteHeader } from "@/components/layout/SiteHeader";
+import { FloatingPortfolioAssistant } from "@/components/chat/FloatingPortfolioAssistant";
 import { getDictionary, hasLocale } from "@/lib/i18n";
 import type { Metadata } from "next";
 
@@ -26,6 +27,7 @@ export default async function LocaleLayout({ children, params }: { children: Rea
       <SiteHeader labels={{ ...dictionary.nav, ...dictionary.common }} locale={candidate} />
       <main className="site-main" id="main-content">{children}</main>
       <SiteFooter locale={candidate} title={dictionary.footer.title} subtitle={dictionary.footer.subtitle} />
+      <FloatingPortfolioAssistant locale={candidate} />
     </>
   );
 }
