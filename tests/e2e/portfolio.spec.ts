@@ -33,6 +33,8 @@ test("experience includes leadership, clubs and innovation", async ({ page }) =>
   await expect(page.getByText(/Data Processing Infrastructure/)).toBeVisible();
   await expect(page.getByText("Sigma Data Club UPV", { exact: true })).toBeVisible();
   await expect(page.getByText("Freelance / Independent", { exact: true })).toBeVisible();
+  await expect(page.getByText("Freelance projects alongside my degree", { exact: true })).toBeVisible();
+  await expect(page.getByText(/learn beyond the classroom/i)).toBeVisible();
   await expect(page.getByText("The Pink Force Foundation", { exact: true })).toBeVisible();
   await expect(page.getByText("UPV Investment Club", { exact: true })).toBeVisible();
   await expect(page.getByText("Samsung Innovation Campus", { exact: true })).toBeVisible();
