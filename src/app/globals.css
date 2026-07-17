@@ -878,7 +878,9 @@ a {
 .education-engagement h3 { margin: 0; font-family: var(--font-instrument-serif), Georgia, serif; font-size: clamp(1.8rem, 3vw, 2.7rem); font-weight: 400; line-height: 1; }
 .education-engagement > p { margin: 0; color: #455650; line-height: 1.65; }
 .education-role-list { display: flex; flex-wrap: wrap; gap: 0.45rem; }
-.education-podcast-link { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 0.75rem; padding-top: 1rem; border-top: 1px solid rgb(6 78 71 / 18%); color: var(--primary); }
+.education-podcast-list { display: grid; }
+.education-podcast-link { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 0.75rem; padding: 1rem 0; border-top: 1px solid rgb(6 78 71 / 18%); color: var(--primary); }
+.education-podcast-link:last-child { padding-bottom: 0; }
 .education-podcast-link span { display: grid; gap: 0.2rem; }
 .education-podcast-link small { color: #59645f; font-family: var(--font-geist-mono), monospace; font-size: 0.62rem; letter-spacing: 0.07em; text-transform: uppercase; }
 .education-podcast-link strong { font-size: 0.9rem; line-height: 1.4; }

@@ -387,13 +387,24 @@ export const degreeEngagement = {
     { en: "Class delegate", es: "Delegado de clase" },
     { en: "ETSINF peer tutor · PIAE+", es: "Alumno tutor de la ETSINF · PIAE+" },
   ],
-  podcast: {
-    title: {
-      en: "Marketing in companies: Apple and the four variables of the marketing mix",
-      es: "El marketing en las empresas: Apple y las cuatro variables del marketing mix",
+  podcasts: [
+    {
+      id: "marketing-mix-apple",
+      title: {
+        en: "Marketing in companies: Apple and the four variables of the marketing mix",
+        es: "El marketing en las empresas: Apple y las cuatro variables del marketing mix",
+      },
+      url: "https://open.spotify.com/episode/3y5OqwHlNSQeqWMKKEszNw?si=OLJxY7RAQwS5whPKW3TBdw",
     },
-    url: "https://open.spotify.com/episode/3y5OqwHlNSQeqWMKKEszNw?si=OLJxY7RAQwS5whPKW3TBdw",
-  },
+    {
+      id: "planning-measure-intangible",
+      title: {
+        en: "Planning and control: measuring the intangible like Netflix",
+        es: "Planificación y control: medir lo intangible como hace Netflix",
+      },
+      url: "https://open.spotify.com/episode/2Q5wz6ImysqHcIemmEPDQm?si=9_nf7ozLRDKdON8eXht_gA",
+    },
+  ],
 } as const;
 
 export const careerMetrics = [
