@@ -21,7 +21,7 @@ jobs:
       - name: Integration not configured
         if: ${{ env.SUPABASE_URL == '' || env.SUPABASE_SERVICE_ROLE_KEY == '' }}
         run: echo "RAG indexing is intentionally skipped until Supabase production secrets are configured."
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         if: ${{ env.SUPABASE_URL != '' && env.SUPABASE_SERVICE_ROLE_KEY != '' }}
       - uses: actions/setup-node@v4
         if: ${{ env.SUPABASE_URL != '' && env.SUPABASE_SERVICE_ROLE_KEY != '' }}
