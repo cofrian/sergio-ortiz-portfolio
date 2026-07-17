@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { FeaturedProject } from "@/components/projects/FeaturedProject";
 import { ProjectVisual } from "@/components/projects/ProjectVisual";
 import { notes } from "@/content/notes";
+import { linkedinPosts } from "@/content/linkedin";
 import { profile, verifiedMilestones } from "@/content/profile";
 import { projects } from "@/content/projects";
 import { hasLocale, localePath } from "@/lib/i18n";
@@ -61,6 +62,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       <section className="section-block">
         <div className="section-heading"><div><p className="eyebrow">04 · Notes</p><h2>{locale === "es" ? "Decisiones detrás del resultado." : "Behind the result."}</h2></div><Link className="button button-ghost" href={localePath(locale, "/notes")}>{locale === "es" ? "Todas las notas" : "All notes"}<ArrowRight aria-hidden="true" size={16} /></Link></div>
         <div className="notes-grid">{notes.slice(0, 2).map((note) => <article className="card note-card" key={note.slug}><ProjectVisual compact title={note.title[locale]} variant={note.visual} /><div className="note-card-copy"><div className="note-meta"><span>{note.category}</span><span>{formatDate(note.date, locale)}</span></div><h2>{note.title[locale]}</h2><p className="muted">{note.excerpt[locale]}</p><Link className="button button-ghost" href={localePath(locale, `/notes/${note.slug}`)}>{locale === "es" ? "Leer nota" : "Read note"}<ArrowRight aria-hidden="true" size={15} /></Link></div></article>)}</div>
+        {linkedinPosts.length > 0 ? <div className="linkedin-home-row"><p className="eyebrow">LinkedIn</p>{linkedinPosts.slice(0, 3).map((post) => <a href={post.url} key={post.id} rel="noreferrer" target="_blank"><strong>{post.title}</strong><span>{formatDate(post.publishedAt, locale)}</span><ArrowRight aria-hidden="true" size={15} /></a>)}</div> : null}
       </section>
 
       <section className="section-block about-grid">

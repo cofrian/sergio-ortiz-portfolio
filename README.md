@@ -10,7 +10,7 @@ Live site: [portfolio-seven-red-73.vercel.app](https://portfolio-seven-red-73.ve
 - Home, Work, Project Detail, Research, Experience, About, Notes, Contact, Ask and Connections.
 - Ivory editorial design with project-specific visuals and accessible mobile alternatives.
 - Every displayed project metric points to a public source reference.
-- Real CV, portrait and LinkedIn posts remain disabled until supplied. The contact recipient stays private on the server.
+- Real CV and portrait remain disabled until supplied. The public contact address is `scofrian@gmail.com`; the mail-provider credentials stay private on the server.
 
 ## Local development
 
@@ -57,9 +57,9 @@ GitHub-generated content never goes directly to production. The sync workflow op
 
 ## Integrations
 
-- Supabase: apply `supabase/migrations`, set server secrets, then run `npm run ingest:rag`.
+- Supabase: apply `supabase/migrations`, set server secrets, then run `npm run ingest:rag`. Curated projects and editorial notes are indexed with the Transformers.js-compatible `Xenova/multilingual-e5-small` model.
 - NVIDIA NIM: set `NVIDIA_API_KEY`, `LLM_BASE_URL` and `LLM_MODEL`. Without it, Ask returns verified search results and citations.
-- LinkedIn: create an issue using “Add LinkedIn post”; the workflow creates a PR without scraping.
+- LinkedIn: the official API workflow can create reviewed PRs when LinkedIn grants `r_member_social`; the “Add LinkedIn post” Issue Form remains the no-scraping fallback.
 - Contact: apply the Supabase migration for atomic rate limiting, then set `RATE_LIMIT_HMAC_SECRET`, `RESEND_API_KEY` and the private `CONTACT_EMAIL` recipient.
 - CV: add `public/cv/Sergio_Ortiz_EN.pdf` and `public/cv/Sergio_Ortiz_ES.pdf`, then update the profile config.
 - Portrait: replace the monogram placeholder with an approved local asset.

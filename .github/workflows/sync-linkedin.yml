@@ -1,0 +1,40 @@
+name: Sync LinkedIn posts
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "29 8 * * *"
+permissions:
+  contents: write
+  pull-requests: write
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    environment: production
+    env:
+      LINKEDIN_ACCESS_TOKEN: ${{ secrets.LINKEDIN_ACCESS_TOKEN }}
+      LINKEDIN_PERSON_URN: ${{ secrets.LINKEDIN_PERSON_URN }}
+      LINKEDIN_API_VERSION: ${{ vars.LINKEDIN_API_VERSION || '202606' }}
+    steps:
+      - name: Integration not configured
+        if: ${{ env.LINKEDIN_ACCESS_TOKEN == '' || env.LINKEDIN_PERSON_URN == '' }}
+        run: echo "LinkedIn sync is safely disabled until official API access is configured."
+      - uses: actions/checkout@v7
+        if: ${{ env.LINKEDIN_ACCESS_TOKEN != '' && env.LINKEDIN_PERSON_URN != '' }}
+      - uses: actions/setup-node@v7
+        if: ${{ env.LINKEDIN_ACCESS_TOKEN != '' && env.LINKEDIN_PERSON_URN != '' }}
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+        if: ${{ env.LINKEDIN_ACCESS_TOKEN != '' && env.LINKEDIN_PERSON_URN != '' }}
+      - run: npm run sync:linkedin
+        if: ${{ env.LINKEDIN_ACCESS_TOKEN != '' && env.LINKEDIN_PERSON_URN != '' }}
+      - uses: peter-evans/create-pull-request@v8
+        if: ${{ env.LINKEDIN_ACCESS_TOKEN != '' && env.LINKEDIN_PERSON_URN != '' }}
+        with:
+          branch: automation/linkedin-sync
+          delete-branch: true
+          commit-message: "chore(content): sync public LinkedIn posts"
+          title: "chore(content): review LinkedIn post sync"
+          body: "Public posts retrieved through LinkedIn's official API. Review excerpts and presentation before merge."
+          labels: content-review,linkedin
