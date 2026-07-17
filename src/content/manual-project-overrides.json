@@ -1,1 +1,8 @@
-{}
+{
+  "covid19-wealth-mortality": {
+    "allowFork": true
+  },
+  "Proyecto_fitplanner": {
+    "allowFork": true
+  }
+}

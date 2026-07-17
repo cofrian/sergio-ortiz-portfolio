@@ -53,7 +53,7 @@ GitHub-generated content never goes directly to production. The sync workflow op
 4. Run `DRY_RUN=true npm run sync:github`.
 5. Review the generated pull request and cover.
 
-`portfolio-hidden` always wins. Forks need an explicit future override. Until Sergio completes the repository topics, the verified bootstrap list remains active. See [docs/ADDING_PROJECTS.md](docs/ADDING_PROJECTS.md).
+`portfolio-hidden` always wins. Forks need an explicit `allowFork` entry in `src/content/manual-project-overrides.json`. Production uses strict topic mode, so repositories without an approved portfolio topic are excluded. See [docs/ADDING_PROJECTS.md](docs/ADDING_PROJECTS.md).
 
 ## Integrations
 
