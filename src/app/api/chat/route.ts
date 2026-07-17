@@ -1,6 +1,6 @@
 import { NextRequest } from "next/server";
 import { generateGroundedAnswer } from "@/lib/rag/provider";
-import { retrieveSources } from "@/lib/rag/retrieval";
+import { buildRepositoryOverview, isRepositoryOverviewQuestion, retrieveSources } from "@/lib/rag/retrieval";
 import { classifyScope } from "@/lib/rag/scope-classifier";
 import { chatRequestSchema, chatResponseSchema } from "@/lib/schemas";
 import { consumeRateLimit } from "@/lib/security/rate-limit";
@@ -97,13 +97,16 @@ export async function POST(request: NextRequest) {
     }
 
     const context = buildVerifiedContext(matches);
-    const generated = await generateGroundedAnswer({
+    const overview = isRepositoryOverviewQuestion(parsed.data.message);
+    const generated = overview ? null : await generateGroundedAnswer({
       message: parsed.data.message,
       locale: parsed.data.locale,
       context,
       requestId,
     });
-    const answer = generated ?? fallbackAnswer(parsed.data.locale, matches);
+    const answer = overview
+      ? buildRepositoryOverview(parsed.data.locale)
+      : generated ?? fallbackAnswer(parsed.data.locale, matches);
     const sources = matches.map((source) => ({
       title: source.title,
       url: source.url,
@@ -113,7 +116,7 @@ export async function POST(request: NextRequest) {
       answer,
       sources,
       inScope: true,
-      confidence: generated ? "high" : "medium",
+      confidence: overview || generated ? "high" : "medium",
     });
     safeLog("chat", {
       requestId,
