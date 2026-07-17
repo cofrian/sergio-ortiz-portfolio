@@ -63,7 +63,6 @@ async function main() {
       experiment: classification.experiment,
       approvedForRag: portfolio?.approvedForRag ?? false,
       portfolio,
-      readmeExcerpt: readme?.slice(0, 12_000) ?? "",
       needsEditorialReview: !portfolio,
       syncHash: await crypto.subtle.digest("SHA-256", new TextEncoder().encode(`${repository.pushed_at}:${rawPortfolio ?? ""}:${readme ?? ""}`)).then((buffer) => Buffer.from(buffer).toString("hex")),
     });

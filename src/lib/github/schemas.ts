@@ -1,9 +1,13 @@
 import { z } from "zod";
 
+const httpsUrlSchema = z.url().refine((value) => value.startsWith("https://"), {
+  message: "Only HTTPS URLs are allowed",
+});
+
 export const githubRepositorySchema = z.object({
   name: z.string(),
   full_name: z.string(),
-  html_url: z.url(),
+  html_url: httpsUrlSchema,
   description: z.string().nullable(),
   homepage: z.string().nullable(),
   topics: z.array(z.string()).default([]),
@@ -26,8 +30,8 @@ export const repositoryPortfolioSchema = z.object({
   year: z.number().int().min(2000).max(2100).optional(),
   categories: z.array(z.string().max(50)).max(12).optional(),
   metrics: z.array(z.object({ label: z.string().max(80), value: z.string().max(40), evidenceRef: z.string().max(160) })).max(8).optional(),
-  demoUrl: z.url().optional(),
-  coverUrl: z.url().optional(),
+  demoUrl: httpsUrlSchema.optional(),
+  coverUrl: httpsUrlSchema.optional(),
   coverStrategy: z.enum(["demo-screenshot", "open-graph", "deterministic"]).optional(),
   approvedForRag: z.boolean().default(false),
   sections: z.record(z.string(), z.string().max(5_000)).optional(),

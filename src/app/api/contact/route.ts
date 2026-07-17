@@ -1,10 +1,17 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest } from "next/server";
 import { Resend } from "resend";
 import { getServerEnv } from "@/lib/env/server";
 import { contactRequestSchema } from "@/lib/schemas";
 import { consumeRateLimit } from "@/lib/security/rate-limit";
-import { hasValidJsonRequest } from "@/lib/security/request";
+import {
+  hasValidJsonRequest,
+  InvalidRequestBodyError,
+  readJsonWithLimit,
+  RequestBodyTooLargeError,
+} from "@/lib/security/request";
+import { noStoreJson } from "@/lib/security/response";
 import { publicError, safeLog } from "@/lib/security/safe-log";
+import { toEmailHeaderValue } from "@/lib/security/text";
 
 export const runtime = "nodejs";
 
@@ -22,24 +29,23 @@ export async function POST(request: NextRequest) {
   const requestId = crypto.randomUUID();
 
   if (!hasValidJsonRequest(request)) {
-    return NextResponse.json(publicError(), { status: 400 });
-  }
-  if (Number(request.headers.get("content-length") ?? 0) > 8_000) {
-    return NextResponse.json(publicError(), { status: 413 });
+    return noStoreJson(publicError(), { status: 400 });
   }
 
   try {
-    const parsed = contactRequestSchema.safeParse(await request.json());
+    const parsed = contactRequestSchema.safeParse(
+      await readJsonWithLimit(request, 8_000),
+    );
     if (!parsed.success) {
-      return NextResponse.json(publicError(), { status: 400 });
+      return noStoreJson(publicError(), { status: 400 });
     }
     if (parsed.data.website) {
-      return NextResponse.json({ message: "Message received." });
+      return noStoreJson({ message: "Message received." });
     }
 
     const limit = await consumeRateLimit(request, "contact", 4, 600);
     if (!limit.allowed) {
-      return NextResponse.json(
+      return noStoreJson(
         {
           error: limit.unavailable
             ? "Service temporarily unavailable."
@@ -51,7 +57,10 @@ export async function POST(request: NextRequest) {
 
     const env = getServerEnv();
     if (!env.RESEND_API_KEY || !env.CONTACT_EMAIL) {
-      return NextResponse.json({ error: "Contact is not configured yet." }, { status: 503 });
+      return noStoreJson(
+        { error: "Contact is not configured yet." },
+        { status: 503 },
+      );
     }
 
     const resend = new Resend(env.RESEND_API_KEY);
@@ -60,7 +69,10 @@ export async function POST(request: NextRequest) {
       from: "Sergio Ortiz Portfolio <onboarding@resend.dev>",
       to: env.CONTACT_EMAIL,
       replyTo: parsed.data.email,
-      subject: `[Portfolio · ${category}] ${parsed.data.name} — ${parsed.data.organisation}`,
+      subject: toEmailHeaderValue(
+        `[Portfolio · ${category}] ${parsed.data.name} — ${parsed.data.organisation}`,
+        180,
+      ),
       text: [
         `Name: ${parsed.data.name}`,
         `Email: ${parsed.data.email}`,
@@ -80,19 +92,25 @@ export async function POST(request: NextRequest) {
       latencyMs: Date.now() - started,
     });
 
-    return NextResponse.json({
+    return noStoreJson({
       message:
         parsed.data.locale === "es"
           ? "Mensaje enviado correctamente."
           : "Message sent successfully.",
     });
-  } catch {
+  } catch (error) {
+    if (error instanceof RequestBodyTooLargeError) {
+      return noStoreJson(publicError(), { status: 413 });
+    }
+    if (error instanceof InvalidRequestBodyError) {
+      return noStoreJson(publicError(), { status: 400 });
+    }
     safeLog("contact", {
       requestId,
       status: "error",
       latencyMs: Date.now() - started,
       code: "CONTACT_FAILED",
     });
-    return NextResponse.json(publicError(), { status: 500 });
+    return noStoreJson(publicError(), { status: 500 });
   }
 }

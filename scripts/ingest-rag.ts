@@ -6,7 +6,7 @@ import { notes } from "../src/content/notes";
 import { projects } from "../src/content/projects";
 
 const url = process.env.SUPABASE_URL;
-const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+const key = process.env.SUPABASE_SECRET_KEY ?? process.env.SUPABASE_SERVICE_ROLE_KEY;
 if (!url || !key) throw new Error("Supabase server credentials are required for RAG ingestion");
 
 const client = createClient(url, key, { auth: { persistSession: false } });

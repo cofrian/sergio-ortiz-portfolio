@@ -10,9 +10,8 @@ function clientAddress(request: NextRequest) {
   return request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
 }
 
-export async function consumeRateLimit(request: NextRequest, scope: string, limit: number, windowSeconds: number) {
+export async function consumeRateLimitForAddress(address: string, scope: string, limit: number, windowSeconds: number) {
   const env = getServerEnv();
-  const address = clientAddress(request);
   if (env.NODE_ENV !== "production" && !env.RATE_LIMIT_HMAC_SECRET) {
     const key = `${scope}:${address}`;
     const now = Date.now();
@@ -32,4 +31,8 @@ export async function consumeRateLimit(request: NextRequest, scope: string, limi
   if (error || !data) return { allowed: false, remaining: 0, unavailable: true };
   const result = Array.isArray(data) ? data[0] : data;
   return { allowed: Boolean(result.allowed), remaining: Number(result.remaining ?? 0) };
+}
+
+export async function consumeRateLimit(request: NextRequest, scope: string, limit: number, windowSeconds: number) {
+  return consumeRateLimitForAddress(clientAddress(request), scope, limit, windowSeconds);
 }

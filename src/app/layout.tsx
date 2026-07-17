@@ -57,6 +57,7 @@ export default async function RootLayout({
     <html
       lang={locale}
       className={`${geistSans.variable} ${geistMono.variable} ${instrumentSerif.variable}`}
+      data-scroll-behavior="smooth"
     >
       <body>
         <a className="skip-link" href="#main-content">

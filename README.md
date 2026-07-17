@@ -37,7 +37,7 @@ npm run security:check
 Browser
   └─ Next.js on Vercel
        ├─ versioned public content
-       ├─ Supabase service-only RAG and rate limits
+       ├─ Supabase server-only RAG and rate limits
        ├─ NVIDIA NIM through a server adapter
        ├─ Resend through /api/contact
        └─ GitHub Actions for sync, covers and embeddings
@@ -57,7 +57,7 @@ GitHub-generated content never goes directly to production. The sync workflow op
 
 ## Integrations
 
-- Supabase: apply `supabase/migrations`, set server secrets, then run `npm run ingest:rag`. Curated projects and editorial notes are indexed with the Transformers.js-compatible `Xenova/multilingual-e5-small` model.
+- Supabase: apply `supabase/migrations`, set `SUPABASE_URL` and the current `SUPABASE_SECRET_KEY`, then run `npm run ingest:rag`. Curated projects and editorial notes are indexed with the Transformers.js-compatible `Xenova/multilingual-e5-small` model.
 - NVIDIA NIM: set `NVIDIA_API_KEY`, `LLM_BASE_URL` and `LLM_MODEL`. Without it, Ask returns verified search results and citations.
 - LinkedIn: the official API workflow can create reviewed PRs when LinkedIn grants `r_member_social`; the “Add LinkedIn post” Issue Form remains the no-scraping fallback.
 - Contact: apply the Supabase migration for atomic rate limiting, then set `RATE_LIMIT_HMAC_SECRET`, `RESEND_API_KEY` and the private `CONTACT_EMAIL` recipient.
@@ -74,4 +74,4 @@ GitHub portfolio synchronization runs on the 1st and 16th of every month at 07:1
 
 ## Security
 
-Private providers are called only from server routes. Service-role credentials, LLM keys, mail keys, webhook secrets and prompts are never serialized to client components. RLS denies anonymous access to internal tables, sensitive endpoints fail closed in production when atomic rate limiting is unavailable, and CI scans source and bundles for secret patterns. See [SECURITY.md](SECURITY.md).
+Private providers are called only from server routes. Supabase server credentials, LLM keys, mail keys, webhook secrets and prompts are never serialized to client components. RLS denies anonymous access to internal tables, sensitive endpoints fail closed in production when atomic rate limiting is unavailable, and CI scans source and bundles for secret patterns. See [SECURITY.md](SECURITY.md).
