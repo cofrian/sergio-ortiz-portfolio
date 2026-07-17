@@ -6,10 +6,6 @@ import { notes } from "@/content/notes";
 import { hasLocale, localePath } from "@/lib/i18n";
 import { formatDate } from "@/lib/utils";
 
-export function generateStaticParams() {
-  return notes.map((note) => ({ slug: note.slug }));
-}
-
 export default async function NotePage({
   params,
 }: {
