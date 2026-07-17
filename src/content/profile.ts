@@ -6,7 +6,7 @@ export const profile = {
   location: "Valencia, Spain",
   github: "https://github.com/cofrian",
   linkedin: "https://www.linkedin.com/in/sergioortizmontesinos/",
-  email: null as string | null,
+  email: "scofrian@gmail.com" as string | null,
   cv: { en: null as string | null, es: null as string | null },
   bio: {
     en: "I work at the intersection of data science, artificial intelligence, software engineering and automation, with a focus on useful systems for real-world environments.",
