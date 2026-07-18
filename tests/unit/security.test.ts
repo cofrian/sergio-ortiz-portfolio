@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { NextRequest } from "next/server";
 import { proxy } from "@/proxy";
 import { validateGeneratedAnswer } from "@/lib/rag/output-security";
-import { buildRepositoryOverview, isEducationQuestion, retrieveLocalSources, retrieveSources } from "@/lib/rag/retrieval";
+import { buildRepositoryOverview, isEducationQuestion, isFreelanceExperienceQuestion, retrieveLocalSources, retrieveSources } from "@/lib/rag/retrieval";
 import { classifyScope } from "@/lib/rag/scope-classifier";
 import { extractNotebookCode, sanitizeGithubRagText, sanitizeRepositoryCode, selectRepositoryCodeFiles } from "@/lib/github/rag-sources";
 import {
@@ -46,6 +46,10 @@ describe("security boundaries", () => {
   it("allows ordinary grounded LLM output", () => {
     expect(validateGeneratedAnswer("UrbanFlow demonstrates deployed machine learning.")).toContain("UrbanFlow");
   });
+  it("rejects answers that explicitly fill evidence gaps with inference", () => {
+    expect(validateGeneratedAnswer("Se puede inferir que Sergio buscaba experiencia real.")).toBeNull();
+    expect(validateGeneratedAnswer("It can be inferred that Sergio wanted client experience.")).toBeNull();
+  });
   it("returns evidence for the production ML suggested question", () => {
     expect(
       retrieveLocalSources("Which project demonstrates production ML?", "en").map(
@@ -75,6 +79,15 @@ describe("security boundaries", () => {
     expect(education.content).toContain("Data Processing Infrastructure");
     expect(education.content).toContain("Economics and Business");
     expect(education.content).not.toContain("10/10");
+  });
+  it("routes freelance questions mentioning the degree to the freelance record instead of education", async () => {
+    const question = "¿Por qué decidió Sergio hacer trabajos freelance durante la carrera?";
+    expect(isFreelanceExperienceQuestion(question)).toBe(true);
+    expect(isEducationQuestion(question)).toBe(false);
+    const [freelance] = await retrieveSources(question, "es");
+    expect(freelance.url).toMatch(/\/es\/experience#freelance-data-ai$/);
+    expect(freelance.content).toContain("hablar con clientes");
+    expect(freelance.content).toContain("gestión de expectativas");
   });
   it("accepts Spanish questions about academic honours", async () => {
     expect(classifyScope("¿Qué matrículas de honor tiene?")).toBe("IN_SCOPE");
