@@ -16,6 +16,8 @@ type GraphNode = { id: string; label: string; type: NodeType; detail?: string; h
 type RelatedNode = GraphNode & { relation: string };
 type SelectedNode = GraphNode | null;
 
+const CYTOSCAPE_STYLESHEET_ID = "__________cytoscape_stylesheet";
+
 const filters: Array<{ id: GraphFilter; en: string; es: string }> = [
   { id: "all", en: "All", es: "Todo" },
   { id: "project", en: "Projects", es: "Proyectos" },
@@ -243,9 +245,16 @@ export function ConnectionsExplorer({ projects, records, locale }: { projects: P
 
   useEffect(() => {
     let active = true;
+    let stylesheetGuard: HTMLMetaElement | null = null;
 
     async function mount() {
       if (!containerRef.current) return;
+      if (!document.getElementById(CYTOSCAPE_STYLESHEET_ID)) {
+        stylesheetGuard = document.createElement("meta");
+        stylesheetGuard.id = CYTOSCAPE_STYLESHEET_ID;
+        stylesheetGuard.name = "cytoscape-csp-guard";
+        document.head.prepend(stylesheetGuard);
+      }
       const cytoscape = (await import("cytoscape")).default;
       if (!active || !containerRef.current) return;
       reducedMotionRef.current = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -339,6 +348,7 @@ export function ConnectionsExplorer({ projects, records, locale }: { projects: P
       active = false;
       graphRef.current?.destroy();
       graphRef.current = null;
+      stylesheetGuard?.remove();
     };
   }, [elements, selectNodeById]);
 
