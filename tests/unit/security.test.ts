@@ -86,8 +86,9 @@ describe("security boundaries", () => {
     expect(isEducationQuestion(question)).toBe(false);
     const [freelance] = await retrieveSources(question, "es");
     expect(freelance.url).toMatch(/\/es\/experience#freelance-data-ai$/);
-    expect(freelance.content).toContain("hablar con clientes");
-    expect(freelance.content).toContain("gestión de expectativas");
+    expect(freelance.content).toContain("más data-driven");
+    expect(freelance.content).toContain("pipelines medibles");
+    expect(freelance.content).toContain("relación con el cliente");
   });
   it("accepts Spanish questions about academic honours", async () => {
     expect(classifyScope("¿Qué matrículas de honor tiene?")).toBe("IN_SCOPE");

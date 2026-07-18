@@ -32,10 +32,12 @@ describe("source-backed career records", () => {
     const pinkForce = careerRecords.find((record) => record.id === "the-pink-force-ambassador");
 
     expect(freelance?.period.en).toBe("Oct 2025 — Present");
-    expect(freelance?.role.es).toBe("Proyectos freelance durante el grado");
+    expect(freelance?.role.es).toBe("Proyectos freelance de Datos e IA durante el grado");
     expect(freelance?.summary.en.toLowerCase()).toContain("learn beyond the classroom");
-    expect(freelance?.summary.es.toLowerCase()).toContain("hablar con clientes");
-    expect(freelance?.capabilities).toEqual(expect.arrayContaining(["Client Communication", "Requirements Discovery", "Project Delivery"]));
+    expect(freelance?.summary.es.toLowerCase()).toContain("colaboré directamente con clientes");
+    expect(freelance?.bullets.map((item) => item.en).join(" ")).toContain("automated document processes");
+    expect(freelance?.bullets.map((item) => item.en).join(" ")).toContain("GovTech");
+    expect(freelance?.capabilities).toEqual(expect.arrayContaining(["Data Science", "Applied AI & Automation", "Client Communication"]));
     expect(JSON.stringify(freelance).toLowerCase()).not.toContain("ordantis");
     expect(pinkForce?.role.en).toBe("Ambassador");
     expect(pinkForce?.source.url).toContain("7463151444582567937");
