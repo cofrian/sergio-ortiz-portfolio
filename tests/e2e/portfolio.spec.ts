@@ -53,6 +53,9 @@ test("connections page exposes the Obsidian-inspired map", async ({ page, isMobi
   } else {
     await expect(page.getByLabel("Interactive connections graph")).toBeVisible();
     await expect(page.getByRole("button", { name: "Rearrange network" })).toBeVisible();
+    const nodeCount = await page.locator(".graph-status strong").first().textContent();
+    await page.getByRole("button", { name: "Leadership", exact: true }).click();
+    await expect(page.locator(".graph-status strong").first()).toHaveText(nodeCount ?? "");
     await page.getByPlaceholder("Search project, club or capability").fill("UrbanFlow");
     await page.locator(".connections-search-results").getByRole("button", { name: /UrbanFlow/i }).click();
     await expect(page.locator(".connections-panel").getByRole("heading", { name: "UrbanFlow Valencia" })).toBeVisible();
