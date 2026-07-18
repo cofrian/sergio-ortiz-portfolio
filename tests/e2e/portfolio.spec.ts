@@ -38,6 +38,7 @@ test("experience includes leadership, clubs and innovation", async ({ page }) =>
   await expect(page.getByText("The Pink Force Foundation", { exact: true })).toBeVisible();
   await expect(page.getByText("UPV Investment Club", { exact: true })).toBeVisible();
   await expect(page.getByText("Samsung Innovation Campus", { exact: true })).toBeVisible();
+  await expect(page.locator('a[href*="pablogandia"]')).toHaveCount(0);
 });
 
 test("connections page exposes the Obsidian-inspired map", async ({ page, isMobile }) => {
