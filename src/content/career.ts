@@ -12,30 +12,34 @@ const rawCareerRecords: CareerRecord[] = [
     kind: "experience",
     organisation: "Freelance / Independent",
     role: {
-      en: "Freelance projects alongside my degree",
-      es: "Proyectos freelance durante el grado",
+      en: "Freelance Data & AI projects alongside my degree",
+      es: "Proyectos freelance de Datos e IA durante el grado",
     },
     period: { en: "Oct 2025 — Present", es: "Oct 2025 — Actualidad" },
     location: { en: "Valencia, Spain · Hybrid", es: "Valencia, España · Híbrido" },
     summary: {
-      en: "During my degree, I chose to take on real freelance projects to learn beyond the classroom: speaking with clients, understanding their needs and taking responsibility for delivering useful results.",
-      es: "Durante el grado decidí asumir proyectos freelance reales para aprender fuera del aula: hablar con clientes, entender sus necesidades y responsabilizarme de entregar resultados útiles.",
+      en: "During my degree, I chose to take on real freelance projects to learn beyond the classroom while helping organisations become more data-driven. I worked directly with clients to understand their needs and build practical solutions with data science, AI and process automation.",
+      es: "Durante el grado decidí asumir proyectos freelance reales para aprender fuera del aula mientras ayudaba a organizaciones a trabajar de forma más data-driven. Colaboré directamente con clientes para entender sus necesidades y construir soluciones prácticas con ciencia de datos, IA y automatización de procesos.",
     },
     bullets: [
       {
-        en: "Learned to listen, ask the right questions and turn an initially unclear problem into a realistic scope and plan.",
-        es: "Aprendí a escuchar, hacer las preguntas adecuadas y convertir un problema inicialmente poco definido en un alcance y un plan realistas.",
+        en: "Turned fragmented data and manual workflows into measurable pipelines, internal tools, automated document processes and decision-support systems.",
+        es: "Convertí datos dispersos y flujos manuales en pipelines medibles, herramientas internas, procesos documentales automatizados y sistemas de apoyo a decisiones.",
       },
       {
-        en: "Developed client communication, expectation management, prioritisation and delivery skills while explaining technical decisions in plain language.",
-        es: "Desarrollé comunicación con clientes, gestión de expectativas, priorización y capacidad de entrega, explicando las decisiones técnicas con un lenguaje claro.",
+        en: "Worked across data foundations, analytics, machine learning, generative AI and maintainable automation, choosing the approach around each real operational need.",
+        es: "Trabajé sobre fundamentos de datos, analítica, machine learning, IA generativa y automatización mantenible, eligiendo el enfoque según cada necesidad operativa real.",
       },
       {
-        en: "Applied data science, AI and automation to real workflows, adapting each solution to the organisation instead of working from a predefined academic brief.",
-        es: "Apliqué ciencia de datos, IA y automatización a procesos reales, adaptando cada solución a la organización en lugar de partir de un enunciado académico cerrado.",
+        en: "Managed the client relationship from discovery to delivery: requirements, scope, expectations, priorities and feedback, explaining technical decisions in plain language.",
+        es: "Gestioné la relación con el cliente desde el descubrimiento hasta la entrega: requisitos, alcance, expectativas, prioridades y feedback, explicando las decisiones técnicas con un lenguaje claro.",
+      },
+      {
+        en: "Also took part in GovTech and innovation challenges focused on cities, public services and real operational needs.",
+        es: "También participé en retos GovTech y de innovación centrados en ciudades, servicios públicos y necesidades operativas reales.",
       },
     ],
-    capabilities: ["Client Communication", "Requirements Discovery", "Scope Management", "Project Delivery", "Data Science", "Applied AI", "Automation"],
+    capabilities: ["Data Science", "Applied AI & Automation", "Client Communication", "Data Engineering", "Requirements Discovery", "Scope Management", "Project Delivery", "GovTech"],
     relatedProjects: ["urbanflow-valencia", "aion-emergency-routing", "genaq-market-selection"],
     source: {
       id: "github-independent-work",

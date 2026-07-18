@@ -107,7 +107,7 @@ export default async function ExperiencePage({ params }: { params: Promise<{ loc
       <section className="section-block">
         <div className="section-heading">
           <div><p className="eyebrow"><BriefcaseBusiness aria-hidden="true" size={15} /> 02 · {locale === "es" ? "Experiencia y liderazgo" : "Experience & leadership"}</p><h2>{locale === "es" ? "Datos, IA y responsabilidad real." : "Data, AI and real responsibility."}</h2></div>
-          <p>{locale === "es" ? "Proyectos reales durante el grado para aprender a escuchar a clientes, definir necesidades, gestionar entregas y crecer más allá del aula." : "Real projects during my degree to learn how to listen to clients, define needs, manage delivery and grow beyond the classroom."}</p>
+          <p>{locale === "es" ? "Proyectos reales durante el grado para convertir datos y procesos manuales en soluciones útiles, mientras aprendía a trabajar con clientes y gestionar entregas." : "Real projects during my degree to turn data and manual processes into useful solutions while learning to work with clients and manage delivery."}</p>
         </div>
         <CareerTimeline locale={locale} records={professionalExperience} />
       </section>
