@@ -45,9 +45,15 @@ export function isCodeQuestion(message: string) {
   return /\b(code|codigo|source|implementation|implemented|function|class|module|file|algorithm|script|endpoint|pipeline|how does|como funciona|como esta hecho|como se implementa)\b/.test(normalized);
 }
 
+export function isFreelanceExperienceQuestion(message: string) {
+  const normalized = normalizeRagText(message);
+  return /\b(freelance|independent work|independent projects?|clients?|customers?|client communication|autonom[oa]|trabajos? independientes?|proyectos? independientes?|clientes?|comunicacion con clientes?)\b/.test(normalized);
+}
+
 export function isEducationQuestion(message: string) {
   const normalized = normalizeRagText(message);
-  return /\b(education|degree|stud(?:y|ies|ying|ent)|academic|honou?r|distinction|university|credits?|ects|formacion|grado|carrera|estudia|estudios|estudiante|academica|academico|matricula(?:s)?(?: de honor)?|universidad|creditos?)\b/.test(normalized);
+  return !isFreelanceExperienceQuestion(message)
+    && /\b(education|degree|stud(?:y|ies|ying|ent)|academic|honou?r|distinction|university|credits?|ects|formacion|grado|carrera|estudia|estudios|estudiante|academica|academico|matricula(?:s)?(?: de honor)?|universidad|creditos?)\b/.test(normalized);
 }
 
 export function buildRepositoryOverview(locale: Locale) {
@@ -86,6 +92,7 @@ function expandedTerms(message: string) {
     [/\bclubs?\b|\bclubes?\b|\bcommunity\b|\bcomunidad\b|\bmentor(?:ing)?\b|\btutor(?:ia)?\b/, ["sigma", "investment", "etsinf", "students", "mentoring"]],
     [/\bpodcasts?\b|\bepisodios?\b|\bspotify\b/, ["podcast", "podcasts", "episode", "episodio", "spotify", "planificacion", "marketing"]],
     [/\binnovation\b|\binnovacion\b|\bentrepreneurship\b|\bemprendimiento\b/, ["akademia", "bankinter", "samsung", "accenture", "product"]],
+    [/\b(freelance|independent work|independent projects?|clients?|customers?|autonom[oa]|trabajos? independientes?|proyectos? independientes?|clientes?)\b/, ["freelance", "independent", "client", "clients", "cliente", "clientes", "requirements", "necesidades", "scope", "alcance", "delivery", "entrega", "classroom", "aula"]],
     [/\b(education|degree|stud(?:y|ies|ying|ent)|academic|honou?r|distinction|university|credits?|ects|formacion|grado|carrera|estudia|estudios|estudiante|academica|academico|matricula(?:s)?(?: de honor)?|universidad|creditos?)\b/, ["data science", "ciencia de datos", "upv", "etsinf", "240 ects", "distinction", "matricula de honor", "economics", "business", "economia", "empresa", "infraestructura", "procesamiento"]],
     [/\bcode\b|\bcodigo\b|\bimplementation\b|\bimplementacion\b|\bfunction\b|\bfuncion\b|\bclass\b|\bmodule\b|\barchivo\b|\bscript\b|\bendpoint\b|\balgorithm\b|\balgoritmo\b/, ["src", "app", "api", "pipeline", "model", "train", "inference"]],
   ];
@@ -98,6 +105,7 @@ function expandedTerms(message: string) {
 function careerSourceContent(message: string, locale: Locale): RetrievedSource[] {
   const terms = expandedTerms(message);
   const educationQuestion = isEducationQuestion(message);
+  const freelanceQuestion = isFreelanceExperienceQuestion(message);
   return careerRecords.map((record) => {
     const content = [
       `${localize(record.role, locale)} · ${record.organisation}`,
@@ -112,7 +120,11 @@ function careerSourceContent(message: string, locale: Locale): RetrievedSource[]
     ].filter(Boolean).join("\n\n");
     const searchable = normalizeRagText(`${record.kind} ${record.organisation} ${content}`);
     const termScore = terms.reduce((total, term) => total + (searchable.includes(term) ? 4 : 0), 0);
-    const intentScore = educationQuestion && record.kind === "education" ? 60 : 0;
+    const intentScore = educationQuestion && record.kind === "education"
+      ? 60
+      : freelanceQuestion && record.id === "freelance-data-ai"
+        ? 80
+        : 0;
     const score = termScore + intentScore;
     return {
       title: `${record.organisation} — ${localize(record.role, locale)}`,
@@ -187,7 +199,7 @@ export function retrieveLocalSources(message: string, locale: Locale, limit = 6)
   const terms = expandedTerms(message);
   const overview = isRepositoryOverviewQuestion(message);
   const codeQuestion = isCodeQuestion(message);
-  const career = /\b(experience|skills?|education|degree|stud(?:y|ies|ying|ent)|academic|honou?r|distinction|university|credits?|ects|hire|hiring|job|candidate|career|leadership|community|clubs?|mentoring|innovation|experiencia|habilidades?|formacion|grado|carrera|estudia|estudios|estudiante|academica|academico|matricula(?:s)?(?: de honor)?|universidad|creditos?|contratar|empleo|candidato|trayectoria|liderazgo|comunidad|clubes?|tutoria|innovacion)\b/.test(normalizeRagText(message));
+  const career = /\b(experience|skills?|education|degree|stud(?:y|ies|ying|ent)|academic|honou?r|distinction|university|credits?|ects|hire|hiring|job|candidate|career|leadership|community|clubs?|mentoring|innovation|freelance|independent|clients?|customers?|experiencia|habilidades?|formacion|grado|carrera|estudia|estudios|estudiante|academica|academico|matricula(?:s)?(?: de honor)?|universidad|creditos?|contratar|empleo|candidato|trayectoria|liderazgo|comunidad|clubes?|tutoria|innovacion|autonom[oa]|clientes?)\b/.test(normalizeRagText(message));
   const curated: RetrievedSource[] = projectSourceContent(locale).map((source) => {
     const normalized = normalizeRagText(source.searchable);
     const title = normalizeRagText(`${source.title} ${source.repository}`);
@@ -376,6 +388,10 @@ async function retrieveSupabaseRowsFallback(message: string, limit: number, requ
 
 export async function retrieveSources(message: string, locale: Locale, limit = 6, requestId?: string) {
   const local = retrieveLocalSources(message, locale, limit);
+  if (isFreelanceExperienceQuestion(message)) {
+    const freelance = local.filter((source) => source.url.endsWith("#freelance-data-ai"));
+    if (freelance.length) return freelance.slice(0, limit);
+  }
   if (isEducationQuestion(message)) {
     const academic = local.filter((source) => source.url.endsWith("#upv-data-science"));
     if (academic.length) return academic.slice(0, limit);

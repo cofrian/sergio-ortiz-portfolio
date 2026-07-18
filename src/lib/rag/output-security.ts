@@ -5,6 +5,8 @@ const forbiddenOutputPatterns = [
   /\b(?:nvapi|gh[pousr]|sb_secret)_[a-z0-9._-]{8,}\b/i,
   /-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----/i,
   /\bauthorization\s*:\s*bearer\s+/i,
+  /\b(?:can|could)\s+be\s+inferred\b/i,
+  /\bse\s+puede\s+inferir\b/i,
 ];
 
 export function validateGeneratedAnswer(value: string | null | undefined) {
