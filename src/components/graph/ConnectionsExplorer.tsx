@@ -50,14 +50,14 @@ function capabilityId(value: string) {
   return `cap-${value.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "")}`;
 }
 
-function filterCareer(records: CareerRecord[], filter: GraphFilter) {
-  if (filter === "all") return records;
-  if (filter === "career") return records.filter((record) => record.kind === "experience" || record.kind === "education");
-  if (filter === "leadership" || filter === "community" || filter === "innovation") return records.filter((record) => record.kind === filter);
-  return [];
+function nodeMatchesFilter(node: NodeSingular, filter: GraphFilter) {
+  const type = node.data("type") as NodeType;
+  if (filter === "all") return true;
+  if (filter === "career") return type === "experience" || type === "education";
+  return type === filter;
 }
 
-function makeElements(projects: ProjectRecord[], records: CareerRecord[], locale: Locale, filter: GraphFilter): ElementDefinition[] {
+function makeElements(projects: ProjectRecord[], records: CareerRecord[], locale: Locale): ElementDefinition[] {
   const elements: ElementDefinition[] = [{
     data: {
       id: "sergio",
@@ -67,17 +67,15 @@ function makeElements(projects: ProjectRecord[], records: CareerRecord[], locale
       href: localePath(locale, "/about"),
     },
   }];
-  const includedProjects = filter === "all" || filter === "project" ? projects : [];
-  const includedRecords = filterCareer(records, filter);
   const capabilityEntries = [
-    ...includedProjects.flatMap((project) => project.categories.slice(0, 4)),
-    ...includedRecords.flatMap((record) => record.capabilities.slice(0, 4)),
+    ...projects.flatMap((project) => project.categories.slice(0, 4)),
+    ...records.flatMap((record) => record.capabilities.slice(0, 4)),
   ];
   const capabilityUsage = capabilityEntries.reduce((usage, capability) => {
     usage.set(capability, (usage.get(capability) ?? 0) + 1);
     return usage;
   }, new Map<string, number>());
-  const capabilities = new Set(capabilityEntries.filter((capability) => filter !== "all" || (capabilityUsage.get(capability) ?? 0) > 2));
+  const capabilities = new Set(capabilityEntries.filter((capability) => (capabilityUsage.get(capability) ?? 0) > 2));
 
   for (const capability of capabilities) {
     elements.push({
@@ -91,7 +89,7 @@ function makeElements(projects: ProjectRecord[], records: CareerRecord[], locale
     });
   }
 
-  for (const project of includedProjects) {
+  for (const project of projects) {
     elements.push({ data: { id: project.slug, label: project.title, type: "project", detail: localize(project.summary, locale), href: localePath(locale, `/work/${project.slug}`) } });
     elements.push({ data: { id: `sergio-project-${project.slug}`, source: "sergio", target: project.slug, relation: "BUILT" } });
     for (const capability of project.categories.slice(0, 4)) {
@@ -100,7 +98,7 @@ function makeElements(projects: ProjectRecord[], records: CareerRecord[], locale
     }
   }
 
-  for (const record of includedRecords) {
+  for (const record of records) {
     const id = `career-${record.id}`;
     elements.push({ data: { id, label: record.organisation, type: record.kind, detail: `${localize(record.role, locale)} · ${localize(record.summary, locale)}`, href: `${localePath(locale, "/experience")}#${record.id}` } });
     elements.push({ data: { id: `sergio-${id}`, source: "sergio", target: id, relation: record.kind === "leadership" ? "LEADS" : "PART_OF" } });
@@ -108,11 +106,9 @@ function makeElements(projects: ProjectRecord[], records: CareerRecord[], locale
       if (!capabilities.has(capability)) continue;
       elements.push({ data: { id: `${id}-${capabilityId(capability)}`, source: id, target: capabilityId(capability), relation: "DEMONSTRATES" } });
     }
-    if (filter === "all") {
-      for (const projectSlug of record.relatedProjects) {
-        if (projects.some((project) => project.slug === projectSlug)) {
-          elements.push({ data: { id: `${id}-project-${projectSlug}`, source: id, target: projectSlug, relation: "BUILT_DURING" } });
-        }
+    for (const projectSlug of record.relatedProjects) {
+      if (projects.some((project) => project.slug === projectSlug)) {
+        elements.push({ data: { id: `${id}-project-${projectSlug}`, source: id, target: projectSlug, relation: "BUILT_DURING" } });
       }
     }
   }
@@ -192,7 +188,7 @@ export function ConnectionsExplorer({ projects, records, locale }: { projects: P
   const [query, setQuery] = useState("");
   const [view, setView] = useState<GraphView>("graph");
   const [graphReady, setGraphReady] = useState(false);
-  const elements = useMemo(() => makeElements(projects, records, locale, filter), [filter, locale, projects, records]);
+  const elements = useMemo(() => makeElements(projects, records, locale), [locale, projects, records]);
   const visibleNodes = useMemo(
     () => elements
       .filter((element) => element.data.source === undefined)
@@ -264,7 +260,6 @@ export function ConnectionsExplorer({ projects, records, locale }: { projects: P
         layout: layoutOptions(reducedMotionRef.current),
         minZoom: 0.42,
         maxZoom: 2.3,
-        wheelSensitivity: 0.18,
         boxSelectionEnabled: false,
         style: [
           {
@@ -316,9 +311,13 @@ export function ConnectionsExplorer({ projects, records, locale }: { projects: P
           { selector: "node[type = 'community']", style: { "background-color": "#7a9b78", color: "#3f5a3d", "font-size": 11.5, "min-zoomed-font-size": 0, "text-max-width": "120px", width: 33, height: 33 } },
           { selector: "node[type = 'innovation']", style: { "background-color": "#b85f4b", color: "#7f382a", "font-size": 11.5, "min-zoomed-font-size": 0, "text-max-width": "120px", width: 35, height: 35 } },
           { selector: "node[type = 'experience'], node[type = 'education']", style: { "background-color": "#6b7280", color: "#48505a", "font-size": 11.5, "min-zoomed-font-size": 0, "text-max-width": "120px", width: 33, height: 33 } },
-          { selector: "node[type = 'capability']", style: { "font-size": 9, "font-weight": 550, "text-max-width": "94px", width: 18, height: 18, opacity: 0.78 } },
+          { selector: "node[type = 'capability']", style: { "font-size": 9, "font-weight": 500, "text-max-width": "94px", width: 18, height: 18, opacity: 0.78 } },
           { selector: "edge", style: { width: 1.15, "line-color": "#aebdb5", opacity: 0.62, "curve-style": "bezier", "line-cap": "round", "transition-property": "opacity, line-color, width", "transition-duration": 180 } },
           { selector: "edge[relation = 'BUILT_DURING']", style: { "line-color": "#c39a3f", width: 1.8, "line-style": "dashed", "line-dash-pattern": [7, 5] } },
+          { selector: ".is-filter-muted", style: { opacity: 0.34, "text-opacity": 0.42 } },
+          { selector: "node.is-filter-related", style: { opacity: 0.72, "text-opacity": 0.8 } },
+          { selector: "node.is-filter-match", style: { opacity: 1, "text-opacity": 1, "border-color": "#d3a94f", "border-width": 4, "min-zoomed-font-size": 0, "underlay-color": "#d3a94f", "underlay-opacity": 0.11, "underlay-padding": 7 } },
+          { selector: "edge.is-filter-edge", style: { opacity: 0.78, width: 2, "line-color": "#72948a" } },
           { selector: ".is-muted", style: { opacity: 0.08, "text-opacity": 0 } },
           { selector: "node.is-related", style: { opacity: 1, "border-color": "#d3a94f", "min-zoomed-font-size": 0 } },
           { selector: "edge.is-related", style: { opacity: 0.34 } },
@@ -351,6 +350,23 @@ export function ConnectionsExplorer({ projects, records, locale }: { projects: P
       stylesheetGuard?.remove();
     };
   }, [elements, selectNodeById]);
+
+  useEffect(() => {
+    const graph = graphRef.current;
+    if (!graph || !graphReady) return;
+    graph.elements().removeClass("is-filter-muted is-filter-related is-filter-match is-filter-edge");
+    if (filter === "all") return;
+
+    const matches = graph.nodes().filter((node) => nodeMatchesFilter(node, filter));
+    const adjacentNodes = matches.neighborhood("node");
+    const contextNodes = matches.union(adjacentNodes);
+    const relatedEdges = matches.connectedEdges();
+    graph.nodes().difference(contextNodes).addClass("is-filter-muted");
+    graph.edges().difference(relatedEdges).addClass("is-filter-muted");
+    adjacentNodes.difference(matches).addClass("is-filter-related");
+    matches.addClass("is-filter-match");
+    relatedEdges.addClass("is-filter-edge");
+  }, [filter, graphReady]);
 
   useEffect(() => {
     const graph = graphRef.current;
@@ -399,7 +415,8 @@ export function ConnectionsExplorer({ projects, records, locale }: { projects: P
   }, [view]);
 
   const setGraphFilter = (nextFilter: GraphFilter) => {
-    setGraphReady(false);
+    const graph = graphRef.current;
+    if (graph) clearFocus(graph);
     setSelected(null);
     setRelated([]);
     setQuery("");
