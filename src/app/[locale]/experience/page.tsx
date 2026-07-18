@@ -88,16 +88,16 @@ export default async function ExperiencePage({ params }: { params: Promise<{ loc
       </section>
 
       <section aria-label={locale === "es" ? "Momentos de liderazgo e impacto" : "Leadership and impact moments"} className="career-story">
-        <a className="career-story-main" href="https://www.linkedin.com/posts/pablogandia_aicommunity-inteligenciaartificial-ugcPost-7432461355523145732-F-KU/" rel="noreferrer" target="_blank">
+        <article className="career-story-card career-story-main">
           <Image alt={locale === "es" ? "Participantes y organización del GenAI Hackathon de Sigma Data Club" : "Participants and organisers at Sigma Data Club's GenAI Hackathon"} fill priority sizes="(max-width: 720px) 100vw, 62vw" src="/images/linkedin/sigma-genai-hackathon-group.jpg" />
           <span><strong>{locale === "es" ? "Liderar haciendo" : "Leading by building"}</strong>{locale === "es" ? "GenAI Hackathon · más de 60 participantes" : "GenAI Hackathon · 60+ participants"}</span>
-        </a>
+        </article>
         <div className="career-story-side">
-          <a href="https://www.linkedin.com/posts/pablogandia_aicommunity-inteligenciaartificial-ugcPost-7432461355523145732-F-KU/" rel="noreferrer" target="_blank">
+          <article className="career-story-card">
             <Image alt={locale === "es" ? "Mentoría y coordinación de equipos durante el GenAI Hackathon de Sigma" : "Team mentoring and coordination during Sigma's GenAI Hackathon"} fill sizes="(max-width: 720px) 100vw, 34vw" src="/images/linkedin/sigma-hackathon-mentoring.webp" />
             <span>{locale === "es" ? "Coordinación y mentoría de equipos" : "Team coordination and mentoring"}</span>
-          </a>
-          <a href="https://www.linkedin.com/feed/update/urn:li:activity:7463151444582567937/" rel="noreferrer" target="_blank">
+          </article>
+          <a className="career-story-card" href="https://www.linkedin.com/feed/update/urn:li:activity:7463151444582567937/" rel="noreferrer" target="_blank">
             <Image alt={locale === "es" ? "Sergio junto a R2-KT y estudiantes durante Up! Steam 7" : "Sergio with R2-KT and students during Up! Steam 7"} fill sizes="(max-width: 720px) 100vw, 34vw" src="/images/linkedin/pink-force-up-steam.jpg" />
             <span>{locale === "es" ? "Embajador · The Pink Force" : "Ambassador · The Pink Force"}</span>
           </a>

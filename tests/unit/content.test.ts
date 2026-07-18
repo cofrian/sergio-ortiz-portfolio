@@ -62,14 +62,15 @@ describe("source-backed career records", () => {
 });
 
 describe("curated LinkedIn evidence", () => {
-  it("includes the delivered Sigma hackathon and The Pink Force event with local images", () => {
-    const hackathon = linkedinPosts.find((post) => post.id === "sigma-genai-hackathon-delivered-2026");
+  it("keeps Sergio's Sigma publication and The Pink Force event without linking to third-party posts", () => {
+    const hackathon = linkedinPosts.find((post) => post.id === "genai-hackathon-sigma-2026");
     const pinkForce = linkedinPosts.find((post) => post.id === "pink-force-up-steam-ambassador-2026");
 
-    expect(hackathon?.content).toContain("más de 60 participantes");
+    expect(hackathon?.content).toContain("Sergio compartió la convocatoria");
     expect(hackathon?.image).toMatch(/^\/images\/linkedin\//);
     expect(pinkForce?.content).toContain("embajador");
     expect(pinkForce?.image).toMatch(/^\/images\/linkedin\//);
+    expect(linkedinPosts.some((post) => post.url.includes("pablogandia"))).toBe(false);
   });
 
   it("links the university podcast directly and removes the superseded career workshop", () => {
