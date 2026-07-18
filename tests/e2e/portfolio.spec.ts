@@ -45,13 +45,18 @@ test("experience includes leadership, clubs and innovation", async ({ page }) =>
 
 test("connections page exposes the Obsidian-inspired map", async ({ page, isMobile }) => {
   await page.goto("/en/connections");
-  await expect(page.getByRole("heading", { name: /form a network/i })).toBeVisible();
+  await expect(page.getByRole("heading", { name: /explore as a network/i })).toBeVisible();
   await expect(page.getByRole("button", { name: "Leadership", exact: true })).toBeVisible();
   if (isMobile) {
-    await expect(page.getByRole("heading", { name: "Accessible list" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "All nodes" })).toBeVisible();
     await expect(page.getByLabel("Interactive connections graph")).toBeHidden();
   } else {
     await expect(page.getByLabel("Interactive connections graph")).toBeVisible();
+    await expect(page.getByRole("button", { name: "Rearrange network" })).toBeVisible();
+    await page.getByPlaceholder("Search project, club or capability").fill("UrbanFlow");
+    await page.locator(".connections-search-results").getByRole("button", { name: /UrbanFlow/i }).click();
+    await expect(page.locator(".connections-panel").getByRole("heading", { name: "UrbanFlow Valencia" })).toBeVisible();
+    await expect(page.locator(".connections-related button").first()).toBeVisible();
   }
 });
 
