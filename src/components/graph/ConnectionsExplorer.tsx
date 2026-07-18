@@ -1,6 +1,6 @@
 "use client";
 
-import type { Core, CoseLayoutOptions, EdgeSingular, ElementDefinition, NodeSingular } from "cytoscape";
+import type { Core, CoseLayoutOptions, EdgeSingular, ElementDefinition, Layouts, NodeSingular } from "cytoscape";
 import { ArrowRight, Focus, List, Minus, Network, Plus, Search, Shuffle } from "lucide-react";
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -50,14 +50,14 @@ function capabilityId(value: string) {
   return `cap-${value.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "")}`;
 }
 
-function nodeMatchesFilter(node: NodeSingular, filter: GraphFilter) {
-  const type = node.data("type") as NodeType;
-  if (filter === "all") return true;
-  if (filter === "career") return type === "experience" || type === "education";
-  return type === filter;
+function filterCareer(records: CareerRecord[], filter: GraphFilter) {
+  if (filter === "all") return records;
+  if (filter === "career") return records.filter((record) => record.kind === "experience" || record.kind === "education");
+  if (filter === "leadership" || filter === "community" || filter === "innovation") return records.filter((record) => record.kind === filter);
+  return [];
 }
 
-function makeElements(projects: ProjectRecord[], records: CareerRecord[], locale: Locale): ElementDefinition[] {
+function makeElements(projects: ProjectRecord[], records: CareerRecord[], locale: Locale, filter: GraphFilter): ElementDefinition[] {
   const elements: ElementDefinition[] = [{
     data: {
       id: "sergio",
@@ -67,15 +67,13 @@ function makeElements(projects: ProjectRecord[], records: CareerRecord[], locale
       href: localePath(locale, "/about"),
     },
   }];
+  const includedProjects = filter === "all" || filter === "project" ? projects : [];
+  const includedRecords = filterCareer(records, filter);
   const capabilityEntries = [
-    ...projects.flatMap((project) => project.categories.slice(0, 4)),
-    ...records.flatMap((record) => record.capabilities.slice(0, 4)),
+    ...includedProjects.flatMap((project) => project.categories.slice(0, 4)),
+    ...includedRecords.flatMap((record) => record.capabilities.slice(0, 4)),
   ];
-  const capabilityUsage = capabilityEntries.reduce((usage, capability) => {
-    usage.set(capability, (usage.get(capability) ?? 0) + 1);
-    return usage;
-  }, new Map<string, number>());
-  const capabilities = new Set(capabilityEntries.filter((capability) => (capabilityUsage.get(capability) ?? 0) > 2));
+  const capabilities = new Set(capabilityEntries);
 
   for (const capability of capabilities) {
     elements.push({
@@ -89,7 +87,7 @@ function makeElements(projects: ProjectRecord[], records: CareerRecord[], locale
     });
   }
 
-  for (const project of projects) {
+  for (const project of includedProjects) {
     elements.push({ data: { id: project.slug, label: project.title, type: "project", detail: localize(project.summary, locale), href: localePath(locale, `/work/${project.slug}`) } });
     elements.push({ data: { id: `sergio-project-${project.slug}`, source: "sergio", target: project.slug, relation: "BUILT" } });
     for (const capability of project.categories.slice(0, 4)) {
@@ -98,7 +96,7 @@ function makeElements(projects: ProjectRecord[], records: CareerRecord[], locale
     }
   }
 
-  for (const record of records) {
+  for (const record of includedRecords) {
     const id = `career-${record.id}`;
     elements.push({ data: { id, label: record.organisation, type: record.kind, detail: `${localize(record.role, locale)} · ${localize(record.summary, locale)}`, href: `${localePath(locale, "/experience")}#${record.id}` } });
     elements.push({ data: { id: `sergio-${id}`, source: "sergio", target: id, relation: record.kind === "leadership" ? "LEADS" : "PART_OF" } });
@@ -106,9 +104,11 @@ function makeElements(projects: ProjectRecord[], records: CareerRecord[], locale
       if (!capabilities.has(capability)) continue;
       elements.push({ data: { id: `${id}-${capabilityId(capability)}`, source: id, target: capabilityId(capability), relation: "DEMONSTRATES" } });
     }
-    for (const projectSlug of record.relatedProjects) {
-      if (projects.some((project) => project.slug === projectSlug)) {
-        elements.push({ data: { id: `${id}-project-${projectSlug}`, source: id, target: projectSlug, relation: "BUILT_DURING" } });
+    if (filter === "all") {
+      for (const projectSlug of record.relatedProjects) {
+        if (projects.some((project) => project.slug === projectSlug)) {
+          elements.push({ data: { id: `${id}-project-${projectSlug}`, source: id, target: projectSlug, relation: "BUILT_DURING" } });
+        }
       }
     }
   }
@@ -161,6 +161,11 @@ function clearFocus(graph: Core) {
   graph.elements().unselect();
 }
 
+function stopGraphMotion(graph: Core) {
+  graph.stop(true, true);
+  graph.elements().stop(true, true);
+}
+
 function focusGraphNode(graph: Core, id: string, reducedMotion: boolean) {
   const node = graph.getElementById(id);
   if (!node.length) return [];
@@ -188,7 +193,7 @@ export function ConnectionsExplorer({ projects, records, locale }: { projects: P
   const [query, setQuery] = useState("");
   const [view, setView] = useState<GraphView>("graph");
   const [graphReady, setGraphReady] = useState(false);
-  const elements = useMemo(() => makeElements(projects, records, locale), [locale, projects, records]);
+  const elements = useMemo(() => makeElements(projects, records, locale, filter), [filter, locale, projects, records]);
   const visibleNodes = useMemo(
     () => elements
       .filter((element) => element.data.source === undefined)
@@ -242,6 +247,7 @@ export function ConnectionsExplorer({ projects, records, locale }: { projects: P
   useEffect(() => {
     let active = true;
     let stylesheetGuard: HTMLMetaElement | null = null;
+    let initialLayout: Layouts | null = null;
 
     async function mount() {
       if (!containerRef.current) return;
@@ -257,7 +263,7 @@ export function ConnectionsExplorer({ projects, records, locale }: { projects: P
       const graph = cytoscape({
         container: containerRef.current,
         elements,
-        layout: layoutOptions(reducedMotionRef.current),
+        layout: { name: "preset" },
         minZoom: 0.42,
         maxZoom: 2.3,
         boxSelectionEnabled: false,
@@ -314,10 +320,6 @@ export function ConnectionsExplorer({ projects, records, locale }: { projects: P
           { selector: "node[type = 'capability']", style: { "font-size": 9, "font-weight": 500, "text-max-width": "94px", width: 18, height: 18, opacity: 0.78 } },
           { selector: "edge", style: { width: 1.15, "line-color": "#aebdb5", opacity: 0.62, "curve-style": "bezier", "line-cap": "round", "transition-property": "opacity, line-color, width", "transition-duration": 180 } },
           { selector: "edge[relation = 'BUILT_DURING']", style: { "line-color": "#c39a3f", width: 1.8, "line-style": "dashed", "line-dash-pattern": [7, 5] } },
-          { selector: ".is-filter-muted", style: { opacity: 0.34, "text-opacity": 0.42 } },
-          { selector: "node.is-filter-related", style: { opacity: 0.72, "text-opacity": 0.8 } },
-          { selector: "node.is-filter-match", style: { opacity: 1, "text-opacity": 1, "border-color": "#d3a94f", "border-width": 4, "min-zoomed-font-size": 0, "underlay-color": "#d3a94f", "underlay-opacity": 0.11, "underlay-padding": 7 } },
-          { selector: "edge.is-filter-edge", style: { opacity: 0.78, width: 2, "line-color": "#72948a" } },
           { selector: ".is-muted", style: { opacity: 0.08, "text-opacity": 0 } },
           { selector: "node.is-related", style: { opacity: 1, "border-color": "#d3a94f", "min-zoomed-font-size": 0 } },
           { selector: "edge.is-related", style: { opacity: 0.34 } },
@@ -331,7 +333,6 @@ export function ConnectionsExplorer({ projects, records, locale }: { projects: P
       });
 
       graphRef.current = graph;
-      setGraphReady(true);
       graph.on("tap", "node", (event) => selectNodeById(event.target.id()));
       graph.on("tap", (event) => {
         if (event.target !== graph) return;
@@ -340,33 +341,27 @@ export function ConnectionsExplorer({ projects, records, locale }: { projects: P
         setRelated([]);
       });
 
+      initialLayout = graph.layout(layoutOptions(reducedMotionRef.current));
+      initialLayout.one("layoutstop", () => {
+        if (active) setGraphReady(true);
+      });
+      initialLayout.run();
+
     }
 
     void mount();
     return () => {
       active = false;
-      graphRef.current?.destroy();
+      initialLayout?.stop();
+      initialLayout?.removeAllListeners();
+      if (graphRef.current) {
+        stopGraphMotion(graphRef.current);
+        graphRef.current.destroy();
+      }
       graphRef.current = null;
       stylesheetGuard?.remove();
     };
   }, [elements, selectNodeById]);
-
-  useEffect(() => {
-    const graph = graphRef.current;
-    if (!graph || !graphReady) return;
-    graph.elements().removeClass("is-filter-muted is-filter-related is-filter-match is-filter-edge");
-    if (filter === "all") return;
-
-    const matches = graph.nodes().filter((node) => nodeMatchesFilter(node, filter));
-    const adjacentNodes = matches.neighborhood("node");
-    const contextNodes = matches.union(adjacentNodes);
-    const relatedEdges = matches.connectedEdges();
-    graph.nodes().difference(contextNodes).addClass("is-filter-muted");
-    graph.edges().difference(relatedEdges).addClass("is-filter-muted");
-    adjacentNodes.difference(matches).addClass("is-filter-related");
-    matches.addClass("is-filter-match");
-    relatedEdges.addClass("is-filter-edge");
-  }, [filter, graphReady]);
 
   useEffect(() => {
     const graph = graphRef.current;
@@ -415,8 +410,9 @@ export function ConnectionsExplorer({ projects, records, locale }: { projects: P
   }, [view]);
 
   const setGraphFilter = (nextFilter: GraphFilter) => {
-    const graph = graphRef.current;
-    if (graph) clearFocus(graph);
+    if (nextFilter === filter) return;
+    if (graphRef.current) stopGraphMotion(graphRef.current);
+    setGraphReady(false);
     setSelected(null);
     setRelated([]);
     setQuery("");
@@ -428,7 +424,7 @@ export function ConnectionsExplorer({ projects, records, locale }: { projects: P
       <div className="connections-tools">
         <div aria-label={locale === "es" ? "Filtrar conexiones" : "Filter connections"} className="connections-filters" role="group">
           {filters.map((item) => (
-            <button aria-pressed={filter === item.id} className={filter === item.id ? "is-active" : undefined} key={item.id} onClick={() => setGraphFilter(item.id)} type="button">
+            <button aria-pressed={filter === item.id} className={filter === item.id ? "is-active" : undefined} disabled={!graphReady} key={item.id} onClick={() => setGraphFilter(item.id)} type="button">
               {item[locale]}
             </button>
           ))}
